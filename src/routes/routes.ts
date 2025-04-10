@@ -1,0 +1,33 @@
+export enum AppRoutes {
+    Home = "/",
+    Auth = "/auth",
+    SignIn = "/auth/sign-in",
+    SignUp = "/auth/sign-up",
+    ResetPassword = "/auth/reset",
+    RequestResetPassword = "/auth/request-reset",
+    Profile = "/profile",
+    Servises = "/services",
+    Projects = "/projects",
+    ContactUs = "/contact-us",
+    Faq = "/faq",
+    PrivacyPolicy = "/privacy-policy",
+    Error = "/error",
+    Error404 = "/error/404",
+    ErrorSessionExpired = "/error/session-expired",
+    ErrorConnectionError = "/error/connection-error",
+    Administration = "/admin",
+}
+
+export const RouteDefinitions = [
+    { key: AppRoutes.Home, label: "Dashboard", showInSidebar: true },
+    { key: AppRoutes.SignIn, label: "Sign In" },
+    { key: AppRoutes.SignUp, label: "Sign Up" },
+    { key: AppRoutes.ResetPassword, label: "Reset" },
+    { key: AppRoutes.RequestResetPassword, label: "Request Reset Password" },
+    { key: AppRoutes.Profile, label: "profile" },
+    { key: AppRoutes.Projects, label: "projects" },
+    { key: AppRoutes.Faq, label: "faq" },
+    { key: AppRoutes.ContactUs, label: "Contact Us" },
+    { key: AppRoutes.PrivacyPolicy, label: "Privacy Policy" },
+    { key: AppRoutes.Administration, label: "Administration" },
+];
