@@ -1,19 +1,19 @@
-import { Div } from "../components/general/BaseComponents";
+import React from "react";
+import { Div, FlexColumn } from "../components/general/BaseComponents";
 import Footer from "./fragments/Footer";
 import TopBar from "./fragments/TopBar";
 import { Outlet } from "react-router-dom";
 
-const MAsterLayout: React.FC = () => {
+const MasterLayout: React.FC = () => {
     return (
-        <Div className="md:ml-[250px] pb-14 md:pb-0 relative">
+        <FlexColumn className="min-h-screen w-full bg-neutral-50">
             <TopBar />
-            <Div className="md:ml-[250px]">
+            <Div className="flex-grow w-full max-w-[1200px] mx-auto p-2">
                 <Outlet />
             </Div>
             <Footer />
-        </Div>
-
+        </FlexColumn>
     );
 };
 
-export default MAsterLayout;    
+export default MasterLayout;

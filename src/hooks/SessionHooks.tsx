@@ -1,14 +1,3 @@
-/**
- * Project Ouma Health
- *
- * @author      Moin Khan
- * @copyright   Teleperinatal, Inc.
- *
- * Built by Eonyx Infotech LLP.
- * @link https://eonyx.io
- *
- */
-
 import { Outlet } from "react-router";
 import { useIdleTimer } from "react-idle-timer";
 import { useAuth } from "../root/providers/AuthProvider";

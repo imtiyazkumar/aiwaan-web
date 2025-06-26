@@ -12,6 +12,10 @@ import PrivacyPolicy from "../Views/PrivacyPolicy";
 import Projects from "../Views/Projects";
 import MAsterLayout from "../layouts/MasterLayout";
 import HomePage from "../Views/Home";
+import About from "../Views/About";
+import GetQuote from "../Views/GetQuote";
+import AddEditProject from "../Views/AddEditProject";
+import Billing from "../Views/Billing";
 
 const router = createBrowserRouter([
     {
@@ -32,12 +36,17 @@ const router = createBrowserRouter([
                                     { path: AppRoutes.ResetPassword, element: <ResetPassword /> },
                                 ]
                             },
-                            { path: AppRoutes.Servises, element: <HomePage /> },
-                            { path: AppRoutes.Home, element: <Services />, index: true },
+                            { path: AppRoutes.Servises, element: <Services /> },
+                            { path: AppRoutes.Home, element: <HomePage />, index: true },
 
                             { path: AppRoutes.ContactUs, element: <ContactUs /> },
+                            { path: AppRoutes.GetQuote, element: <GetQuote /> },
                             { path: AppRoutes.Faq, element: <Faq /> },
                             { path: AppRoutes.PrivacyPolicy, element: <PrivacyPolicy /> },
+                            { path: AppRoutes.Projects, element: <Projects /> },
+                            { path: AppRoutes.About, element: <About /> },
+                            { path: AppRoutes.AddEditProject, element: <AddEditProject /> },
+                            { path: AppRoutes.Billing, element: <Billing /> },
                         ]
                     }
                 ],
@@ -58,6 +67,8 @@ const router = createBrowserRouter([
 
                             // Fix the same issue for Administration path if needed
                             { path: "administration", element: <SignUp /> },
+                            { path: "add-project", element: <AddEditProject /> },
+
                             // Or if using AppRoutes:
                             // { path: AppRoutes.Administration.replace("/", ""), element: <SignUp /> },
                         ]

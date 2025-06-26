@@ -1,6 +1,7 @@
 import React from "react";
-import { ReactChildren } from "../../App.d";
-import { getAuthToken, setAuthToken } from "../services/authService";
+// import { ReactChildren } from "../../App.d";
+import { getAuthToken } from "../services/authService";
+import { ReactChildren } from "../../../App";
 
 type IProps = ReactChildren
 
@@ -17,9 +18,9 @@ const AuthProvider: React.FC<IProps> = ({ children }) => {
 
     const clearToken = () => setToken("");
 
-    React.useLayoutEffect(() => {
-        setAuthToken(token);
-    }, [token]);
+    // React.useLayoutEffect(() => {
+    //     setAuthToken(token);
+    // }, [token]);
 
     const AuthContextValue: IAuthContext = {
         token,

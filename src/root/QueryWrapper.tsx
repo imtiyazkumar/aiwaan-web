@@ -1,22 +1,34 @@
-/**
- * Project Ouma Health
- *
- * @author      Moin Khan
- * @copyright   Teleperinatal, Inc.
- *
- * Built by Eonyx Infotech LLP.
- * @link https://eonyx.io
- *
- */
 
 import React from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { DefaultOptions, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { ReactChildren } from "../App.d";
-import { DefaultQueryOptions } from "../utils/QueryDefaults.config";
+// import { ReactChildren } from "../App.d";
+// import { DefaultQueryOptions } from "../utils/QueryDefaults.config";
 import { useAuth } from "./providers/AuthProvider";
-import { useToast } from "./providers/ToastProvider";
+import { IToastContext, useToast } from "./providers/ToastProvider";
+import { ReactChildren } from "../../App";
 
+export const DefaultQueryOptions = (clearFunction: VoidFunction, toast: IToastContext): DefaultOptions<Error> | undefined => ({
+    queries: {
+        throwOnError: (error: Error) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore-error
+            if (error.apiStatus == 401) clearFunction();
+            toast.error(error.message);
+            return false;
+        },
+        // staleTime: 10000,
+    },
+    mutations: {
+        onError: (error: Error) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore-error
+            if (error.apiStatus == 401) clearFunction();
+            toast.error(error.message);
+            console.log(error);
+        },
+    },
+});
 const QueryWrapper: React.FC<ReactChildren> = ({ children }) => {
     const auth = useAuth();
     const toast = useToast();
