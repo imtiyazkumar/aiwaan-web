@@ -1,40 +1,61 @@
-import React from "react";
-// import { ReactChildren } from "../../App.d";
-import { getAuthToken } from "../services/authService";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { getCurrentUser, getAuthToken, clearAuthToken, User } from "../services/authService";
 import { ReactChildren } from "../../../App";
 
-type IProps = ReactChildren
-
-export interface IAuthContext {
+interface IAuthContext {
+    user: User | null;
     token: string;
-    setToken: React.Dispatch<React.SetStateAction<string>>;
-    clearToken: () => void;
+    isLoading: boolean;
+    setUser: (user: User | null) => void;
+    setToken: (token: string) => void;
+    clearAuth: () => void;
 }
 
-const AuthContext = React.createContext<IAuthContext>({} as IAuthContext);
+const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
-const AuthProvider: React.FC<IProps> = ({ children }) => {
-    const [token, setToken] = React.useState(getAuthToken());
+const AuthProvider: React.FC<ReactChildren> = ({ children }) => {
+    const [user, setUser] = useState<User | null>(null);
+    const [token, setToken] = useState(getAuthToken());
+    const [isLoading, setIsLoading] = useState(true);
 
-    const clearToken = () => setToken("");
+    const clearAuth = () => {
+        setUser(null);
+        setToken("");
+        clearAuthToken();
+    };
 
-    // React.useLayoutEffect(() => {
-    //     setAuthToken(token);
-    // }, [token]);
+    useEffect(() => {
+        const initAuth = async () => {
+            if (token) {
+                try {
+                    const currentUser = await getCurrentUser();
+                    setUser(currentUser);
+                } catch (error) {
+                    console.error("Error getting current user:", error);
+                    clearAuth();
+                }
+            }
+            setIsLoading(false);
+        };
 
-    const AuthContextValue: IAuthContext = {
+        initAuth();
+    }, [token]);
+
+    const value: IAuthContext = {
+        user,
         token,
+        isLoading,
+        setUser,
         setToken,
-        clearToken,
+        clearAuth,
     };
 
     return (
-        <AuthContext.Provider value={AuthContextValue}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );
 };
 
 export default AuthProvider;
-
-export const useAuth = () => React.useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext);
