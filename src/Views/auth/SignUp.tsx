@@ -38,6 +38,7 @@ const SignUp: React.FC = () => {
             setTimeout(() => {
                 navigate(AppRoutes.SignIn);
             }, 3000);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             let errorMessage = "Failed to create account";
             if (err.code === 409) {

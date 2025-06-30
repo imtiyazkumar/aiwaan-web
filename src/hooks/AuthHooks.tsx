@@ -1,7 +1,4 @@
-
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-
-// import { IRouteState } from "../App.d";
 import { AppRoutes } from "../routes/routes";
 import { useAuth } from "../root/providers/AuthProvider";
 import { IRouteState } from "../../App";
@@ -9,8 +6,6 @@ import { IRouteState } from "../../App";
 export const AuthenticatedRoutes = () => {
     const auth = useAuth();
     const location = useLocation();
-
-    console.log("auth.token", auth.token);
 
     if (!auth.token) return <Navigate to={AppRoutes.SignIn} state={{ prev: location }} replace />;
 

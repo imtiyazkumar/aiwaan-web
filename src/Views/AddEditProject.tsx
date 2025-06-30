@@ -1,17 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Save, ArrowLeft, Trash2, Upload, Image as ImageIcon } from "lucide-react";
+import { Save, ArrowLeft, Trash2, Image as ImageIcon } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Div } from "../components/general/BaseComponents";
-import { Button, FormContainer, FormGroup, FormTitle, Select, TextArea, TextInput } from "../components/UiComponents";
-import { 
-    createProject, 
-    getProject, 
-    updateProject, 
-    deleteProject, 
-    uploadProjectImage, 
+import { Button, FormGroup, FormTitle, Select, TextArea, TextInput } from "../components/UiComponents";
+import {
+    createProject,
+    getProject,
+    updateProject,
+    deleteProject,
+    uploadProjectImage,
     deleteProjectImage,
-    Project 
+    Project
 } from "../root/services/projectService";
 import { useToast } from "../root/providers/ToastProvider";
 import AnimatedBackground from "../components/ui/AnimatedBackground";
@@ -29,7 +30,7 @@ const AddEditProject: React.FC = () => {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string>("");
 
-    const [formData, setFormData] = useState<Omit<Project, '$id' | '$createdAt' | '$updatedAt'>>({
+    const [formData, setFormData] = useState<Omit<Project, "$id" | "$createdAt" | "$updatedAt">>({
         projectName: "",
         projectDescription: "",
         projectType: "",
@@ -102,7 +103,7 @@ const AddEditProject: React.FC = () => {
         const { id, value } = e.target;
         setFormData((prev) => ({
             ...prev,
-            [id]: id === 'budget' ? Number(value) : value,
+            [id]: id === "budget" ? Number(value) : value,
         }));
     };
 
@@ -205,7 +206,7 @@ const AddEditProject: React.FC = () => {
     return (
         <Div className="mx-auto relative">
             <AnimatedBackground />
-            
+
             {/* Hero Section */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -415,7 +416,7 @@ const AddEditProject: React.FC = () => {
                                 <h3 className="text-18 font-semibold text-secondary-700 mb-4 pb-2 border-b border-neutral-200">
                                     Project Image
                                 </h3>
-                                
+
                                 <Div className="space-y-4">
                                     <Div className="flex items-center justify-center w-full">
                                         <label htmlFor="image-upload" className="flex flex-col items-center justify-center w-full h-64 border-2 border-neutral-300 border-dashed rounded-lg cursor-pointer bg-neutral-50 hover:bg-neutral-100 transition-colors">
@@ -439,7 +440,7 @@ const AddEditProject: React.FC = () => {
                                             />
                                         </label>
                                     </Div>
-                                    
+
                                     {imagePreview && (
                                         <Button
                                             type="button"
@@ -488,7 +489,7 @@ const AddEditProject: React.FC = () => {
                                         </Div>
                                     ) : (
                                         <>
-                                            {isEditMode ? "Update" : "Save"} Project 
+                                            {isEditMode ? "Update" : "Save"} Project
                                             <Save size={16} className="ml-2 group-hover:scale-110 transition-transform" />
                                         </>
                                     )}

@@ -9,6 +9,7 @@ interface IAuthContext {
     setUser: (user: User | null) => void;
     setToken: (token: string) => void;
     clearAuth: () => void;
+    clearToken: () => void;
 }
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
@@ -22,6 +23,10 @@ const AuthProvider: React.FC<ReactChildren> = ({ children }) => {
         setUser(null);
         setToken("");
         clearAuthToken();
+    };
+
+    const clearToken = () => {
+        clearAuth();
     };
 
     useEffect(() => {
@@ -48,6 +53,7 @@ const AuthProvider: React.FC<ReactChildren> = ({ children }) => {
         setUser,
         setToken,
         clearAuth,
+        clearToken,
     };
 
     return (
