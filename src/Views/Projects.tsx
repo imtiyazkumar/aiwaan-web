@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Plus, Search, Calendar, MapPin, ArrowUpRight } from "lucide-react";
+import { Plus, Filter, Search, Calendar, MapPin, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Div, Flex } from "../components/general/BaseComponents";
 import { Button, Select, TextInput } from "../components/UiComponents";
@@ -87,19 +87,19 @@ const Projects: React.FC = () => {
 
     const getStatusColor = (status: string) => {
         switch (status) {
-            case "completed": return "bg-success-100 text-success-700";
-            case "in-progress": return "bg-warning-100 text-warning-700";
-            case "on-hold": return "bg-error-100 text-error-700";
-            default: return "bg-primary-100 text-primary-700";
+            case 'completed': return 'bg-success-100 text-success-700';
+            case 'in-progress': return 'bg-warning-100 text-warning-700';
+            case 'on-hold': return 'bg-error-100 text-error-700';
+            default: return 'bg-primary-100 text-primary-700';
         }
     };
 
     const formatDate = (dateString: string) => {
-        if (!dateString) return "Not set";
-        return new Date(dateString).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric"
+        if (!dateString) return 'Not set';
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
         });
     };
 
@@ -186,7 +186,7 @@ const Projects: React.FC = () => {
                             <GradientText>Projects</GradientText> Portfolio
                         </h2>
                         <p className="text-secondary-600 mt-2">
-                            {filteredProjects.length} project{filteredProjects.length !== 1 ? "s" : ""} found
+                            {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''} found
                         </p>
                     </Div>
                 </Div>
@@ -237,11 +237,11 @@ const Projects: React.FC = () => {
                                             <Div className="absolute inset-0 bg-gradient-to-t from-secondary-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                             <Div className="absolute top-4 left-4">
                                                 <span className={`text-12 px-3 py-1 rounded-full font-medium ${getStatusColor(project.status)}`}>
-                                                    {project.status.charAt(0).toUpperCase() + project.status.slice(1).replace("-", " ")}
+                                                    {project.status.charAt(0).toUpperCase() + project.status.slice(1).replace('-', ' ')}
                                                 </span>
                                             </Div>
                                             <Div className="absolute top-4 right-4 bg-primary-base/90 backdrop-blur-sm text-white text-12 px-3 py-1 rounded-full font-medium">
-                                                {project.projectType.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}
+                                                {project.projectType.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                                             </Div>
                                             <Div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                                 <ArrowUpRight size={20} className="text-white transform transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />

@@ -84,19 +84,19 @@ const Billing: React.FC = () => {
 
     const getStatusColor = (status: string) => {
         switch (status) {
-            case "paid": return "bg-success-100 text-success-700";
-            case "pending": return "bg-warning-100 text-warning-700";
-            case "overdue": return "bg-error-100 text-error-700";
-            case "draft": return "bg-neutral-100 text-neutral-700";
-            default: return "bg-primary-100 text-primary-700";
+            case 'paid': return 'bg-success-100 text-success-700';
+            case 'pending': return 'bg-warning-100 text-warning-700';
+            case 'overdue': return 'bg-error-100 text-error-700';
+            case 'draft': return 'bg-neutral-100 text-neutral-700';
+            default: return 'bg-primary-100 text-primary-700';
         }
     };
 
     const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric"
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
         });
     };
 
@@ -176,7 +176,7 @@ const Billing: React.FC = () => {
                             <GradientText>Invoice</GradientText> Management
                         </h2>
                         <p className="text-secondary-600 mt-2">
-                            {filteredInvoices.length} invoice{filteredInvoices.length !== 1 ? "s" : ""} found
+                            {filteredInvoices.length} invoice{filteredInvoices.length !== 1 ? 's' : ''} found
                         </p>
                     </Div>
                     <Button variant="primary">

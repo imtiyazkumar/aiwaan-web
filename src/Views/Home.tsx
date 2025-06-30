@@ -1,5 +1,5 @@
 import React from "react";
-import { Award, Users, Clock, Building2, PenTool, Sparkles, CheckCircle, MapPin, Lightbulb, Target } from "lucide-react";
+import { Award, Users, Clock, Building2, PenTool, Image, Home, Layout, Sparkles, CheckCircle, MapPin, Lightbulb, Target } from "lucide-react";
 import { Div } from "../components/general/BaseComponents";
 import HeroSection from "../components/sections/HeroSection";
 import StatsSection from "../components/sections/StatsSection";
