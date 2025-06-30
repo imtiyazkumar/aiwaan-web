@@ -9,16 +9,12 @@ export const ValidateSession = () => {
     useIdleTimer({
         timeout: 1000 * 60 * 60 * config.inactivityDuration,
         promptTimeout: 0,
-        onIdle: auth.clearToken,
+        onIdle: auth.clearAuth,
         debounce: 1000 * 60 * 1,
         crossTab: true,
-        name: "Ouma Timer",
+        name: "Aiwaan Timer",
         syncTimers: 1000 * 60 * 1,
     });
 
-    return (
-        <>
-            <Outlet />
-        </>
-    );
+    return <Outlet />;
 };

@@ -1,43 +1,116 @@
 import React from "react";
-import { Div, Flex } from "../components/general/BaseComponents";
-import { FaUsers, FaMapMarkerAlt, FaLightbulb } from "react-icons/fa";
+import { Users, MapPin, Lightbulb, Award, Clock, Target, Heart, Star } from "lucide-react";
+import { Div } from "../components/general/BaseComponents";
+import HeroSection from "../components/sections/HeroSection";
+import WhyChooseUsSection from "../components/sections/WhyChooseUsSection";
+import StatsSection from "../components/sections/StatsSection";
+import CTASection from "../components/sections/CTASection";
 
 const About: React.FC = () => {
+    // Company values/features
+    const companyFeatures = [
+        {
+            title: "Our Mission",
+            description: "To transform architectural visions into stunning realities through innovative design and cutting-edge visualization technology, while preserving the rich cultural heritage of Kashmir.",
+            icon: <Target size={20} className="text-primary-base" />
+        },
+        {
+            title: "Our Vision",
+            description: "To become the leading architectural visualization firm in Kashmir, known for excellence, innovation, and cultural authenticity in every project we undertake.",
+            icon: <Lightbulb size={20} className="text-primary-base" />
+        },
+        {
+            title: "Our Values",
+            description: "We believe in integrity, creativity, and collaboration. Every project is approached with dedication to quality and respect for our clients' unique vision and cultural context.",
+            icon: <Heart size={20} className="text-primary-base" />
+        },
+        {
+            title: "Our Commitment",
+            description: "We are committed to delivering exceptional results on time, within budget, and beyond expectations. Your satisfaction is our ultimate measure of success.",
+            icon: <Star size={20} className="text-primary-base" />
+        }
+    ];
+
+    // Team stats
+    const teamStats = [
+        { icon: <Users size={24} />, number: "12+", label: "Team Members", description: "Skilled professionals" },
+        { icon: <Award size={24} />, number: "5+", label: "Years Experience", description: "In the industry" },
+        { icon: <MapPin size={24} />, number: "2", label: "Office Locations", description: "Sopore & Srinagar" },
+        { icon: <Clock size={24} />, number: "24/7", label: "Support", description: "Client assistance" },
+    ];
+
     return (
-        <Div className="max-w-[1200px] mx-auto py-12">
-            <h1 className="text-32 font-bold text-secondary-500 mb-8">About Us</h1>
-            <Flex className="flex-col md:flex-row items-center gap-8">
-                <Div className="flex-1">
-                    <img
-                        src="https://via.placeholder.com/600x400"
-                        alt="About Aiwaan"
-                        className="rounded-lg shadow-md"
-                    />
-                </Div>
-                <Div className="flex-1">
-                    <Flex className="items-center mb-4">
-                        <FaUsers className="text-24 text-secondary-500 mr-2" />
-                        <h2 className="text-20 font-bold text-secondary-500">Who We Are</h2>
-                    </Flex>
-                    <p className="text-16 text-neutral-600 leading-relaxed">
-                        At Aiwaan, we specialize in architectural visualization services that bring your ideas to life. Based in Sopore, Jammu and Kashmir, our team combines local expertise with cutting-edge technology to deliver exceptional designs tailored to your needs.
-                    </p>
-                    <Flex className="items-center mt-6 mb-4">
-                        <FaMapMarkerAlt className="text-24 text-secondary-500 mr-2" />
-                        <h2 className="text-20 font-bold text-secondary-500">Our Location</h2>
-                    </Flex>
-                    <p className="text-16 text-neutral-600 leading-relaxed">
-                        We are proud to be based in the heart of Sopore, a region rich in culture and heritage. Our designs reflect the beauty and uniqueness of our surroundings.
-                    </p>
-                    <Flex className="items-center mt-6 mb-4">
-                        <FaLightbulb className="text-24 text-secondary-500 mr-2" />
-                        <h2 className="text-20 font-bold text-secondary-500">Our Vision</h2>
-                    </Flex>
-                    <p className="text-16 text-neutral-600 leading-relaxed">
-                        Our mission is to create designs that not only meet but exceed client expectations, blending functionality with aesthetics. We aim to transform your vision into reality.
-                    </p>
-                </Div>
-            </Flex>
+        <Div className="max-w-[1200px] mx-auto overflow-hidden">
+            {/* Hero Section */}
+            <HeroSection
+                title="About"
+                subtitle="Aiwaan"
+                description="We are a passionate team of architects and designers based in the heart of Kashmir, dedicated to creating exceptional architectural visualizations that blend modern innovation with traditional Kashmiri aesthetics."
+                backgroundImage="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                primaryButtonText="View Our Work"
+                primaryButtonLink="/projects"
+                secondaryButtonText="Contact Us"
+                secondaryButtonLink="/contact"
+                height="md"
+            />
+
+            {/* Company Story Section */}
+            <WhyChooseUsSection
+                title="Our"
+                subtitle="Story"
+                features={companyFeatures}
+                image="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600"
+                learnMoreText="View Our Projects"
+                learnMoreLink="/projects"
+                imagePosition="left"
+            />
+
+            {/* Team Stats */}
+            <StatsSection 
+                stats={teamStats} 
+                columns={4}
+                backgroundColor="gradient"
+            />
+
+            {/* Location & Heritage Section */}
+            <WhyChooseUsSection
+                title="Kashmir"
+                subtitle="Heritage"
+                features={[
+                    {
+                        title: "Cultural Authenticity",
+                        description: "Our designs reflect the rich architectural heritage of Kashmir, incorporating traditional elements like intricate woodwork, beautiful gardens, and harmonious proportions.",
+                        icon: <Heart size={20} className="text-primary-base" />
+                    },
+                    {
+                        title: "Local Materials",
+                        description: "We understand the importance of using local materials and construction techniques that are suited to Kashmir's unique climate and landscape.",
+                        icon: <MapPin size={20} className="text-primary-base" />
+                    },
+                    {
+                        title: "Modern Innovation",
+                        description: "While respecting tradition, we embrace modern technology and sustainable practices to create designs that are both beautiful and functional.",
+                        icon: <Lightbulb size={20} className="text-primary-base" />
+                    },
+                    {
+                        title: "Community Focus",
+                        description: "We are committed to contributing to our local community by supporting local artisans, using regional resources, and creating spaces that serve the people of Kashmir.",
+                        icon: <Users size={20} className="text-primary-base" />
+                    }
+                ]}
+                image="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=600"
+                learnMoreText="Explore Our Services"
+                learnMoreLink="/services"
+            />
+
+            {/* CTA Section */}
+            <CTASection
+                title="Ready to Work With Us?"
+                description="Join the many satisfied clients who have trusted Aiwaan with their architectural visualization needs. Let's bring your vision to life with the perfect blend of tradition and innovation."
+                primaryButtonText="Start Your Project"
+                primaryButtonLink="/contact"
+                backgroundGradient="secondary"
+            />
         </Div>
     );
 };
