@@ -1,19 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Save, ArrowLeft, Trash2, Image as ImageIcon } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Div } from "../components/general/BaseComponents";
 import { Button, FormGroup, FormTitle, Select, TextArea, TextInput } from "../components/UiComponents";
-import {
-    createProject,
-    getProject,
-    updateProject,
-    deleteProject,
-    uploadProjectImage,
-    deleteProjectImage,
-    Project
-} from "../root/services/projectService";
+import { useProjects } from "../hooks/useProjects";
 import { useToast } from "../root/providers/ToastProvider";
 import AnimatedBackground from "../components/ui/AnimatedBackground";
 import GlassCard from "../components/ui/GlassCard";
@@ -25,79 +17,57 @@ const AddEditProject: React.FC = () => {
     const isEditMode = !!id;
     const toast = useToast();
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [imageFile, setImageFile] = useState<File | null>(null);
-    const [imagePreview, setImagePreview] = useState<string>("");
+    const { useGetDocument, useCreateDocument, useUpdateDocument, useDeleteDocument } = useProjects();
+    const { data: project, isLoading: loadingProject } = useGetDocument(id || "");
+    const createProject = useCreateDocument();
+    const updateProject = useUpdateDocument();
+    const deleteProject = useDeleteDocument();
 
-    const [formData, setFormData] = useState<Omit<Project, "$id" | "$createdAt" | "$updatedAt">>({
-        projectName: "",
-        projectDescription: "",
-        projectType: "",
-        address: "",
-        clientName: "",
-        clientEmail: "",
-        clientPhone: "",
+    const [formData, setFormData] = useState({
+        title: "",
+        type: "",
+        description: "",
+        location: "",
+        client_name: "",
+        client_email: "",
+        client_phone: "",
         budget: 0,
-        startDate: "",
-        estimatedCompletion: "",
-        status: "new",
-        imageUrl: "",
-        imageId: "",
+        start_date: "",
+        estimated_completion_date: "",
+        care_of: "",
+        images: [] as string[],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
     });
 
     const projectTypeOptions = [
-        { value: "residential-interior", label: "Residential Interior" },
-        { value: "residential-exterior", label: "Residential Exterior" },
-        { value: "commercial-space", label: "Commercial Space" },
-        { value: "office-interior", label: "Office Interior" },
-        { value: "landscape-design", label: "Landscape Design" },
-        { value: "custom-project", label: "Custom Project" },
-    ];
-
-    const statusOptions = [
-        { value: "new", label: "New" },
-        { value: "in-progress", label: "In Progress" },
-        { value: "completed", label: "Completed" },
-        { value: "on-hold", label: "On Hold" },
+        { value: "Interior", label: "Interior Design" },
+        { value: "Exterior", label: "Exterior Design" },
+        { value: "Residential", label: "Residential" },
+        { value: "Commercial", label: "Commercial" },
+        { value: "Landscape", label: "Landscape Design" },
     ];
 
     useEffect(() => {
-        const fetchProject = async () => {
-            if (isEditMode && id) {
-                setIsLoading(true);
-                try {
-                    const project = await getProject(id);
-                    setFormData({
-                        projectName: project.projectName,
-                        projectDescription: project.projectDescription,
-                        projectType: project.projectType,
-                        address: project.address,
-                        clientName: project.clientName,
-                        clientEmail: project.clientEmail,
-                        clientPhone: project.clientPhone,
-                        budget: project.budget,
-                        startDate: project.startDate,
-                        estimatedCompletion: project.estimatedCompletion,
-                        status: project.status,
-                        imageUrl: project.imageUrl || "",
-                        imageId: project.imageId || "",
-                    });
-                    if (project.imageUrl) {
-                        setImagePreview(project.imageUrl);
-                    }
-                } catch (error) {
-                    console.error("Error fetching project:", error);
-                    toast.error("Failed to load project data");
-                    setTimeout(() => navigate("/projects"), 2000);
-                } finally {
-                    setIsLoading(false);
-                }
-            }
-        };
-
-        fetchProject();
-    }, [id, isEditMode, navigate, toast]);
+        if (isEditMode && project) {
+            setFormData({
+                title: project.title || "",
+                type: project.type || "",
+                description: project.description || "",
+                location: project.location || "",
+                client_name: project.client_name || "",
+                client_email: project.client_email || "",
+                client_phone: project.client_phone || "",
+                budget: project.budget || 0,
+                start_date: project.start_date,
+                estimated_completion_date: project.estimated_completion_date,
+                care_of: project.care_of || "",
+                created_at: project.created_at || new Date().toISOString(),
+                updated_at: project.updated_at || new Date().toISOString(),
+                images: project.images || [],
+            });
+        }
+    }, [isEditMode, project]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
@@ -114,51 +84,21 @@ const AddEditProject: React.FC = () => {
         }));
     };
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setImageFile(file);
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                setImagePreview(e.target?.result as string);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsSubmitting(true);
 
         try {
-            let imageData = { imageUrl: formData.imageUrl, imageId: formData.imageId };
-
-            // Upload new image if selected
-            if (imageFile) {
-                // Delete old image if exists
-                if (formData.imageId) {
-                    try {
-                        await deleteProjectImage(formData.imageId);
-                    } catch (error) {
-                        console.warn("Failed to delete old image:", error);
-                    }
-                }
-
-                // Upload new image
-                imageData = await uploadProjectImage(imageFile);
-            }
-
             const projectData = {
                 ...formData,
-                imageUrl: imageData.imageUrl,
-                imageId: imageData.imageId,
+                start_date: formData.start_date ? new Date(formData.start_date).toISOString() : "",
+                estimated_completion_date: formData.estimated_completion_date ? new Date(formData.estimated_completion_date).toISOString() : "",
             };
 
             if (isEditMode && id) {
-                await updateProject(id, projectData);
+                await updateProject.mutateAsync({ documentId: id, data: projectData });
                 toast.success("Project updated successfully!");
             } else {
-                await createProject(projectData);
+                await createProject.mutateAsync(projectData);
                 toast.success("Project created successfully!");
             }
 
@@ -166,8 +106,6 @@ const AddEditProject: React.FC = () => {
         } catch (error: any) {
             console.error("Error saving project:", error);
             toast.error("Failed to save project: " + (error.message || "Unknown error"));
-        } finally {
-            setIsSubmitting(false);
         }
     };
 
@@ -177,16 +115,7 @@ const AddEditProject: React.FC = () => {
         }
 
         try {
-            // Delete image if exists
-            if (formData.imageId) {
-                try {
-                    await deleteProjectImage(formData.imageId);
-                } catch (error) {
-                    console.warn("Failed to delete project image:", error);
-                }
-            }
-
-            await deleteProject(id);
+            await deleteProject.mutateAsync(id);
             toast.success("Project deleted successfully!");
             navigate("/projects");
         } catch (error: any) {
@@ -195,7 +124,7 @@ const AddEditProject: React.FC = () => {
         }
     };
 
-    if (isLoading) {
+    if (loadingProject) {
         return (
             <Div className="min-h-screen flex items-center justify-center">
                 <LoadingSpinner size="lg" />
@@ -240,22 +169,6 @@ const AddEditProject: React.FC = () => {
                 </Div>
             </motion.div>
 
-            <Div className="container mx-auto px-4 py-6">
-                <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <Button
-                        variant="outline"
-                        onClick={() => navigate("/projects")}
-                        className="text-secondary-600 hover:text-secondary-800 mb-6"
-                    >
-                        <ArrowLeft size={16} className="mr-2" /> Back to Projects
-                    </Button>
-                </motion.div>
-            </Div>
-
             <Div className="py-6">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -285,30 +198,30 @@ const AddEditProject: React.FC = () => {
 
                                 <FormGroup>
                                     <TextInput
-                                        id="projectName"
-                                        label="Project Name"
-                                        placeholder="Enter project name"
-                                        value={formData.projectName}
+                                        id="title"
+                                        label="Project Title"
+                                        placeholder="Enter project title"
+                                        value={formData.title}
                                         onChange={handleInputChange}
                                         required
                                     />
                                     <Select
-                                        id="projectType"
+                                        id="type"
                                         label="Project Type"
                                         options={projectTypeOptions}
-                                        value={formData.projectType}
-                                        onChange={(e) => handleSelectChange("projectType", e.target.value)}
+                                        value={formData.type}
+                                        onChange={(e) => handleSelectChange("type", e.target.value)}
                                         required
                                     />
                                 </FormGroup>
 
                                 <Div className="mt-6">
                                     <TextArea
-                                        id="projectDescription"
+                                        id="description"
                                         label="Project Description"
                                         placeholder="Describe your project in detail..."
                                         rows={4}
-                                        value={formData.projectDescription}
+                                        value={formData.description}
                                         onChange={handleInputChange}
                                         required
                                     />
@@ -316,16 +229,16 @@ const AddEditProject: React.FC = () => {
 
                                 <FormGroup className="mt-6">
                                     <TextInput
-                                        id="address"
-                                        label="Project Location/Address"
-                                        placeholder="Enter full address"
-                                        value={formData.address}
+                                        id="location"
+                                        label="Project Location"
+                                        placeholder="Enter location"
+                                        value={formData.location}
                                         onChange={handleInputChange}
                                         required
                                     />
                                     <TextInput
                                         id="budget"
-                                        label="Budget (USD)"
+                                        label="Budget (₹)"
                                         placeholder="Estimated budget"
                                         type="number"
                                         value={formData.budget.toString()}
@@ -335,32 +248,20 @@ const AddEditProject: React.FC = () => {
 
                                 <FormGroup className="mt-6">
                                     <TextInput
-                                        id="startDate"
+                                        id="start_date"
                                         label="Start Date"
                                         type="date"
-                                        value={formData.startDate}
+                                        value={formData.start_date}
                                         onChange={handleInputChange}
                                     />
                                     <TextInput
-                                        id="estimatedCompletion"
+                                        id="estimated_completion_date"
                                         label="Estimated Completion Date"
                                         type="date"
-                                        value={formData.estimatedCompletion}
+                                        value={formData.estimated_completion_date}
                                         onChange={handleInputChange}
                                     />
                                 </FormGroup>
-
-                                {isEditMode && (
-                                    <FormGroup className="mt-6">
-                                        <Select
-                                            id="status"
-                                            label="Project Status"
-                                            options={statusOptions}
-                                            value={formData.status}
-                                            onChange={(e) => handleSelectChange("status", e.target.value)}
-                                        />
-                                    </FormGroup>
-                                )}
                             </motion.div>
 
                             {/* Client Information */}
@@ -376,19 +277,19 @@ const AddEditProject: React.FC = () => {
 
                                 <FormGroup>
                                     <TextInput
-                                        id="clientName"
+                                        id="client_name"
                                         label="Client Name"
                                         placeholder="Client's full name"
-                                        value={formData.clientName}
+                                        value={formData.client_name}
                                         onChange={handleInputChange}
                                         required
                                     />
                                     <TextInput
-                                        id="clientEmail"
+                                        id="client_email"
                                         type="email"
                                         label="Client Email"
                                         placeholder="client@example.com"
-                                        value={formData.clientEmail}
+                                        value={formData.client_email}
                                         onChange={handleInputChange}
                                         required
                                     />
@@ -396,66 +297,21 @@ const AddEditProject: React.FC = () => {
 
                                 <FormGroup className="mt-6">
                                     <TextInput
-                                        id="clientPhone"
+                                        id="client_phone"
                                         label="Client Phone"
-                                        placeholder="+1 234 567 8900"
-                                        value={formData.clientPhone}
+                                        placeholder="+91 123 456 7890"
+                                        value={formData.client_phone}
                                         onChange={handleInputChange}
                                         required
                                     />
+                                    <TextInput
+                                        id="care_of"
+                                        label="Care Of"
+                                        placeholder="Architect/Designer name"
+                                        value={formData.care_of}
+                                        onChange={handleInputChange}
+                                    />
                                 </FormGroup>
-                            </motion.div>
-
-                            {/* Project Image */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.5 }}
-                                className="mb-8"
-                            >
-                                <h3 className="text-18 font-semibold text-secondary-700 mb-4 pb-2 border-b border-neutral-200">
-                                    Project Image
-                                </h3>
-
-                                <Div className="space-y-4">
-                                    <Div className="flex items-center justify-center w-full">
-                                        <label htmlFor="image-upload" className="flex flex-col items-center justify-center w-full h-64 border-2 border-neutral-300 border-dashed rounded-lg cursor-pointer bg-neutral-50 hover:bg-neutral-100 transition-colors">
-                                            {imagePreview ? (
-                                                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
-                                            ) : (
-                                                <Div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                    <ImageIcon size={48} className="text-neutral-400 mb-4" />
-                                                    <p className="mb-2 text-sm text-neutral-500">
-                                                        <span className="font-semibold">Click to upload</span> or drag and drop
-                                                    </p>
-                                                    <p className="text-xs text-neutral-500">PNG, JPG or JPEG (MAX. 10MB)</p>
-                                                </Div>
-                                            )}
-                                            <input
-                                                id="image-upload"
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={handleImageChange}
-                                                className="hidden"
-                                            />
-                                        </label>
-                                    </Div>
-
-                                    {imagePreview && (
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            onClick={() => {
-                                                setImageFile(null);
-                                                setImagePreview("");
-                                                setFormData(prev => ({ ...prev, imageUrl: "", imageId: "" }));
-                                            }}
-                                            className="text-error-600 border-error-300 hover:bg-error-50"
-                                        >
-                                            Remove Image
-                                        </Button>
-                                    )}
-                                </Div>
                             </motion.div>
 
                             {/* Action Buttons */}
@@ -471,29 +327,21 @@ const AddEditProject: React.FC = () => {
                                         variant="outline"
                                         onClick={handleDelete}
                                         className="text-error-600 border-error-300 hover:bg-error-50"
-                                    >
-                                        <Trash2 size={16} className="mr-2" /> Delete Project
-                                    </Button>
-                                )}
+                                        disabled={deleteProject.isPending}
+                                        label="Delete Project"
+                                        icon={<Trash2 size={16} className="mr-2" />}
+                                    />
 
+                                )}
                                 <Button
                                     type="submit"
                                     variant="primary"
-                                    disabled={isSubmitting}
+                                    disabled={createProject.isPending || updateProject.isPending}
                                     className="ml-auto group"
-                                >
-                                    {isSubmitting ? (
-                                        <Div className="flex items-center">
-                                            <LoadingSpinner size="sm" color="text-white" />
-                                            <span className="ml-2">Saving...</span>
-                                        </Div>
-                                    ) : (
-                                        <>
-                                            {isEditMode ? "Update" : "Save"} Project
-                                            <Save size={16} className="ml-2 group-hover:scale-110 transition-transform" />
-                                        </>
-                                    )}
-                                </Button>
+                                    label={isEditMode ? "Update Project" : "Save Project"}
+                                    icon={<LoadingSpinner size="sm" color="text-white" />}
+                                    isLoading={createProject.isPending || updateProject.isPending}
+                                />
                             </motion.div>
                         </form>
                     </GlassCard>

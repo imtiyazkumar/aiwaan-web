@@ -1,4 +1,5 @@
 import React, { InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes, ButtonHTMLAttributes } from "react";
+import { Flex, Span } from "./general/BaseComponents";
 
 // Text Input component
 interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -157,17 +158,12 @@ export const Radio: React.FC<RadioProps> = ({
 // Button component
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: "primary" | "secondary" | "outline";
+    label: string;
     isLoading?: boolean;
+    icon?: React.ReactNode;
 }
 
-export const Button: React.FC<ButtonProps> = ({
-    children,
-    variant = "primary",
-    isLoading = false,
-    className = "",
-    disabled,
-    ...props
-}) => {
+export const Button: React.FC<ButtonProps> = ({ label, icon, variant = "primary", isLoading = false, className = "", disabled, ...props }) => {
     const baseClasses = "px-8 py-3 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-70";
 
     const variantClasses = {
@@ -177,12 +173,13 @@ export const Button: React.FC<ButtonProps> = ({
     };
 
     return (
-        <button
-            className={`${baseClasses} ${variantClasses[variant]} ${className}`}
-            disabled={disabled || isLoading}
-            {...props}
-        >
-            {isLoading ? "Loading..." : children}
+        <button className={`${baseClasses} ${variantClasses[variant]} ${className}`} disabled={disabled} {...props}>
+            {isLoading ?
+                <Span className="text-secondary-600">Loading...</Span> :
+                <Flex className="items-center space-x-2">
+                    <Span>{label}</Span>
+                    {icon && icon}
+                </Flex>}
         </button>
     );
 };

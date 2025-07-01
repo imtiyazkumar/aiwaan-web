@@ -8,7 +8,7 @@ export enum AppRoutes {
     Profile = "/profile",
     Servises = "/services",
     Projects = "/projects",
-    ContactUs = "/contact-us",
+    Contact = "/contact",
     Faq = "/faq",
     PrivacyPolicy = "/privacy-policy",
     Error = "/error",
@@ -17,7 +17,6 @@ export enum AppRoutes {
     ErrorConnectionError = "/error/connection-error",
     Administration = "/admin",
     About = "/about",
-    GetQuote = "/get-quote",
     AddEditProject = "/add-edit-project",
     Billing = "/billing",
 }
@@ -32,11 +31,8 @@ export const RouteDefinitions = [
     { key: AppRoutes.RequestResetPassword, label: "Request Reset Password" },
     { key: AppRoutes.Profile, label: "profile" },
     { key: AppRoutes.Projects, label: "projects", showInTopbar: true },
-    { key: AppRoutes.AddEditProject, label: "New Project", showInTopbar: true },
     { key: AppRoutes.Billing, label: "Billing", showInTopbar: true },
-    { key: AppRoutes.Projects, label: "projects", showInTopbar: true },
     { key: AppRoutes.Faq, label: "faq" },
-    { key: AppRoutes.ContactUs, label: "Contact Us", showInTopbar: true },
     { key: AppRoutes.PrivacyPolicy, label: "Privacy Policy" },
     { key: AppRoutes.Administration, label: "Administration" },
 ];

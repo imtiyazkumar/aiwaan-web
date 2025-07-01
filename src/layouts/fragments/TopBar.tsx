@@ -38,7 +38,7 @@ const TopBar: React.FC = () => {
                         </NavLink>
                     ))}
                     <NavLink
-                        to={AppRoutes.ContactUs}
+                        to={AppRoutes.Contact}
                         className={({ isActive }) => `px-6 py-2 rounded-md transition-colors ${isActive ? "bg-primary-600 text-white" : "bg-primary-base text-white hover:bg-primary-600"}`}
                     >
                         Get a Quote
@@ -88,7 +88,7 @@ const TopBar: React.FC = () => {
                             </Div>
 
                             <NavLink
-                                to={AppRoutes.ContactUs}
+                                to={AppRoutes.Contact}
                                 className={({ isActive }) => `py-3 px-4 rounded-md text-center font-medium mt-2 ${isActive ? "bg-primary-600 text-white" : "bg-primary-base text-white hover:bg-primary-600"}`}
                             >
                                 Get a Quote
