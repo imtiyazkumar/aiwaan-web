@@ -2,10 +2,10 @@ import React from "react";
 
 // import { ReactChildren } from "../App.d";
 // import { initializeAxios } from "./services/axiosService";
-import AuthProvider from "./providers/AuthProvider";
 import ToastProvider from "./providers/ToastProvider";
 import QueryWrapper from "./QueryWrapper";
-import { ReactChildren } from "../../App";
+import AuthProvider from "./providers/AuthProvider";
+import type { ReactChildren } from "../../App.d";
 
 // initializeAxios();
 

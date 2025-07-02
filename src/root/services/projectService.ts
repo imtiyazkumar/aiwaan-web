@@ -1,5 +1,5 @@
-import { databases, storage, ID } from '../../lib/appwrite';
-import config from '../../../config';
+import { databases, storage, ID } from "../../lib/appwrite";
+import config from "../../../config";
 
 export interface Project {
     $id?: string;
@@ -20,7 +20,7 @@ export interface Project {
     $updatedAt?: string;
 }
 
-export const createProject = async (projectData: Omit<Project, '$id' | '$createdAt' | '$updatedAt'>) => {
+export const createProject = async (projectData: Omit<Project, "$id" | "$createdAt" | "$updatedAt">) => {
     try {
         const response = await databases.createDocument(
             config.appwrite.databaseId,
@@ -30,7 +30,7 @@ export const createProject = async (projectData: Omit<Project, '$id' | '$created
         );
         return response;
     } catch (error) {
-        console.error('Error creating project:', error);
+        console.error("Error creating project:", error);
         throw error;
     }
 };
@@ -43,7 +43,7 @@ export const getProjects = async () => {
         );
         return response.documents as Project[];
     } catch (error) {
-        console.error('Error fetching projects:', error);
+        console.error("Error fetching projects:", error);
         throw error;
     }
 };
@@ -57,7 +57,7 @@ export const getProject = async (projectId: string) => {
         );
         return response as Project;
     } catch (error) {
-        console.error('Error fetching project:', error);
+        console.error("Error fetching project:", error);
         throw error;
     }
 };
@@ -72,7 +72,7 @@ export const updateProject = async (projectId: string, projectData: Partial<Proj
         );
         return response;
     } catch (error) {
-        console.error('Error updating project:', error);
+        console.error("Error updating project:", error);
         throw error;
     }
 };
@@ -85,7 +85,7 @@ export const deleteProject = async (projectId: string) => {
             projectId
         );
     } catch (error) {
-        console.error('Error deleting project:', error);
+        console.error("Error deleting project:", error);
         throw error;
     }
 };
@@ -97,18 +97,18 @@ export const uploadProjectImage = async (file: File) => {
             ID.unique(),
             file
         );
-        
+
         const imageUrl = storage.getFileView(
             config.appwrite.storageBucketId,
             response.$id
         );
-        
+
         return {
             imageId: response.$id,
             imageUrl: imageUrl.href
         };
     } catch (error) {
-        console.error('Error uploading image:', error);
+        console.error("Error uploading image:", error);
         throw error;
     }
 };
@@ -117,7 +117,7 @@ export const deleteProjectImage = async (imageId: string) => {
     try {
         await storage.deleteFile(config.appwrite.storageBucketId, imageId);
     } catch (error) {
-        console.error('Error deleting image:', error);
+        console.error("Error deleting image:", error);
         throw error;
     }
 };

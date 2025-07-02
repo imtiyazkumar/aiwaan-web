@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle, User, MessageSquare } from "lucide-react";
 import { Div } from "../components/general/BaseComponents";
 import { Button, FormGroup, FormTitle, Radio, Select, TextArea, TextInput } from "../components/UiComponents";
@@ -8,7 +7,6 @@ import { useToast } from "../root/providers/ToastProvider";
 import HeroSection from "../components/sections/HeroSection";
 import GlassCard from "../components/ui/GlassCard";
 import GradientText from "../components/ui/GradientText";
-import AnimatedBackground from "../components/ui/AnimatedBackground";
 
 const Contact: React.FC = () => {
     const [formSubmitted, setFormSubmitted] = useState(false);
@@ -107,10 +105,8 @@ const Contact: React.FC = () => {
             />
 
             {/* Contact Information */}
-            <motion.div
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6 }}
+            <Div
+
                 className="py-16 px-4"
             >
                 <Div className="text-center mb-12">
@@ -124,11 +120,9 @@ const Contact: React.FC = () => {
 
                 <Div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
                     {contactInfo.map((item, index) => (
-                        <motion.div
+                        <Div
                             key={index}
-                            initial={{ y: 30, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
+
                         >
                             <GlassCard className="p-6 text-center h-full">
                                 <Div className="bg-primary-100 p-4 rounded-2xl w-fit mx-auto mb-4">
@@ -139,27 +133,22 @@ const Contact: React.FC = () => {
                                     <p key={i} className="text-14 text-secondary-600 mb-1">{detail}</p>
                                 ))}
                             </GlassCard>
-                        </motion.div>
+                        </Div>
                     ))}
                 </Div>
-            </motion.div>
+            </Div>
 
             {/* Contact/Quote Form */}
-            <motion.div
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+            <Div
+
                 className="py-16 px-4 relative"
                 id="contact-form"
             >
-                <AnimatedBackground />
 
                 <GlassCard className="p-8 relative z-10">
                     {formSubmitted ? (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.5 }}
+                        <Div
+
                             className="py-12 text-center"
                         >
                             <CheckCircle size={64} className="text-success-500 mx-auto mb-4" />
@@ -175,7 +164,7 @@ const Contact: React.FC = () => {
                                 label=" Send Another Message"
                                 className="w-full md:w-auto"
                             />
-                        </motion.div>
+                        </Div>
                     ) : (
                         <>
                             <form onSubmit={handleSubmit}>
@@ -186,10 +175,8 @@ const Contact: React.FC = () => {
                                 />
 
                                 {/* Personal Information */}
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5 }}
+                                <Div
+
                                     className="mb-8"
                                 >
                                     <h3 className="text-18 font-semibold text-secondary-700 mb-4 pb-2 border-b border-neutral-200 flex items-center">
@@ -275,12 +262,10 @@ const Contact: React.FC = () => {
                                     </Div>
 
 
-                                </motion.div>
+                                </Div>
 
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: 0.1 }}
+                                <Div
+
                                     className="mb-8"
                                 >
                                     <h3 className="text-18 font-semibold text-secondary-700 mb-4 pb-2 border-b border-neutral-200 flex items-center">
@@ -300,12 +285,10 @@ const Contact: React.FC = () => {
                                             required
                                         />
                                     </Div>
-                                </motion.div>
+                                </Div>
 
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: 0.2 }}
+                                <Div
+
                                     className="text-center"
                                 >
                                     <Button
@@ -316,7 +299,7 @@ const Contact: React.FC = () => {
                                         icon={<Send size={16} className="ml-2" />}
                                         isLoading={createMessage.isPending}
                                     />
-                                </motion.div>
+                                </Div>
                             </form>
                         </>
                     )}
@@ -324,10 +307,8 @@ const Contact: React.FC = () => {
 
                 {/* What Happens Next */}
                 {!formSubmitted && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.3 }}
+                    <Div
+
                         className="mt-12"
                     >
                         <GlassCard className="p-8">
@@ -348,9 +329,9 @@ const Contact: React.FC = () => {
                                 ))}
                             </Div>
                         </GlassCard>
-                    </motion.div>
+                    </Div>
                 )}
-            </motion.div>
+            </Div>
         </Div>
     );
 };

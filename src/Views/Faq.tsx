@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 import { Div } from "../components/general/BaseComponents";
 import HeroSection from "../components/sections/HeroSection";
@@ -113,38 +112,30 @@ const Faq: React.FC = () => {
             />
 
             {/* FAQ Content */}
-            <motion.div
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6 }}
+            <Div
+
                 className="py-16 px-4"
             >
                 <Div className="text-center mb-12">
-                    <motion.h2
+                    <div
                         className="text-32 md:text-48 font-bold text-secondary-800 mb-4 font-display"
-                        initial={{ y: 30, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.6 }}
+
                     >
                         Got <GradientText>Questions?</GradientText>
-                    </motion.h2>
-                    <motion.p
+                    </div>
+                    <Div
                         className="text-secondary-600 max-w-3xl mx-auto text-16 leading-relaxed"
-                        initial={{ y: 30, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.6, delay: 0.1 }}
+
                     >
                         We've compiled answers to the most common questions about our services and process.
-                    </motion.p>
+                    </Div>
                 </Div>
 
                 <Div className="space-y-12">
                     {faqCategories.map((category, categoryIndex) => (
-                        <motion.div
+                        <Div
                             key={categoryIndex}
-                            initial={{ y: 50, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
+
                         >
                             <GlassCard className="p-8">
                                 <Div className="flex items-center mb-6">
@@ -158,11 +149,8 @@ const Faq: React.FC = () => {
                                         const isOpen = openFaq === globalIndex;
 
                                         return (
-                                            <motion.div
-                                                key={faqIndex}
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                transition={{ duration: 0.3, delay: faqIndex * 0.05 }}
+                                            <Div
+
                                                 className="border border-neutral-200 rounded-lg overflow-hidden"
                                             >
                                                 <button
@@ -177,13 +165,8 @@ const Faq: React.FC = () => {
                                                     </Div>
                                                 </button>
 
-                                                <motion.div
-                                                    initial={false}
-                                                    animate={{
-                                                        height: isOpen ? "auto" : 0,
-                                                        opacity: isOpen ? 1 : 0
-                                                    }}
-                                                    transition={{ duration: 0.3 }}
+                                                <Div
+
                                                     className="overflow-hidden"
                                                 >
                                                     <Div className="px-6 py-4 bg-neutral-50 border-t border-neutral-200">
@@ -191,16 +174,16 @@ const Faq: React.FC = () => {
                                                             {faq.answer}
                                                         </p>
                                                     </Div>
-                                                </motion.div>
-                                            </motion.div>
+                                                </Div>
+                                            </Div>
                                         );
                                     })}
                                 </Div>
                             </GlassCard>
-                        </motion.div>
+                        </Div>
                     ))}
                 </Div>
-            </motion.div>
+            </Div>
 
             {/* CTA Section */}
             <CTASection

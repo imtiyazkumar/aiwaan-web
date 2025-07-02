@@ -1,7 +1,6 @@
 import React from "react";
 import { Building2, Layout, PenTool, Image, Home, Sparkles, CheckCircle, ArrowRight, Clock, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { Div } from "../components/general/BaseComponents";
 import HeroSection from "../components/sections/HeroSection";
 import HowItWorksSection from "../components/sections/HowItWorksSection";
@@ -115,21 +114,15 @@ const Services: React.FC = () => {
             />
 
             {/* Services Grid - Redesigned */}
-            <motion.div
-                initial={{ y: 30, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
+            <Div
+
                 className="py-20 px-4"
             >
                 <Div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {services.map((service, index) => (
-                        <motion.div
+                        <Div
                             key={index}
-                            initial={{ y: 30, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.5 }}
-                            viewport={{ once: true }}
+
                             className="group"
                         >
                             <GlassCard className="relative p-8 h-full group-hover:shadow-2xl group-hover:scale-[1.02] transition-all duration-300 border-2 border-transparent group-hover:border-primary-200 overflow-hidden">
@@ -189,10 +182,10 @@ const Services: React.FC = () => {
                                 {/* Decorative gradient overlay */}
                                 <Div className="absolute inset-0 bg-gradient-to-br from-primary-50/0 to-accent-50/0 group-hover:from-primary-50/10 group-hover:to-accent-50/10 transition-all duration-300 pointer-events-none rounded-2xl" />
                             </GlassCard>
-                        </motion.div>
+                        </Div>
                     ))}
                 </Div>
-            </motion.div>
+            </Div>
 
             {/* How It Works Section */}
             <HowItWorksSection

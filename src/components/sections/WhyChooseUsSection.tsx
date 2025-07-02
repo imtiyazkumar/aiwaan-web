@@ -1,9 +1,8 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { Div } from '../general/BaseComponents';
-import GradientText from '../ui/GradientText';
+import React from "react";
+import { ArrowRight, CheckCircle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Div } from "../general/BaseComponents";
+import GradientText from "../ui/GradientText";
 
 interface Feature {
     title: string;
@@ -19,7 +18,7 @@ interface WhyChooseUsSectionProps {
     learnMoreLink?: string;
     learnMoreText?: string;
     showLearnMore?: boolean;
-    imagePosition?: 'left' | 'right';
+    imagePosition?: "left" | "right";
 }
 
 const WhyChooseUsSection: React.FC<WhyChooseUsSectionProps> = ({
@@ -30,60 +29,48 @@ const WhyChooseUsSection: React.FC<WhyChooseUsSectionProps> = ({
     learnMoreLink = "/about",
     learnMoreText = "Learn More About Us",
     showLearnMore = true,
-    imagePosition = 'right'
+    imagePosition = "right"
 }) => {
     return (
-        <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="py-20 px-4"
+        <Div
+
+            className="py-16 px-2"
         >
-            <Div className={`grid grid-cols-1 lg:grid-cols-2 gap-16 items-center ${imagePosition === 'left' ? 'lg:grid-flow-col-dense' : ''}`}>
-                <motion.div
-                    initial={{ x: imagePosition === 'left' ? 50 : -50, opacity: 0 }}
-                    whileInView={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.6 }}
-                    viewport={{ once: true }}
-                    className={imagePosition === 'left' ? 'lg:col-start-2' : ''}
+            <Div className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${imagePosition === "left" ? "lg:grid-flow-col-dense" : ""}`}>
+                <Div
+
+                    className={imagePosition === "left" ? "lg:col-start-2" : ""}
                 >
-                    <h2 className="text-32 md:text-48 font-bold text-secondary-800 mb-8 font-display">
+                    <h2 className="text-32 md:text-48 font-bold text-secondary-800 mb-6 font-display">
                         {title} <GradientText>{subtitle}</GradientText>
                     </h2>
 
-                    <Div className="space-y-8">
+                    <Div className="space-y-6">
                         {features.map((feature, index) => (
-                            <motion.div
+                            <Div
                                 key={index}
-                                initial={{ x: imagePosition === 'left' ? 30 : -30, opacity: 0 }}
-                                whileInView={{ x: 0, opacity: 1 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                                viewport={{ once: true }}
+
                                 className="flex items-start group"
                             >
-                                <Div className="bg-primary-100 p-3 rounded-full mt-1 mr-6 group-hover:bg-primary-200 transition-colors">
+                                <Div className="bg-primary-100 p-2 rounded-full mt-1 mr-4 group-hover:bg-primary-200 transition-colors">
                                     {feature.icon || <CheckCircle size={20} className="text-primary-base" />}
                                 </Div>
                                 <Div>
-                                    <h3 className="text-20 font-bold text-secondary-800 mb-2 group-hover:text-primary-base transition-colors">
+                                    <h3 className="text-20 font-bold text-secondary-800 mb-1 group-hover:text-primary-base transition-colors">
                                         {feature.title}
                                     </h3>
                                     <p className="text-14 text-secondary-600 leading-relaxed">
                                         {feature.description}
                                     </p>
                                 </Div>
-                            </motion.div>
+                            </Div>
                         ))}
                     </Div>
 
                     {showLearnMore && (
-                        <motion.div 
-                            className="mt-10"
-                            initial={{ y: 20, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.5, delay: 0.4 }}
-                            viewport={{ once: true }}
+                        <Div
+                            className="mt-8"
+
                         >
                             <Link
                                 to={learnMoreLink}
@@ -91,27 +78,25 @@ const WhyChooseUsSection: React.FC<WhyChooseUsSectionProps> = ({
                             >
                                 {learnMoreText} <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
                             </Link>
-                        </motion.div>
+                        </Div>
                     )}
-                </motion.div>
+                </Div>
 
-                <motion.div 
-                    className={`relative ${imagePosition === 'left' ? 'lg:col-start-1' : ''}`}
-                    initial={{ x: imagePosition === 'left' ? -50 : 50, opacity: 0 }}
-                    whileInView={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    viewport={{ once: true }}
+                <Div
+                    className={`relative ${imagePosition === "left" ? "lg:col-start-1" : ""}`}
+
                 >
-                    <Div className="absolute -top-8 -left-8 w-32 h-32 bg-gradient-to-br from-primary-200 to-primary-300 rounded-2xl z-0 animate-float"></Div>
+                    <Div className="absolute -top-6 -left-6 w-24 h-24 bg-gradient-to-br from-primary-200 to-primary-300 rounded-2xl z-0 animate-float"></Div>
                     <img
                         src={image}
                         alt="Why choose us"
                         className="w-full h-auto rounded-2xl shadow-2xl relative z-10 transform hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
                     />
-                    <Div className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-tl from-secondary-200 to-secondary-300 rounded-2xl z-0 animate-float" style={{ animationDelay: '1s' }}></Div>
-                </motion.div>
+                    <Div className="absolute -bottom-6 -right-6 w-24 h-24 bg-gradient-to-tl from-secondary-200 to-secondary-300 rounded-2xl z-0 animate-float" style={{ animationDelay: "1s" }}></Div>
+                </Div>
             </Div>
-        </motion.div>
+        </Div>
     );
 };
 

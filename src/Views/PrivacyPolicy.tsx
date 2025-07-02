@@ -1,5 +1,4 @@
 import React from "react";
-import { motion } from "framer-motion";
 import { Shield, Eye, Lock, Users, Mail, Phone } from "lucide-react";
 import { Div } from "../components/general/BaseComponents";
 import HeroSection from "../components/sections/HeroSection";
@@ -95,39 +94,31 @@ const PrivacyPolicy: React.FC = () => {
             />
 
             {/* Policy Content */}
-            <motion.div
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6 }}
+            <Div
+
                 className="py-16 px-4"
             >
                 <Div className="text-center mb-12">
-                    <motion.h2
+                    <div
                         className="text-32 md:text-48 font-bold text-secondary-800 mb-4 font-display"
-                        initial={{ y: 30, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.6 }}
+
                     >
                         Our <GradientText>Commitment</GradientText>
-                    </motion.h2>
-                    <motion.p
+                    </div>
+                    <Div
                         className="text-secondary-600 max-w-3xl mx-auto text-16 leading-relaxed"
-                        initial={{ y: 30, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.6, delay: 0.1 }}
+
                     >
                         We are committed to protecting your privacy and ensuring the security of your personal information.
                         This policy was last updated on January 1, 2024.
-                    </motion.p>
+                    </Div>
                 </Div>
 
                 <Div className="space-y-8">
                     {sections.map((section, index) => (
-                        <motion.div
+                        <Div
                             key={index}
-                            initial={{ y: 50, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.6, delay: index * 0.1 }}
+
                         >
                             <GlassCard className="p-8">
                                 <Div className="flex items-start mb-6">
@@ -151,15 +142,13 @@ const PrivacyPolicy: React.FC = () => {
                                     </Div>
                                 </Div>
                             </GlassCard>
-                        </motion.div>
+                        </Div>
                     ))}
                 </Div>
 
                 {/* Additional Information */}
-                <motion.div
-                    initial={{ y: 50, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.6 }}
+                <Div
+
                     className="mt-12"
                 >
                     <GlassCard className="p-8 bg-gradient-to-br from-primary-50 to-secondary-50">
@@ -178,8 +167,8 @@ const PrivacyPolicy: React.FC = () => {
                             </p>
                         </Div>
                     </GlassCard>
-                </motion.div>
-            </motion.div>
+                </Div>
+            </Div>
         </Div>
     );
 };

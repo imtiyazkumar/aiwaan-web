@@ -7,17 +7,17 @@ const Footer: React.FC = () => {
     const currentYear = new Date().getFullYear();
 
     return (
-        <Div className="bg-secondary-500 text-white mt-12 w-full">
+        <Div className="bg-secondary-500 text-white mt-8 w-full">
             {/* Full Footer for larger screens */}
-            <Div className="hidden md:block max-w-[1200px] mx-auto py-12 px-6">
-                <Div className="grid grid-cols-4 gap-8 mb-8">
+            <Div className="hidden md:block max-w-[1200px] mx-auto py-8 px-4">
+                <Div className="grid grid-cols-4 gap-6 mb-6">
                     {/* Company Info */}
-                    <FlexColumn className="space-y-4">
+                    <FlexColumn className="space-y-3">
                         <h3 className="text-20 font-bold text-white">AIWAAN</h3>
                         <p className="text-14 text-neutral-300">
                             Premium architectural visualization services based in Sopore, Jammu and Kashmir.
                         </p>
-                        <Div className="flex space-x-3 mt-4">
+                        <Div className="flex space-x-2 mt-3">
                             <a href="#" className="bg-primary-base/20 p-2 rounded-full text-primary-200 hover:bg-primary-base/40 transition-colors">
                                 <Instagram size={18} />
                             </a>
@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
                     </FlexColumn>
 
                     {/* Quick Links */}
-                    <FlexColumn className="space-y-4">
+                    <FlexColumn className="space-y-3">
                         <h3 className="text-16 font-bold text-primary-200">Quick Links</h3>
                         <Link to="/projects" className="text-14 text-neutral-300 hover:text-primary-200 transition-colors">
                             Our Projects
@@ -48,24 +48,24 @@ const Footer: React.FC = () => {
                     </FlexColumn>
 
                     {/* Services */}
-                    <FlexColumn className="space-y-4">
+                    <FlexColumn className="space-y-3">
                         <h3 className="text-16 font-bold text-primary-200">Services</h3>
-                        <Link to="/services/2d-floor-plans" className="text-14 text-neutral-300 hover:text-primary-200 transition-colors">
+                        <Link to="/services" className="text-14 text-neutral-300 hover:text-primary-200 transition-colors">
                             2D Floor Plans
                         </Link>
-                        <Link to="/services/3d-modeling" className="text-14 text-neutral-300 hover:text-primary-200 transition-colors">
+                        <Link to="/services" className="text-14 text-neutral-300 hover:text-primary-200 transition-colors">
                             3D Modeling
                         </Link>
-                        <Link to="/services/interior-design" className="text-14 text-neutral-300 hover:text-primary-200 transition-colors">
+                        <Link to="/services" className="text-14 text-neutral-300 hover:text-primary-200 transition-colors">
                             Interior Design
                         </Link>
-                        <Link to="/services/exterior-renders" className="text-14 text-neutral-300 hover:text-primary-200 transition-colors">
+                        <Link to="/services" className="text-14 text-neutral-300 hover:text-primary-200 transition-colors">
                             Exterior Renders
                         </Link>
                     </FlexColumn>
 
                     {/* Contact */}
-                    <FlexColumn className="space-y-4">
+                    <FlexColumn className="space-y-3">
                         <h3 className="text-16 font-bold text-primary-200">Contact Us</h3>
                         <Flex className="text-14 text-neutral-300 items-start">
                             <MapPin size={18} className="mr-2 mt-1 text-primary-200" />
@@ -82,7 +82,7 @@ const Footer: React.FC = () => {
                     </FlexColumn>
                 </Div>
 
-                <Div className="border-t border-neutral-700 pt-6 flex justify-between items-center">
+                <Div className="border-t border-neutral-700 pt-4 flex justify-between items-center">
                     <Div className="text-14 text-neutral-300">
                         &copy; {currentYear} Aiwaan. All rights reserved.
                     </Div>
@@ -100,7 +100,7 @@ const Footer: React.FC = () => {
 
             {/* Mobile Footer */}
             <Div className="md:hidden fixed bottom-0 left-0 right-0 bg-secondary-500 shadow-lg z-40">
-                <Div className="flex justify-between items-center px-4 py-3">
+                <Div className="flex justify-between items-center px-3 py-2">
                     <a href="tel:+911234567890" className="flex flex-col items-center text-neutral-300">
                         <Phone size={20} className="text-primary-200" />
                         <span className="text-10 mt-1">Call</span>
@@ -116,7 +116,7 @@ const Footer: React.FC = () => {
                         <span className="text-10 mt-1">Location</span>
                     </a>
 
-                    <Link to="/contact" className="bg-primary-base text-white px-4 py-2 rounded-md text-12">
+                    <Link to="/contact" className="bg-primary-base text-white px-3 py-2 rounded-md text-12">
                         Contact Us
                     </Link>
                 </Div>

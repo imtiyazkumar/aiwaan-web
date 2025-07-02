@@ -9,6 +9,7 @@ export enum AppRoutes {
     Servises = "/services",
     Projects = "/projects",
     Contact = "/contact",
+    GetQuote = "/get-quote",
     Faq = "/faq",
     PrivacyPolicy = "/privacy-policy",
     Error = "/error",

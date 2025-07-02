@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { Trash2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Div } from "../components/general/BaseComponents";
 import { Button, FormGroup, FormTitle, Select, TextArea, TextInput } from "../components/UiComponents";
 import { useProjects } from "../hooks/useProjects";
 import { useToast } from "../root/providers/ToastProvider";
-import AnimatedBackground from "../components/ui/AnimatedBackground";
 import GlassCard from "../components/ui/GlassCard";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 
@@ -134,13 +132,10 @@ const AddEditProject: React.FC = () => {
 
     return (
         <Div className="mx-auto relative">
-            <AnimatedBackground />
 
             {/* Hero Section */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+            <Div
+
                 className="relative overflow-hidden rounded-2xl mb-8"
             >
                 <Div className="absolute inset-0 bg-gradient-to-r from-secondary-500/90 to-primary-base/80 z-10" />
@@ -152,10 +147,8 @@ const AddEditProject: React.FC = () => {
                     />
                 </Div>
                 <Div className="container mx-auto px-6 py-16 relative z-20">
-                    <motion.div
-                        initial={{ x: -30, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
+                    <Div
+
                     >
                         <h1 className="text-32 md:text-48 font-bold text-white leading-tight mb-4 font-display">
                             {isEditMode ? "Edit" : "Add New"} <span className="text-primary-200">Project</span>
@@ -165,15 +158,13 @@ const AddEditProject: React.FC = () => {
                                 ? "Update the details of your existing project"
                                 : "Create a new project with all the necessary details"}
                         </p>
-                    </motion.div>
+                    </Div>
                 </Div>
-            </motion.div>
+            </Div>
 
             <Div className="py-6">
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
+                <Div
+
                 >
                     <GlassCard className="p-8">
                         <form onSubmit={handleSubmit}>
@@ -186,10 +177,8 @@ const AddEditProject: React.FC = () => {
                             />
 
                             {/* Project Information */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.3 }}
+                            <Div
+
                                 className="mb-8"
                             >
                                 <h3 className="text-18 font-semibold text-secondary-700 mb-4 pb-2 border-b border-neutral-200">
@@ -262,13 +251,11 @@ const AddEditProject: React.FC = () => {
                                         onChange={handleInputChange}
                                     />
                                 </FormGroup>
-                            </motion.div>
+                            </Div>
 
                             {/* Client Information */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.4 }}
+                            <Div
+
                                 className="mb-8"
                             >
                                 <h3 className="text-18 font-semibold text-secondary-700 mb-4 pb-2 border-b border-neutral-200">
@@ -312,13 +299,11 @@ const AddEditProject: React.FC = () => {
                                         onChange={handleInputChange}
                                     />
                                 </FormGroup>
-                            </motion.div>
+                            </Div>
 
                             {/* Action Buttons */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.6 }}
+                            <Div
+
                                 className="flex justify-between items-center"
                             >
                                 {isEditMode && (
@@ -342,10 +327,10 @@ const AddEditProject: React.FC = () => {
                                     icon={<LoadingSpinner size="sm" color="text-white" />}
                                     isLoading={createProject.isPending || updateProject.isPending}
                                 />
-                            </motion.div>
+                            </Div>
                         </form>
                     </GlassCard>
-                </motion.div>
+                </Div>
             </Div>
         </Div>
     );

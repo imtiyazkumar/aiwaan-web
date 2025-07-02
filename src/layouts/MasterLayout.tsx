@@ -8,7 +8,7 @@ const MasterLayout: React.FC = () => {
     return (
         <FlexColumn className="min-h-screen w-full bg-neutral-50">
             <TopBar />
-            <Div className="flex-grow w-full max-w-[1200px] mx-auto p-2">
+            <Div className="flex-grow w-full max-w-[1200px] mx-auto px-2">
                 <Outlet />
             </Div>
             <Footer />

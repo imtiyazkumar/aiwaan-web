@@ -1,12 +1,11 @@
-
 import React from "react";
-import { DefaultOptions, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, type DefaultOptions } from "@tanstack/react-query";
+import { useToast, type IToastContext } from "./providers/ToastProvider";
+import type { ReactChildren } from "../../App.d";
+import { useAuth } from "./providers/AuthProvider";
 
 // import { ReactChildren } from "../App.d";
 // import { DefaultQueryOptions } from "../utils/QueryDefaults.config";
-import { useAuth } from "./providers/AuthProvider";
-import { IToastContext, useToast } from "./providers/ToastProvider";
-import { ReactChildren } from "../../App";
 
 export const DefaultQueryOptions = (clearFunction: VoidFunction, toast: IToastContext): DefaultOptions<Error> | undefined => ({
     queries: {
@@ -14,7 +13,10 @@ export const DefaultQueryOptions = (clearFunction: VoidFunction, toast: IToastCo
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore-error
             if (error.apiStatus == 401) clearFunction();
-            toast.error(error.message);
+            // Defer toast error to next event loop cycle to avoid setState during render
+            setTimeout(() => {
+                toast.error(error.message);
+            }, 0);
             return false;
         },
         // staleTime: 10000,
@@ -24,7 +26,10 @@ export const DefaultQueryOptions = (clearFunction: VoidFunction, toast: IToastCo
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore-error
             if (error.apiStatus == 401) clearFunction();
-            toast.error(error.message);
+            // Defer toast error to next event loop cycle to avoid setState during render
+            setTimeout(() => {
+                toast.error(error.message);
+            }, 0);
             console.log(error);
         },
     },

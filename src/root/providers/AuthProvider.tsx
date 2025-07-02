@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getCurrentUser, getAuthToken, clearAuthToken, User } from "../services/authService";
-import { ReactChildren } from "../../../App";
+import { getCurrentUser, getAuthToken, clearAuthToken, type User } from "../services/authService";
+import type { ReactChildren } from "../../../App.d";
+// import { ReactChildren } from "../../../App";
 
 interface IAuthContext {
     user: User | null;

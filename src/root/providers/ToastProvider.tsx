@@ -1,6 +1,6 @@
 import React from "react";
-import { toast, Toaster, ToastBar, Toast as IToast, Renderable, DefaultToastOptions } from "react-hot-toast";
-import { ReactChildren } from "../../../App";
+import { toast, Toaster, ToastBar, type DefaultToastOptions, type Renderable, type Toast, } from "react-hot-toast";
+// import { ReactChildren } from "../../../App.d";
 import { Div, Flex } from "../../components/general/BaseComponents";
 import { IconCircleCheckFilled, IconAlertTriangleFilled, IconX, IconInfoCircleFilled, IconAlertCircleFilled } from "@tabler/icons-react";
 
@@ -32,7 +32,7 @@ const ToastOptions: DefaultToastOptions = {
     },
 };
 
-const renderIcon = (type: IToast["type"], icon: Renderable): Renderable => {
+const renderIcon = (type: Toast["type"], icon: Renderable): Renderable => {
     switch (type) {
         case "success":
             return <IconCircleCheckFilled />;

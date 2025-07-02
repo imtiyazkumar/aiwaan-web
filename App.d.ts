@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type */
 import React from "react";
+// import { HashMapNode } from './../App.d';
 
 export interface HashMapBase<V> {
     [key: string]: V;
 }
 
-export interface HashMap extends HashMapBase<string> {}
+// export interface HashMap extends HashMapBase<string> {}
 
-export interface HashMapNode extends HashMapBase<React.ReactNode> {}
+// export interface HashMapNode extends HashMapBase<React.ReactNode> {}
 
 export interface ReactChildren {
     children?: React.ReactNode;

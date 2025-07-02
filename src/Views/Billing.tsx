@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { CreditCard, Download, Eye, Calendar, DollarSign, FileText, Filter, Search, Plus, Edit, Trash2 } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { CreditCard, Download, Eye, Calendar, DollarSign, FileText, Filter, Search, Plus, Edit, Trash2, Send, CheckCircle } from "lucide-react";
 import { Div, Flex } from "../components/general/BaseComponents";
-import { Button, Select, TextInput } from "../components/UiComponents";
+import { Button, Select, TextInput, FormGroup, TextArea } from "../components/UiComponents";
 import { useInvoices } from "../hooks/useInvoices";
 import { useToast } from "../root/providers/ToastProvider";
 import HeroSection from "../components/sections/HeroSection";
@@ -15,34 +14,54 @@ import LoadingSpinner from "../components/ui/LoadingSpinner";
 const Billing: React.FC = () => {
     const [filterStatus, setFilterStatus] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
+    const [showFilters, setShowFilters] = useState(false);
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [editingInvoice, setEditingInvoice] = useState<string | null>(null);
     const toast = useToast();
 
-    const { useGetDocuments, useDeleteDocument } = useInvoices();
+    const { useGetDocuments, useCreateDocument, useUpdateDocument, useDeleteDocument } = useInvoices();
     const { data: invoices = [], isLoading, error } = useGetDocuments();
+    const createInvoice = useCreateDocument();
+    const updateInvoice = useUpdateDocument();
     const deleteInvoice = useDeleteDocument();
 
+    // Form state for creating/editing invoices
+    const [formData, setFormData] = useState({
+        invoice_number: "",
+        client_name: "",
+        client_email: "",
+        amount: 0,
+        status: "draft",
+        due_date: "",
+        services: [] as string[],
+        notes: "",
+        project_id: ""
+    });
+
     // Calculate stats from real data
-    const totalRevenue = invoices
-        .filter(invoice => invoice.status === "paid")
-        .reduce((sum, invoice) => sum + invoice.amount, 0);
+    const stats = useMemo(() => {
+        const totalRevenue = invoices
+            .filter(invoice => invoice.status === "paid")
+            .reduce((sum, invoice) => sum + invoice.amount, 0);
 
-    const pendingAmount = invoices
-        .filter(invoice => invoice.status === "sent" || invoice.status === "overdue")
-        .reduce((sum, invoice) => sum + invoice.amount, 0);
+        const pendingAmount = invoices
+            .filter(invoice => invoice.status === "sent" || invoice.status === "overdue")
+            .reduce((sum, invoice) => sum + invoice.amount, 0);
 
-    const thisMonthInvoices = invoices.filter(invoice => {
-        const invoiceDate = new Date(invoice.$createdAt || "");
-        const now = new Date();
-        return invoiceDate.getMonth() === now.getMonth() &&
-            invoiceDate.getFullYear() === now.getFullYear();
-    }).length;
+        const thisMonthInvoices = invoices.filter(invoice => {
+            const invoiceDate = new Date(invoice.$createdAt || "");
+            const now = new Date();
+            return invoiceDate.getMonth() === now.getMonth() &&
+                invoiceDate.getFullYear() === now.getFullYear();
+        }).length;
 
-    const billingStats = [
-        { icon: <DollarSign size={24} />, number: `₹${totalRevenue}`, label: "Total Revenue", description: "This year" },
-        { icon: <FileText size={24} />, number: invoices.length.toString(), label: "Total Invoices", description: "Generated" },
-        { icon: <CreditCard size={24} />, number: `₹${pendingAmount}`, label: "Pending Amount", description: "Outstanding" },
-        { icon: <Calendar size={24} />, number: thisMonthInvoices.toString(), label: "This Month", description: "New invoices" },
-    ];
+        return [
+            { icon: <DollarSign size={24} />, number: `₹${totalRevenue}`, label: "Total Revenue", description: "This year" },
+            { icon: <FileText size={24} />, number: invoices.length.toString(), label: "Total Invoices", description: "Generated" },
+            { icon: <CreditCard size={24} />, number: `₹${pendingAmount}`, label: "Pending Amount", description: "Outstanding" },
+            { icon: <Calendar size={24} />, number: thisMonthInvoices.toString(), label: "This Month", description: "New invoices" },
+        ];
+    }, [invoices]);
 
     const statusOptions = [
         { value: "", label: "All Status" },
@@ -52,15 +71,36 @@ const Billing: React.FC = () => {
         { value: "overdue", label: "Overdue" },
     ];
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case "paid": return "bg-success-100 text-success-700";
-            case "sent": return "bg-warning-100 text-warning-700";
-            case "overdue": return "bg-error-100 text-error-700";
-            case "draft": return "bg-neutral-100 text-neutral-700";
-            default: return "bg-primary-100 text-primary-700";
-        }
-    };
+    const serviceOptions = [
+        "2D Floor Plans",
+        "3D Modeling",
+        "Interior Design",
+        "Exterior Renders",
+        "Landscape Design",
+        "Architectural Consultation"
+    ];
+
+    // Memoized filtered invoices
+    const filteredInvoices = useMemo(() => {
+        return invoices.filter(invoice => {
+            const matchesStatus = !filterStatus || invoice.status === filterStatus;
+            const matchesSearch = !searchTerm ||
+                invoice.invoice_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                invoice.client_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                invoice.client_email.toLowerCase().includes(searchTerm.toLowerCase());
+            return matchesStatus && matchesSearch;
+        });
+    }, [invoices, filterStatus, searchTerm]);
+
+    // const getStatusColor = (status: string) => {
+    //     switch (status) {
+    //         case "paid": return "bg-success-100 text-success-700";
+    //         case "sent": return "bg-warning-100 text-warning-700";
+    //         case "overdue": return "bg-error-100 text-error-700";
+    //         case "draft": return "bg-neutral-100 text-neutral-700";
+    //         default: return "bg-primary-100 text-primary-700";
+    //     }
+    // };
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString("en-US", {
@@ -70,16 +110,81 @@ const Billing: React.FC = () => {
         });
     };
 
-    const filteredInvoices = invoices.filter(invoice => {
-        const matchesStatus = !filterStatus || invoice.status === filterStatus;
-        const matchesSearch = !searchTerm ||
-            invoice.invoice_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            invoice.client_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            invoice.client_email.toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesStatus && matchesSearch;
-    });
+    const generateInvoiceNumber = () => {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const random = Math.floor(Math.random() * 1000).toString().padStart(3, "0");
+        return `INV-${year}${month}-${random}`;
+    };
 
-    const handleDeleteInvoice = async (invoiceId: string, invoiceNumber: string) => {
+    const resetForm = () => {
+        setFormData({
+            invoice_number: generateInvoiceNumber(),
+            client_name: "",
+            client_email: "",
+            amount: 0,
+            status: "draft",
+            due_date: "",
+            services: [],
+            notes: "",
+            project_id: ""
+        });
+        setEditingInvoice(null);
+        setShowCreateForm(false);
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { id, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [id]: id === "amount" ? Number(value) : value
+        }));
+    };
+
+    const handleServiceToggle = (service: string) => {
+        setFormData(prev => ({
+            ...prev,
+            services: prev.services.includes(service)
+                ? prev.services.filter(s => s !== service)
+                : [...prev.services, service]
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            if (editingInvoice) {
+                await updateInvoice.mutateAsync({ documentId: editingInvoice, data: formData });
+                toast.success("Invoice updated successfully!");
+            } else {
+                await createInvoice.mutateAsync(formData);
+                toast.success("Invoice created successfully!");
+            }
+            resetForm();
+        } catch (error) {
+            console.error("Error saving invoice:", error);
+            toast.error("Failed to save invoice");
+        }
+    };
+
+    const handleEdit = (invoice: any) => {
+        setFormData({
+            invoice_number: invoice.invoice_number,
+            client_name: invoice.client_name,
+            client_email: invoice.client_email,
+            amount: invoice.amount,
+            status: invoice.status,
+            due_date: invoice.due_date,
+            services: invoice.services || [],
+            notes: invoice.notes || "",
+            project_id: invoice.project_id || ""
+        });
+        setEditingInvoice(invoice.$id);
+        setShowCreateForm(true);
+    };
+
+    const handleDelete = async (invoiceId: string, invoiceNumber: string) => {
         if (!window.confirm(`Are you sure you want to delete invoice "${invoiceNumber}"?`)) {
             return;
         }
@@ -90,6 +195,19 @@ const Billing: React.FC = () => {
         } catch (error) {
             console.error("Error deleting invoice:", error);
             toast.error("Failed to delete invoice");
+        }
+    };
+
+    const handleStatusChange = async (invoiceId: string, newStatus: string) => {
+        try {
+            await updateInvoice.mutateAsync({
+                documentId: invoiceId,
+                data: { status: newStatus }
+            });
+            toast.success(`Invoice status updated to ${newStatus}`);
+        } catch (error) {
+            console.error("Error updating status:", error);
+            toast.error("Failed to update status");
         }
     };
 
@@ -121,67 +239,199 @@ const Billing: React.FC = () => {
                 description="Manage your project invoices, track payments, and monitor your business revenue. Keep your financial records organized and accessible."
                 backgroundImage="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1200"
                 primaryButtonText="Create Invoice"
-                primaryButtonLink="/add-edit-project"
+                primaryButtonLink="#"
                 secondaryButtonText="View Reports"
                 secondaryButtonLink="#reports"
                 height="md"
             />
 
             {/* Billing Stats */}
-            <StatsSection stats={billingStats} columns={4} />
+            <StatsSection stats={stats} columns={4} />
+
+            {/* Create/Edit Invoice Form */}
+            {showCreateForm && (
+                <Div
+
+                    className="py-8 px-4"
+                >
+                    <GlassCard className="p-8">
+                        <Div className="flex justify-between items-center mb-6">
+                            <h3 className="text-24 font-bold text-secondary-800">
+                                {editingInvoice ? "Edit" : "Create New"} Invoice
+                            </h3>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={resetForm}
+                                label="Cancel"
+                            />
+                        </Div>
+
+                        <form onSubmit={handleSubmit}>
+                            <FormGroup>
+                                <TextInput
+                                    id="invoice_number"
+                                    label="Invoice Number"
+                                    value={formData.invoice_number}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                <Select
+                                    id="status"
+                                    label="Status"
+                                    options={statusOptions.slice(1)}
+                                    value={formData.status}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))}
+                                />
+                            </FormGroup>
+
+                            <FormGroup className="mt-6">
+                                <TextInput
+                                    id="client_name"
+                                    label="Client Name"
+                                    value={formData.client_name}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                <TextInput
+                                    id="client_email"
+                                    type="email"
+                                    label="Client Email"
+                                    value={formData.client_email}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </FormGroup>
+
+                            <FormGroup className="mt-6">
+                                <TextInput
+                                    id="amount"
+                                    type="number"
+                                    label="Amount (₹)"
+                                    value={formData.amount.toString()}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                <TextInput
+                                    id="due_date"
+                                    type="date"
+                                    label="Due Date"
+                                    value={formData.due_date}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </FormGroup>
+
+                            <Div className="mt-6">
+                                <label className="block text-secondary-700 mb-2">Services</label>
+                                <Div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    {serviceOptions.map(service => (
+                                        <label key={service} className="flex items-center">
+                                            <input
+                                                type="checkbox"
+                                                checked={formData.services.includes(service)}
+                                                onChange={() => handleServiceToggle(service)}
+                                                className="mr-2"
+                                            />
+                                            <span className="text-14">{service}</span>
+                                        </label>
+                                    ))}
+                                </Div>
+                            </Div>
+
+                            <Div className="mt-6">
+                                <TextArea
+                                    id="notes"
+                                    label="Notes (Optional)"
+                                    value={formData.notes}
+                                    onChange={handleInputChange}
+                                    rows={3}
+                                />
+                            </Div>
+
+                            <Div className="mt-8 flex justify-end space-x-4">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={resetForm}
+                                    label="Cancel"
+                                />
+                                <Button
+                                    type="submit"
+                                    variant="primary"
+                                    label={editingInvoice ? "Update Invoice" : "Create Invoice"}
+                                    isLoading={createInvoice.isPending || updateInvoice.isPending}
+                                />
+                            </Div>
+                        </form>
+                    </GlassCard>
+                </Div>
+            )}
 
             {/* Filters and Search */}
-            <motion.div
-                initial={{ y: 30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6 }}
+            <Div
+
                 className="py-8 px-4"
             >
                 <GlassCard className="p-6 mb-8">
-                    <Flex className="flex-col md:flex-row gap-4 items-start md:items-end">
-                        <Div className="flex-1">
-                            <TextInput
-                                id="search"
-                                label="Search Invoices"
-                                placeholder="Search by invoice ID, client name, or email..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                icon={<Search size={20} className="text-neutral-400" />}
+                    <Flex className="flex-col gap-4">
+                        <Flex className="flex-col md:flex-row gap-4 items-start md:items-end">
+                            <Div className="flex-1">
+                                <TextInput
+                                    id="search"
+                                    label="Search Invoices"
+                                    placeholder="Search by invoice ID, client name, or email..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    icon={<Search size={20} className="text-neutral-400" />}
+                                />
+                            </Div>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setShowFilters(!showFilters)}
+                                label="Filters"
+                                icon={<Filter size={16} className="mr-2" />}
+                                className="w-full md:w-auto"
                             />
-                        </Div>
-                        <Div className="w-full md:w-48">
-                            <Select
-                                id="filterStatus"
-                                label="Status"
-                                options={statusOptions}
-                                value={filterStatus}
-                                onChange={(e) => setFilterStatus(e.target.value)}
+                            <Button
+                                type="button"
+                                variant="primary"
+                                onClick={() => {
+                                    setFormData(prev => ({ ...prev, invoice_number: generateInvoiceNumber() }));
+                                    setShowCreateForm(true);
+                                }}
+                                label="New Invoice"
+                                icon={<Plus size={16} className="mr-2" />}
+                                className="w-full md:w-auto"
                             />
-                        </Div>
-                        <Button
-                            type="submit"
-                            variant="outline"
-                            label="More Filters"
-                            icon={<Filter size={16} className="mr-2" />}
-                            className="w-full md:w-auto"
-                        />
+                        </Flex>
 
-                        <Button
-                            type="submit"
-                            variant="outline"
-                            label=" New Invoice"
-                            icon={<Plus size={16} className="mr-2" />}
-                            className="w-full md:w-auto"
-                        />
+                        {showFilters && (
+                            <Div
+
+                                className="overflow-hidden"
+                            >
+                                <Flex className="pt-4 border-t border-neutral-200">
+                                    <Div className="w-full md:w-48">
+                                        <Select
+                                            id="filterStatus"
+                                            label="Status"
+                                            options={statusOptions}
+                                            value={filterStatus}
+                                            onChange={(e) => setFilterStatus(e.target.value)}
+                                        />
+                                    </Div>
+                                </Flex>
+                            </Div>
+                        )}
                     </Flex>
                 </GlassCard>
-            </motion.div>
+            </Div>
 
             {/* Invoices List */}
-            <motion.div
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+            <Div
+
                 className="py-8 px-4"
             >
                 <Div className="flex justify-between items-center mb-8">
@@ -206,21 +456,22 @@ const Billing: React.FC = () => {
                             }
                         </p>
                         <Button
-                            type="submit"
-                            variant="outline"
+                            type="button"
+                            variant="primary"
+                            onClick={() => {
+                                setFormData(prev => ({ ...prev, invoice_number: generateInvoiceNumber() }));
+                                setShowCreateForm(true);
+                            }}
                             label="Create First Invoice"
                             icon={<FileText size={16} className="mr-2" />}
-                            className="w-full md:w-auto"
                         />
                     </Div>
                 ) : (
                     <Div className="space-y-4">
-                        {filteredInvoices?.map((invoice, index) => (
-                            <motion.div
+                        {filteredInvoices.map((invoice) => (
+                            <Div
                                 key={invoice.$id}
-                                initial={{ y: 30, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
+
                             >
                                 <GlassCard className="p-6 hover:shadow-lg transition-all duration-300">
                                     <Div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
@@ -241,11 +492,16 @@ const Billing: React.FC = () => {
                                         <Div className="md:col-span-3">
                                             <p className="text-12 text-secondary-500 mb-1">Services</p>
                                             <Div className="flex flex-wrap gap-1">
-                                                {invoice.services?.map((service, i) => (
+                                                {invoice.services?.slice(0, 2).map((service, i) => (
                                                     <span key={i} className="text-10 bg-primary-100 text-primary-700 px-2 py-1 rounded">
                                                         {service}
                                                     </span>
                                                 ))}
+                                                {invoice.services?.length > 2 && (
+                                                    <span className="text-10 bg-neutral-100 text-neutral-600 px-2 py-1 rounded">
+                                                        +{invoice.services.length - 2} more
+                                                    </span>
+                                                )}
                                             </Div>
                                         </Div>
 
@@ -272,22 +528,37 @@ const Billing: React.FC = () => {
 
                                         {/* Status & Actions */}
                                         <Div className="md:col-span-2 flex flex-col items-center space-y-2">
-                                            <span className={`text-12 px-3 py-1 rounded-full font-medium ${getStatusColor(invoice.status)}`}>
-                                                {/* {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)} */}
-                                            </span>
+                                            <Select
+                                                id={`status-${invoice.$id}`}
+                                                options={statusOptions.slice(1)}
+                                                value={invoice.status}
+                                                onChange={(e) => handleStatusChange(invoice.$id!, e.target.value)}
+                                                className="text-12"
+                                            />
                                             <Div className="flex space-x-2">
-                                                <button className="p-2 text-primary-base hover:bg-primary-100 rounded-lg transition-colors">
+                                                <button
+                                                    className="p-2 text-primary-base hover:bg-primary-100 rounded-lg transition-colors"
+                                                    title="View Invoice"
+                                                >
                                                     <Eye size={16} />
                                                 </button>
-                                                <button className="p-2 text-secondary-600 hover:bg-secondary-100 rounded-lg transition-colors">
+                                                <button
+                                                    onClick={() => handleEdit(invoice)}
+                                                    className="p-2 text-secondary-600 hover:bg-secondary-100 rounded-lg transition-colors"
+                                                    title="Edit Invoice"
+                                                >
                                                     <Edit size={16} />
                                                 </button>
-                                                <button className="p-2 text-secondary-600 hover:bg-secondary-100 rounded-lg transition-colors">
+                                                <button
+                                                    className="p-2 text-secondary-600 hover:bg-secondary-100 rounded-lg transition-colors"
+                                                    title="Download Invoice"
+                                                >
                                                     <Download size={16} />
                                                 </button>
                                                 <button
-                                                    onClick={() => handleDeleteInvoice(invoice.$id!, invoice.invoice_number)}
+                                                    onClick={() => handleDelete(invoice.$id!, invoice.invoice_number)}
                                                     className="p-2 text-error-600 hover:bg-error-100 rounded-lg transition-colors"
+                                                    title="Delete Invoice"
                                                 >
                                                     <Trash2 size={16} />
                                                 </button>
@@ -295,18 +566,18 @@ const Billing: React.FC = () => {
                                         </Div>
                                     </Div>
                                 </GlassCard>
-                            </motion.div>
+                            </Div>
                         ))}
                     </Div>
                 )}
-            </motion.div>
+            </Div>
 
             {/* CTA Section */}
             <CTASection
                 title="Streamline Your Billing Process"
                 description="Take control of your project finances with our comprehensive billing management system. Track payments, generate reports, and keep your business organized."
-                primaryButtonText="Upgrade Billing"
-                primaryButtonLink="/contact"
+                primaryButtonText="Create Invoice"
+                primaryButtonLink="#"
                 backgroundGradient="accent"
             />
         </Div>

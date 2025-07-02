@@ -1,26 +1,25 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { Div } from "../general/BaseComponents";
 
 interface LoadingSpinnerProps {
-    size?: 'sm' | 'md' | 'lg';
+    size?: "sm" | "md" | "lg";
     color?: string;
 }
 
-const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-    size = 'md', 
-    color = 'text-primary-base' 
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
+    size = "md",
+    color = "text-primary-base"
 }) => {
     const sizes = {
-        sm: 'w-4 h-4',
-        md: 'w-8 h-8',
-        lg: 'w-12 h-12'
+        sm: "w-4 h-4",
+        md: "w-8 h-8",
+        lg: "w-12 h-12"
     };
 
     return (
-        <motion.div
+        <Div
             className={`${sizes[size]} ${color}`}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+
         >
             <svg
                 className="w-full h-full"
@@ -51,7 +50,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
                     className="opacity-75"
                 />
             </svg>
-        </motion.div>
+        </Div>
     );
 };
 
