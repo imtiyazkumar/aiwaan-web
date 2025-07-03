@@ -5,6 +5,8 @@ import HeroSection from "../components/sections/HeroSection";
 import WhyChooseUsSection from "../components/sections/WhyChooseUsSection";
 import StatsSection from "../components/sections/StatsSection";
 import CTASection from "../components/sections/CTASection";
+import OurTeam from "../components/sections/OurTeam";
+import { OurValuesSection } from "../components/sections/OurValuesSection";
 
 const About: React.FC = () => {
     // Company values/features
@@ -54,6 +56,14 @@ const About: React.FC = () => {
                 height="md"
             />
 
+            {/* Team Stats */}
+            <StatsSection
+                stats={teamStats}
+                columns={4}
+                backgroundColor="gradient"
+            />
+
+
             {/* Company Story Section */}
             <WhyChooseUsSection
                 title="Our"
@@ -65,12 +75,9 @@ const About: React.FC = () => {
                 imagePosition="left"
             />
 
-            {/* Team Stats */}
-            <StatsSection
-                stats={teamStats}
-                columns={4}
-                backgroundColor="gradient"
-            />
+            <OurValuesSection />
+
+
 
             {/* Location & Heritage Section */}
             <WhyChooseUsSection
@@ -102,6 +109,8 @@ const About: React.FC = () => {
                 learnMoreText="Explore Our Services"
                 learnMoreLink="/services"
             />
+            <OurTeam />
+
 
             {/* CTA Section */}
             <CTASection

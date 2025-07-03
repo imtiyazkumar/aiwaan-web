@@ -1,15 +1,17 @@
 import { createBrowserRouter } from "react-router-dom";
 import { AppRoutes } from "./routes";
-import Services from "../views/Services";
-import HomePage from "../views/Home";
 import MasterLayout from "../layouts/MasterLayout";
-import Contact from "../views/Contact";
-import Faq from "../views/Faq";
-import PrivacyPolicy from "../views/PrivacyPolicy";
-import Projects from "../views/Projects";
-import About from "../views/About";
-import AddEditProject from "../views/AddEditProject";
-import Billing from "../views/Billing";
+import Services from "../Views/Services";
+import HomePage from "../Views/Home";
+import Faq from "../Views/Faq";
+import PrivacyPolicy from "../Views/PrivacyPolicy";
+import AdminProjects from "../Views/AdminProjects";
+import Projects from "../Views/Projects";
+import About from "../Views/About";
+import AddEditProject from "../Views/AddEditProject";
+import Billing from "../Views/Billing";
+import SignIn from "../Views/SignIn";
+import Contact from "../Views/Contact";
 
 
 const router = createBrowserRouter([
@@ -25,10 +27,13 @@ const router = createBrowserRouter([
                     { path: AppRoutes.Faq, element: <Faq /> },
                     { path: AppRoutes.PrivacyPolicy, element: <PrivacyPolicy /> },
                     { path: AppRoutes.Projects, element: <Projects /> },
+                    { path: AppRoutes.AdminProjects, element: <AdminProjects /> },
                     { path: AppRoutes.About, element: <About /> },
                     { path: AppRoutes.AddEditProject, element: <AddEditProject /> },
                     { path: `${AppRoutes.AddEditProject}/:id`, element: <AddEditProject /> },
                     { path: AppRoutes.Billing, element: <Billing /> },
+                    { path: AppRoutes.SignIn, element: <SignIn /> },
+
                 ]
             }
         ],
