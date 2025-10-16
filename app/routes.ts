@@ -18,12 +18,12 @@ export default [
   route("faq", "routes/faq.tsx"),
   route("privacy-policy", "routes/privacy-policy.tsx"),
   route("about", "routes/about.tsx"),
-  route("add-edit-project", "routes/add-edit-project.tsx"),
-  route("billing", "routes/billing.tsx"),
 
   layout("routes/admin.tsx", [
     index("routes/admin._index.tsx"),
     route("admin/projects", "routes/admin.projects.tsx"),
+    route("add-edit-project", "routes/add-edit-project.tsx"),
+    route("billing", "routes/billing.tsx"),
   ]),
 
   layout("routes/error.tsx", [
