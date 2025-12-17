@@ -42,3 +42,163 @@ export const RouteDefinitions = [
     { key: AppRoutes.PrivacyPolicy, label: "Privacy Policy" },
     { key: AppRoutes.Administration, label: "Administration", isAdmin: true },
 ];
+
+export const ourServices = [
+    {
+        title: "3D Architectural Visualization",
+        description:
+            "Transform blueprints into photorealistic 3D renders that help clients visualize the final build before construction begins.",
+        imageUrl:
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+        index: 1,
+        tag: "FEATURED",
+        isFeatured: true,
+        features: [
+            "Exterior Renders",
+            "Interior Views",
+            "4K Output",
+            "Lighting & Materials",
+        ],
+        buttonTitle: "Explore Service",
+        onClick: () => console.log("3D Architectural Visualization"),
+    },
+    {
+        title: "2D Floor Plans & Layouts",
+        description:
+            "Accurate, presentation-ready floor plans with precise dimensions and furniture layouts for residential and commercial projects.",
+        imageUrl:
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+        index: 2,
+        tag: "ESSENTIAL",
+        isFeatured: true,
+        features: [
+            "CAD Drawings",
+            "Furniture Layout",
+            "Clear Dimensions",
+            "Print Ready",
+        ],
+        buttonTitle: "View Samples",
+        onClick: () => console.log("2D Floor Plans & Layouts"),
+    },
+    {
+        title: "Interior Design & Styling",
+        description:
+            "Curated interior concepts blending Kashmiri craftsmanship with modern aesthetics, tailored to your lifestyle and space.",
+        imageUrl:
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80",
+        index: 3,
+        tag: "CREATIVE",
+        isFeatured: true,
+        features: [
+            "Material Selection",
+            "Color Schemes",
+            "Custom Furniture",
+            "Lighting Design",
+        ],
+        buttonTitle: "Start Your Project",
+        onClick: () => console.log("Interior Design & Styling"),
+    },
+
+    {
+        title: "Exterior Elevation Design",
+        description:
+            "Striking exterior elevation designs that define architectural character and enhance curb appeal.",
+        imageUrl:
+            "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1400&auto=format&fit=crop&q=80",
+        index: 4,
+        tag: "DESIGN",
+        isFeatured: false,
+        features: [
+            "Modern Facades",
+            "Material Finishes",
+            "Day & Night Views",
+        ],
+        buttonTitle: "View Designs",
+        onClick: () => console.log("Exterior Elevation Design"),
+    },
+    {
+        title: "Walkthrough Animations",
+        description:
+            "Cinematic 3D walkthrough animations that bring architectural spaces to life before they are built.",
+        imageUrl:
+            "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&auto=format&fit=crop&q=80",
+        index: 5,
+        tag: "IMMERSIVE",
+        isFeatured: false,
+        features: [
+            "4K Animation",
+            "Smooth Camera Paths",
+            "Interior & Exterior",
+        ],
+        buttonTitle: "Watch Samples",
+        onClick: () => console.log("Walkthrough Animations"),
+    },
+    {
+        title: "Virtual Reality (VR) Experiences",
+        description:
+            "Immersive VR experiences allowing clients to explore spaces in real scale and real time.",
+        imageUrl:
+            "https://images.unsplash.com/photo-1593642634367-d91a135587b5?w=1400&auto=format&fit=crop&q=80",
+        index: 6,
+        tag: "VR",
+        isFeatured: false,
+        features: [
+            "VR Ready Models",
+            "Interactive Navigation",
+            "Client Presentations",
+        ],
+        buttonTitle: "Explore VR",
+        onClick: () => console.log("Virtual Reality Experiences"),
+    },
+    {
+        title: "Landscape Design Visualization",
+        description:
+            "Beautiful landscape visualizations integrating greenery, lighting, and outdoor elements.",
+        imageUrl:
+            "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1400&auto=format&fit=crop&q=80",
+        index: 7,
+        tag: "LANDSCAPE",
+        isFeatured: false,
+        features: [
+            "Garden Layouts",
+            "Outdoor Lighting",
+            "Hardscape Elements",
+        ],
+        buttonTitle: "View Landscapes",
+        onClick: () => console.log("Landscape Design Visualization"),
+    },
+    {
+        title: "Commercial Space Planning",
+        description:
+            "Optimized layouts for offices, retail, and commercial environments focused on functionality and flow.",
+        imageUrl:
+            "https://images.unsplash.com/photo-1492724441997-5dc865305da7?w=1400&auto=format&fit=crop&q=80",
+        index: 8,
+        tag: "COMMERCIAL",
+        isFeatured: false,
+        features: [
+            "Office Layouts",
+            "Retail Planning",
+            "Space Optimization",
+        ],
+        buttonTitle: "Plan Your Space",
+        onClick: () => console.log("Commercial Space Planning"),
+    },
+    {
+        title: "Lighting Design & Visualization",
+        description:
+            "Professional lighting plans and renders showcasing mood, ambience, and architectural highlights.",
+        imageUrl:
+            "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1400&auto=format&fit=crop&q=80",
+        index: 9,
+        tag: "LIGHTING",
+        isFeatured: false,
+        features: [
+            "Ambient Lighting",
+            "Fixture Placement",
+            "Day & Night Renders",
+        ],
+        buttonTitle: "See Lighting",
+        onClick: () => console.log("Lighting Design & Visualization"),
+    },
+];

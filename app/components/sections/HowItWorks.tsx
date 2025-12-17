@@ -3,7 +3,7 @@ import { Div, Flex, FlexColumn, Span } from "../general/BaseComponents";
 import GradientText from "../ui/GradientText";
 import StepCard from "~/components/cards/StepCard";
 import Title from "~/components/general/Title";
-import { ArrowRight, Sparkles, Users } from "lucide-react";
+import { ArrowRight, CheckCircle, PenTool, Sparkles, Users } from "lucide-react";
 import Button from "~/components/buttons/Button";
 import { useNavigate } from "react-router";
 import { wrapperBaseClass } from "~/utils/constants";
@@ -21,7 +21,6 @@ interface HowItWorksSectionProps {
     title?: string;
     subtitle?: string;
     description?: string;
-    steps: Step[];
     backgroundColor?: "transparent" | "gradient" | "white";
     topTitle?: string;
     topIcon?: React.ReactNode;
@@ -37,12 +36,42 @@ const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
     title = "How It",
     subtitle = "Works",
     description = "Our streamlined process ensures a smooth experience every time.",
-    steps,
     backgroundColor = "gradient",
     topTitle,
     topIcon
 }) => {
     const navigate = useNavigate();
+
+    const howItWorksSteps = [
+        {
+            number: 1,
+            title: "Consultation",
+            description: "We start with understanding your vision, requirements, and project goals through detailed consultation.",
+            icon: <Users size={20} className="text-primary-base" />,
+            details: ["Initial meeting", "Requirement analysis", "Budget discussion"]
+        },
+        {
+            number: 2,
+            title: "Design & Planning",
+            description: "Our team creates detailed designs and plans that bring your vision to life with precision.",
+            icon: <PenTool size={20} className="text-primary-base" />,
+            details: ["Concept development", "3D modeling", "Technical drawings"]
+        },
+        {
+            number: 3,
+            title: "Review & Refine",
+            description: "We present the designs for your review and make refinements based on your feedback.",
+            icon: <CheckCircle size={20} className="text-primary-base" />,
+            details: ["Design presentation", "Client feedback", "Revisions"]
+        },
+        {
+            number: 4,
+            title: "Final Delivery",
+            description: "We deliver the final designs with all necessary documentation and support.",
+            icon: <Sparkles size={20} className="text-primary-base" />,
+            details: ["Final files", "Documentation", "Ongoing support"]
+        }
+    ];
 
     return (
         <FlexColumn className={`${wrapperBaseClass} ${bgClass[backgroundColor]} bg`}>
@@ -64,8 +93,8 @@ const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 </Div>
 
                 <Div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
-                    {steps.map((s, i) => (
-                        <StepCard key={s.number} step={s} isLast={i === steps.length - 1} />
+                    {howItWorksSteps.map((s, i) => (
+                        <StepCard key={s.number} step={s} isLast={i === howItWorksSteps.length - 1} />
                     ))}
                 </Div>
             </Div>

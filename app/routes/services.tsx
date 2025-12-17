@@ -1,90 +1,70 @@
-import { Link } from 'react-router';
+/**
+ * Project Aiwaan
+ *
+ * @author      Imtiyaz Ahmad
+ * @copyright   Imtiyaz Ahmad
+ *
+ * Built by Imtiyaz Ahmad
+ * @link https://aiwaan.in
+ *
+ */
 
-const dummyServices = [
-  {
-    id: '1',
-    title: 'Custom Web Development',
-    description: 'Build powerful, scalable web applications tailored to your business needs.',
-    icon: '🌐',
-    price: 'Starting at $5,000',
-    features: ['Responsive Design', 'Custom Backend', 'API Integration']
-  },
-  {
-    id: '2',
-    title: 'Mobile App Development',
-    description: 'Native and cross-platform mobile applications for iOS and Android.',
-    icon: '📱',
-    price: 'Starting at $8,000',
-    features: ['iOS & Android', 'Cross-platform', 'App Store Deployment']
-  },
-  {
-    id: '3',
-    title: 'UI/UX Design',
-    description: 'Create stunning, user-friendly interfaces that engage your audience.',
-    icon: '🎨',
-    price: 'Starting at $3,000',
-    features: ['User Research', 'Wireframing', 'Prototyping']
-  },
-  {
-    id: '4',
-    title: 'Cloud Solutions',
-    description: 'Scalable cloud infrastructure and deployment services.',
-    icon: '☁️',
-    price: 'Starting at $4,000',
-    features: ['AWS/Azure/GCP', 'DevOps', 'CI/CD Pipeline']
-  },
-  {
-    id: '5',
-    title: 'E-Commerce Solutions',
-    description: 'Complete e-commerce platforms with payment integration.',
-    icon: '🛒',
-    price: 'Starting at $7,000',
-    features: ['Payment Gateway', 'Inventory System', 'Admin Dashboard']
-  },
-  {
-    id: '6',
-    title: 'AI & Machine Learning',
-    description: 'Intelligent solutions powered by artificial intelligence.',
-    icon: '🤖',
-    price: 'Custom Pricing',
-    features: ['ML Models', 'Data Analysis', 'Predictive Analytics']
-  }
-];
+import { Sparkles } from "lucide-react";
+import ServiceCard from "~/components/cards/ProjectCard";
+import TitleCard from "~/components/cards/TitleCard";
+import { Flex, FlexColumn } from "~/components/general/BaseComponents";
+import ButtonBanner from "~/components/sections/BottomBanner";
+import HeroSection from "~/components/sections/HeroSection";
+import HowItWorksSection from "~/components/sections/HowItWorks";
+import { ourServices, wrapperBaseClass } from "~/utils/constants";
 
-export default function Services() {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h1>
-          <p className="text-gray-600 text-lg">Comprehensive technology solutions to drive your business forward.</p>
-        </div>
+const services = () => {
+    return (
+        <FlexColumn className='w-full'>
+            <HeroSection
+                title="Our"
+                subtitle="Services"
+                description="Comprehensive architectural visualization services tailored for Kashmiri aesthetics and your unique needs, delivered with precision and creativity by our expert team.to completion, with a distinct Kashmiri touch and modern innovation."
+                backgroundImage="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                primaryButtonText="Explore Our Services"
+                primaryButtonLink="/services"
+                secondaryButtonText="Request a Quote"
+                secondaryButtonLink="/contact"
+            />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {dummyServices.map((service) => (
-            <Link
-              key={service.id}
-              to={`/services/${service.id}`}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow"
-            >
-              <div className="text-5xl mb-4">{service.icon}</div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">{service.title}</h2>
-              <p className="text-gray-600 mb-4">{service.description}</p>
-              <p className="text-lg font-semibold text-blue-600 mb-4">{service.price}</p>
-              <ul className="space-y-2">
-                {service.features.map((feature, index) => (
-                  <li key={index} className="flex items-center text-sm text-gray-700">
-                    <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+            <FlexColumn className={`${wrapperBaseClass}`}>
+                <TitleCard title="Our Services" />
+                <Flex className="flex-wrap gap-4">
+                    {ourServices.map((service, index) => (
+                        <ServiceCard
+                            title={service.title}
+                            description={service.description}
+                            imageUrl={service.imageUrl}
+                            features={service.features}
+                            buttonTitle={service.buttonTitle}
+                            index={index + 1}
+                            tag={service.tag}
+                            onClick={service.onClick}
+                        />
+                    ))}
+                </Flex>
+            </FlexColumn>
+
+            <HowItWorksSection
+                backgroundColor='white'
+                topIcon={<Sparkles size={16} className="text-primary-base" />}
+            ></HowItWorksSection>
+
+            <ButtonBanner
+                title="Connect to let us serve you"
+                description="Contact us today to discuss your project needs and discover how our architectural visualization services can bring your vision to life in Sopore and beyond. Let's create something extraordinary together."
+                primaryButtonText="Connect now"
+                primaryButtonLink="/contact"
+                backgroundGradient="accent"
+            />
+
+        </FlexColumn>
+    );
+};
+
+export default services;

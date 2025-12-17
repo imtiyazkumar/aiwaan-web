@@ -3,7 +3,7 @@ import Button from '~/components/buttons/Button';
 import { Div, Flex, Span } from '~/components/general/BaseComponents'
 
 
-interface IProjectCardProps {
+interface IServiceCardProps {
     title: string;
     description: string;
     imageUrl: string;
@@ -14,7 +14,7 @@ interface IProjectCardProps {
     index: number;
 }
 
-const ProjectCard: React.FC<IProjectCardProps> = ({ title, description, imageUrl, tag, index, features, buttonTitle, onClick }) => {
+const ServiceCard: React.FC<IServiceCardProps> = ({ title, description, imageUrl, tag, index, features, buttonTitle, onClick }) => {
     return (
         <Flex className="group relative min-w-[500px] w-full min-h-[500px] max-w-[600px] max-h-[600px] overflow-hidden rounded-3xl shadow-xl">
             <img
@@ -53,4 +53,4 @@ const ProjectCard: React.FC<IProjectCardProps> = ({ title, description, imageUrl
     )
 };
 
-export default ProjectCard
+export default ServiceCard
