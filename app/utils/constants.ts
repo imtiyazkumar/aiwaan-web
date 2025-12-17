@@ -63,6 +63,11 @@ export const ourServices = [
         ],
         buttonTitle: "Explore Service",
         onClick: () => console.log("3D Architectural Visualization"),
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         title: "2D Floor Plans & Layouts",
@@ -81,6 +86,11 @@ export const ourServices = [
         ],
         buttonTitle: "View Samples",
         onClick: () => console.log("2D Floor Plans & Layouts"),
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         title: "Interior Design & Styling",
@@ -99,6 +109,11 @@ export const ourServices = [
         ],
         buttonTitle: "Start Your Project",
         onClick: () => console.log("Interior Design & Styling"),
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
 
     {
@@ -117,6 +132,11 @@ export const ourServices = [
         ],
         buttonTitle: "View Designs",
         onClick: () => console.log("Exterior Elevation Design"),
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         title: "Walkthrough Animations",
@@ -134,6 +154,11 @@ export const ourServices = [
         ],
         buttonTitle: "Watch Samples",
         onClick: () => console.log("Walkthrough Animations"),
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         title: "Virtual Reality (VR) Experiences",
@@ -151,6 +176,11 @@ export const ourServices = [
         ],
         buttonTitle: "Explore VR",
         onClick: () => console.log("Virtual Reality Experiences"),
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         title: "Landscape Design Visualization",
@@ -168,6 +198,11 @@ export const ourServices = [
         ],
         buttonTitle: "View Landscapes",
         onClick: () => console.log("Landscape Design Visualization"),
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         title: "Commercial Space Planning",
@@ -185,6 +220,11 @@ export const ourServices = [
         ],
         buttonTitle: "Plan Your Space",
         onClick: () => console.log("Commercial Space Planning"),
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         title: "Lighting Design & Visualization",
@@ -202,6 +242,11 @@ export const ourServices = [
         ],
         buttonTitle: "See Lighting",
         onClick: () => console.log("Lighting Design & Visualization"),
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
 ];
 
@@ -216,7 +261,12 @@ export const ourProjects: IProject[] = [
         image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Private Client",
-        year: "2024"
+        year: "2024",
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         id: "showcase-2",
@@ -227,7 +277,12 @@ export const ourProjects: IProject[] = [
         image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Heritage Hotels Ltd",
-        year: "2023"
+        year: "2023",
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         id: "showcase-3",
@@ -238,7 +293,12 @@ export const ourProjects: IProject[] = [
         image: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Tech Innovations",
-        year: "2024"
+        year: "2024",
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         id: "showcase-4",
@@ -249,7 +309,12 @@ export const ourProjects: IProject[] = [
         image: "https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Private Residence",
-        year: "2023"
+        year: "2023",
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         id: "showcase-5",
@@ -260,7 +325,12 @@ export const ourProjects: IProject[] = [
         image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Private Estate",
-        year: "2024"
+        year: "2024",
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         id: "showcase-6",
@@ -271,7 +341,12 @@ export const ourProjects: IProject[] = [
         image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Cultural Foundation",
-        year: "2023"
+        year: "2023",
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         id: "showcase-7",
@@ -282,7 +357,12 @@ export const ourProjects: IProject[] = [
         image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Mountain Resorts",
-        year: "2024"
+        year: "2024",
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         id: "showcase-8",
@@ -293,7 +373,12 @@ export const ourProjects: IProject[] = [
         image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Heritage Tourism",
-        year: "2023"
+        year: "2023",
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     },
     {
         id: "showcase-9",
@@ -304,6 +389,11 @@ export const ourProjects: IProject[] = [
         image: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Craft Council",
-        year: "2024"
+        year: "2024",
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
+        ]
     }
 ];

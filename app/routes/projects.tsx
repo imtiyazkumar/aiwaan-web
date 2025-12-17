@@ -9,6 +9,7 @@
  *
  */
 
+import { useNavigate } from 'react-router';
 import ProjectCard from '~/components/cards/ProjectCard';
 import TitleCard from '~/components/cards/TitleCard';
 import { Div, Flex, FlexColumn } from '~/components/general/BaseComponents';
@@ -17,6 +18,8 @@ import HeroSection from '~/components/sections/HeroSection';
 import { ourProjects, wrapperBaseClass } from '~/utils/constants';
 
 const projects = () => {
+    const navigate = useNavigate();
+
     return (
         <FlexColumn className='w-full'>
             <HeroSection
@@ -34,7 +37,7 @@ const projects = () => {
                 <TitleCard title="Our Portfolio" />
                 <Flex className="flex-wrap gap-4">
                     {ourProjects.map((project, index) => (
-                        <Div key={project.id} className='max-w-[32.7%] cursor-pointer w-full'>
+                        <Div key={project.id} className='max-w-[32.7%] cursor-pointer w-full' onClick={() => navigate(`/projects/${project.id}`)}>
                             <ProjectCard index={index} project={project} />
                         </Div>
                     ))}

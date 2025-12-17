@@ -12,6 +12,7 @@ export interface IProject {
     status: "completed" | "ongoing" | "concept";
     client: string;
     year: string;
+    images: string[];
 }
 
 interface IProjectCardProps {
