@@ -1,4 +1,4 @@
-import ServiceCard from '~/components/cards/ProjectCard';
+import ServiceCard from '~/components/cards/ServiceCard';
 import TitleCard from '~/components/cards/TitleCard';
 import { Flex, FlexColumn } from '~/components/general/BaseComponents';
 import { ourServices, wrapperBaseClass } from '~/utils/constants';
