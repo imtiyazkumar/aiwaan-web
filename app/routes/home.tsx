@@ -19,15 +19,14 @@ import ButtonBanner from '~/components/sections/BottomBanner';
 import FeaturedProjects from '~/components/sections/FeaturedProjects';
 import FeaturedServices from '~/components/sections/FeaturedServices';
 
+export const stats = [
+    { icon: <Award size={24} />, number: "150+", label: "Projects Completed", description: "Successfully delivered" },
+    { icon: <Users size={24} />, number: "98%", label: "Client Satisfaction", description: "Happy customers" },
+    { icon: <Clock size={24} />, number: "5+", label: "Years Experience", description: "In the industry" },
+    { icon: <Building2 size={24} />, number: "50+", label: "Happy Clients", description: "Across Kashmir" },
+];
+
 const Home = () => {
-
-    const stats = [
-        { icon: <Award size={24} />, number: "150+", label: "Projects Completed", description: "Successfully delivered" },
-        { icon: <Users size={24} />, number: "98%", label: "Client Satisfaction", description: "Happy customers" },
-        { icon: <Clock size={24} />, number: "5+", label: "Years Experience", description: "In the industry" },
-        { icon: <Building2 size={24} />, number: "50+", label: "Happy Clients", description: "Across Kashmir" },
-    ];
-
     const whyChooseUsFeatures = [
         {
             title: "Local Expertise",

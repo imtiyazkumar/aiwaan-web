@@ -34,8 +34,7 @@ const projects = () => {
                 <TitleCard title="Our Portfolio" />
                 <Flex className="flex-wrap gap-4">
                     {ourProjects.map((project, index) => (
-                        <Div className='max-w-[32.7%] cursor-pointer w-full '>
-
+                        <Div key={project.id} className='max-w-[32.7%] cursor-pointer w-full'>
                             <ProjectCard index={index} project={project} />
                         </Div>
                     ))}
