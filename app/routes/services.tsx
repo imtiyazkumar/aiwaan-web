@@ -12,7 +12,7 @@
 import { Sparkles } from "lucide-react";
 import ServiceCard from "~/components/cards/ServiceCard";
 import TitleCard from "~/components/cards/TitleCard";
-import { Flex, FlexColumn } from "~/components/general/BaseComponents";
+import { Div, Flex, FlexColumn } from "~/components/general/BaseComponents";
 import ButtonBanner from "~/components/sections/BottomBanner";
 import HeroSection from "~/components/sections/HeroSection";
 import HowItWorksSection from "~/components/sections/HowItWorks";
@@ -36,16 +36,18 @@ const services = () => {
                 <TitleCard title="Our Services" />
                 <Flex className="flex-wrap gap-4">
                     {ourServices.map((service, index) => (
-                        <ServiceCard
-                            title={service.title}
-                            description={service.description}
-                            imageUrl={service.imageUrl}
-                            features={service.features}
-                            buttonTitle={service.buttonTitle}
-                            index={index + 1}
-                            tag={service.tag}
-                            onClick={service.onClick}
-                        />
+                        <Div className='max-w-[32.7%] w-full'>
+                            <ServiceCard
+                                title={service.title}
+                                description={service.description}
+                                imageUrl={service.imageUrl}
+                                features={service.features}
+                                buttonTitle={service.buttonTitle}
+                                index={index + 1}
+                                tag={service.tag}
+                                onClick={service.onClick}
+                            />
+                        </Div>
                     ))}
                 </Flex>
             </FlexColumn>

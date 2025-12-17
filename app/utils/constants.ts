@@ -1,3 +1,5 @@
+import type { IProject } from "~/components/cards/ProjectCard";
+
 export const wrapperBaseClass = "py-10 w-full justify-center items-center bg-white rounded-2xl my-2 md:my-4 lg:my-8 shadow-lg px-4 overflow-hidden"
 
 
@@ -201,4 +203,107 @@ export const ourServices = [
         buttonTitle: "See Lighting",
         onClick: () => console.log("Lighting Design & Visualization"),
     },
+];
+
+
+export const ourProjects: IProject[] = [
+    {
+        id: "showcase-1",
+        title: "Modern Kashmir Villa",
+        type: "Residential",
+        description: "A stunning blend of traditional Kashmiri architecture with modern amenities, featuring intricate woodwork and contemporary design elements.",
+        location: "Srinagar, Kashmir",
+        image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600",
+        status: "completed",
+        client: "Private Client",
+        year: "2024"
+    },
+    {
+        id: "showcase-2",
+        title: "Heritage Hotel Design",
+        type: "Commercial",
+        description: "Restoration and modernization of a heritage property into a boutique hotel, preserving cultural authenticity while adding luxury amenities.",
+        location: "Sopore, Kashmir",
+        image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600",
+        status: "completed",
+        client: "Heritage Hotels Ltd",
+        year: "2023"
+    },
+    {
+        id: "showcase-3",
+        title: "Contemporary Office Space",
+        type: "Commercial",
+        description: "Modern office design incorporating natural light and local materials, creating an inspiring workspace for a tech company.",
+        location: "Srinagar, Kashmir",
+        image: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=600",
+        status: "completed",
+        client: "Tech Innovations",
+        year: "2024"
+    },
+    {
+        id: "showcase-4",
+        title: "Luxury Apartment Interior",
+        type: "Interior",
+        description: "Elegant interior design for a luxury apartment, featuring custom furniture and traditional Kashmiri craftsmanship.",
+        location: "Srinagar, Kashmir",
+        image: "https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=600",
+        status: "completed",
+        client: "Private Residence",
+        year: "2023"
+    },
+    {
+        id: "showcase-5",
+        title: "Garden Landscape Design",
+        type: "Landscape",
+        description: "Beautiful garden design incorporating traditional Mughal garden elements with contemporary landscaping techniques.",
+        location: "Sopore, Kashmir",
+        image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600",
+        status: "completed",
+        client: "Private Estate",
+        year: "2024"
+    },
+    {
+        id: "showcase-6",
+        title: "Cultural Center Design",
+        type: "Commercial",
+        description: "Design for a cultural center celebrating Kashmiri arts and crafts, featuring exhibition spaces and workshop areas.",
+        location: "Srinagar, Kashmir",
+        image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600",
+        status: "completed",
+        client: "Cultural Foundation",
+        year: "2023"
+    },
+    {
+        id: "showcase-7",
+        title: "Mountain Resort Design",
+        type: "Residential",
+        description: "Eco-friendly mountain resort design that harmonizes with the natural landscape while providing luxury accommodations.",
+        location: "Gulmarg, Kashmir",
+        image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600",
+        status: "completed",
+        client: "Mountain Resorts",
+        year: "2024"
+    },
+    {
+        id: "showcase-8",
+        title: "Traditional Houseboat Renovation",
+        type: "Residential",
+        description: "Careful renovation of a traditional Kashmiri houseboat, preserving heritage while adding modern comforts.",
+        location: "Dal Lake, Srinagar",
+        image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600",
+        status: "completed",
+        client: "Heritage Tourism",
+        year: "2023"
+    },
+    {
+        id: "showcase-9",
+        title: "Artisan Workshop Complex",
+        type: "Commercial",
+        description: "Design for a complex of workshops dedicated to traditional Kashmiri crafts, promoting local artisans and cultural heritage.",
+        location: "Sopore, Kashmir",
+        image: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=600",
+        status: "completed",
+        client: "Craft Council",
+        year: "2024"
+    }
 ];
