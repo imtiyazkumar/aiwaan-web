@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "react-router build",
     "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
+    "build": "react-router build",
+    "postbuild": "echo '{\"version\":1,\"include\":[\"/*\"],\"exclude\":[]}' > build/client/_routes.json",
+    "deploy": "wrangler pages deploy build/client",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
