@@ -1,84 +1,103 @@
-import { useState } from 'react';
-import { Link } from 'react-router';
-import { useAuth } from '~/contexts/AuthContext';
+import { useState } from "react";
+import { Link } from "react-router";
+import { useAuth } from "~/contexts/AuthContext";
+import { Div, Flex, FlexColumn } from "~/components/general/BaseComponents";
+import Button from "~/components/buttons/Button";
+import { wrapperBaseClass } from "~/utils/constants";
+import TextInput from "~/components/general/TextInput";
 
 export default function RequestResetPassword() {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { resetPassword } = useAuth();
+    const [email, setEmail] = useState("");
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const { resetPassword } = useAuth();
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+    async function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
 
-    try {
-      await resetPassword(email);
-      setSuccess(true);
-    } catch (err: any) {
-      setError(err.message || 'Failed to send reset email');
-    } finally {
-      setLoading(false);
+        try {
+            await resetPassword(email);
+            setSuccess(true);
+        } catch (err: any) {
+            setError(err.message || "Failed to send reset email");
+        } finally {
+            setLoading(false);
+        }
     }
-  }
 
-  if (success) {
     return (
-      <div className="bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Check Your Email</h1>
-        <p className="text-gray-600 mb-6">
-          We've sent a password reset link to {email}. Please check your inbox.
-        </p>
-        <Link
-          to="/auth/sign-in"
-          className="text-blue-600 hover:underline"
-        >
-          Back to Sign In
-        </Link>
-      </div>
+        <Flex className="min-h-[calc(100vh-4rem)] items-center justify-center px-4">
+            <Div className="w-full max-w-md">
+                <Div className={`${wrapperBaseClass} px-6 sm:px-8 py-8 sm:py-10`}>
+                    {success ? (
+                        <FlexColumn className="text-center gap-4">
+                            <h1 className="text-2xl sm:text-3xl font-bold text-secondary-900">
+                                Check Your Email
+                            </h1>
+                            <p className="text-sm text-secondary-600">
+                                We’ve sent a password reset link to
+                                <span className="font-medium text-secondary-900"> {email}</span>.
+                                Please check your inbox.
+                            </p>
+                            <Link
+                                to="/auth/sign-in"
+                                className="mt-2 inline-block font-medium text-primary-base hover:text-primary-dark transition-colors"
+                            >
+                                Back to Sign In
+                            </Link>
+                        </FlexColumn>
+                    ) : (
+                        <>
+                            <FlexColumn className="text-center mb-6 gap-2">
+                                <h1 className="text-2xl sm:text-3xl font-bold text-secondary-900">
+                                    Reset Password
+                                </h1>
+                                <p className="text-sm text-secondary-600">
+                                    Enter your email to receive a reset link
+                                </p>
+                            </FlexColumn>
+
+                            {error && (
+                                <Div className="mb-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+                                    {error}
+                                </Div>
+                            )}
+
+                            <form onSubmit={handleSubmit} className="space-y-4">
+                                <TextInput
+                                    label="Email"
+                                    type="email"
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
+                                    required
+                                />
+
+                                <Button
+                                    type="submit"
+                                    disabled={loading}
+                                    variant="primary_filled"
+                                    height="large"
+                                    className="w-full mt-2 disabled:opacity-60"
+                                >
+                                    {loading ? "Sending…" : "Send Reset Link"}
+                                </Button>
+                            </form>
+
+                            <Div className="mt-6 text-center text-sm text-secondary-600">
+                                <Link
+                                    to="/auth/sign-in"
+                                    className="font-medium text-primary-base hover:text-primary-dark transition-colors"
+                                >
+                                    Back to Sign In
+                                </Link>
+                            </Div>
+                        </>
+                    )}
+                </Div>
+            </Div>
+        </Flex>
     );
-  }
-
-  return (
-    <div className="bg-white p-8 rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Reset Password</h1>
-
-      {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit}>
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
-            Email
-          </label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
-        >
-          {loading ? 'Sending...' : 'Send Reset Link'}
-        </button>
-      </form>
-
-      <div className="mt-4 text-center text-sm text-gray-600">
-        <Link to="/auth/sign-in" className="text-blue-600 hover:underline">
-          Back to Sign In
-        </Link>
-      </div>
-    </div>
-  );
 }

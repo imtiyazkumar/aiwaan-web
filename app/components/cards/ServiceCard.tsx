@@ -16,20 +16,20 @@ interface IServiceCardProps {
 
 const ServiceCard: React.FC<IServiceCardProps> = ({ title, description, imageUrl, tag, index, features, buttonTitle, onClick }) => {
     return (
-        <Flex className="group relative min-w-[500px] w-full min-h-[500px] max-w-[600px] max-h-[600px] overflow-hidden rounded-3xl shadow-xl">
+        <Flex className="group relative min-w-80 md:min-w-125 w-full min-h-80 md:min-h-125 md:max-w-150 md:max-h-150 overflow-hidden rounded-3xl shadow-xl">
             <img
                 src={imageUrl}
                 alt="Interior Design"
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
-            <Div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/40 to-slate-800/80 transition-colors duration-500 group-hover:from-black/10 group-hover:via-emerald-900/60" />
+            <Div className="absolute inset-0 bg-linear-to-b from-black/0 via-black/40 to-slate-800/80 transition-colors duration-500 group-hover:from-black/10 group-hover:via-emerald-900/60" />
             <Div className="absolute bottom-12 left-0 z-10 w-full text-white">
                 <Div className="px-8 pb-12">
                     <Span className="mb-4 inline-block rounded-full bg-white/20 px-4 py-1 text-xs font-bold tracking-widest backdrop-blur">
                         {index}/{tag}
                     </Span>
                     <h3 className="mb-4 text-3xl font-extrabold leading-tight">{title}</h3>
-                    <Div className="max-h-0 overflow-hidden opacity-0 transition-all duration-800 ease-out group-hover:max-h-[240px] group-hover:opacity-100">
+                    <Div className="max-h-0 overflow-hidden opacity-0 transition-all duration-800 ease-out group-hover:max-h-60 group-hover:opacity-100">
                         <p className="mb-4 text-sm text-white/90">{description}</p>
                         <Flex className="flex-wrap gap-3">
                             {features.map(item => (

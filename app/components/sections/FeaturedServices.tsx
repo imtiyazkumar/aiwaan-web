@@ -9,7 +9,7 @@ const FeaturedServices = () => {
         <FlexColumn className={`${wrapperBaseClass}`}>
             <TitleCard title="Featured Services" />
 
-            <Flex className='w-full h-full gap-4'>
+            <Flex className='w-full h-full gap-4 flex-col md:flex-row'>
                 {ourServices.filter(s => s.isFeatured).map((service, index) => (
                     <ServiceCard
                         title={service.title}

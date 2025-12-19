@@ -41,7 +41,7 @@ const WhyChooseUsSection: React.FC<WhyChooseUsSectionProps> = ({
                     <Div className="space-y-6">
                         {features.map((feature, index) => (
                             <Div key={index} className="flex items-start group" >
-                                <Div className="bg-primary-100 p-2 rounded-full mt-1 mr-4 group-hover:bg-primary-300 transition-colors">
+                                <Div className="bg-primary-100 p-2 rounded-full mr-4 group-hover:bg-primary-300 transition-colors">
                                     {feature.icon || <CheckCircle size={20} className="text-primary" />}
                                 </Div>
                                 <Div>
@@ -66,14 +66,14 @@ const WhyChooseUsSection: React.FC<WhyChooseUsSectionProps> = ({
                 </Div>
 
                 <Div className={`relative ${imagePosition === "left" ? "lg:col-start-1" : ""}`}>
-                    <Div className="absolute -top-6 -left-6 w-24 h-24 bg-gradient-to-br from-primary-300 to-primary-600 rounded-2xl z-0 animate-float"></Div>
+                    <Div className="absolute -top-6 -left-6 w-24 h-24 bg-linear-to-br from-primary-300 to-primary-600 rounded-2xl z-0 animate-float"></Div>
                     <img
                         src={image}
                         alt="Why choose us"
                         className="w-full h-auto rounded-2xl shadow-2xl relative z-10 transform hover:scale-105 transition-transform duration-500"
                         loading="lazy"
                     />
-                    <Div className="absolute -bottom-6 -right-6 w-24 h-24 bg-gradient-to-tl from-secondary-200 to-secondary-300 rounded-2xl z-0 animate-float" style={{ animationDelay: "1s" }}></Div>
+                    <Div className="absolute -bottom-6 -right-6 w-24 h-24 bg-linear-to-tl from-secondary-200 to-secondary-300 rounded-2xl z-0 animate-float" style={{ animationDelay: "1s" }}></Div>
                 </Div>
             </Div>
         </Div>

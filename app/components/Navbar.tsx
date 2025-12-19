@@ -14,7 +14,7 @@ const Navbar = () => {
     return (
         <nav className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-sm shadow-md">
             <Div className="px-4 sm:px-6 lg:px-8">
-                <Flex className="h-16 items-center justify-between">
+                <Flex className="h-12 md:h-16 items-center justify-between">
                     <Flex className="gap-8">
                         <Link to="/" className="text-xl font-bold text-gray-900">
                             Aiwaan

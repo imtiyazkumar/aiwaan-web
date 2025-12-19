@@ -34,7 +34,7 @@ const ButtonBanner: React.FC<ButtonBannerProps> = ({
 
     return (
         <Div className={`${gradients[backgroundGradient]} ${wrapperBaseClass}`}>
-            <Div className="container mx-auto px-6 py-12 text-center relative z-10">
+            <Div className="container mx-auto px-2 md:px-6 py-6 md:py-12 text-center relative z-10">
                 <Div className="text-32 md:text-48 font-bold text-white mb-4 font-display" >
                     {title}
                 </Div>

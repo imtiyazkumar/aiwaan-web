@@ -1,6 +1,6 @@
 import type { IProject } from "~/components/cards/ProjectCard";
 
-export const wrapperBaseClass = "py-10 w-full justify-center items-center bg-white rounded-2xl my-2 md:my-4 lg:my-8 shadow-lg px-4 overflow-hidden"
+export const wrapperBaseClass = "w-full gap-2.5 md:gap-0 bg-white rounded-2xl shadow-lg overflow-hidden px-4 sm:px-6 lg:px-10 py-4 sm:py-8 lg:py-10 my-2 sm:my-4 lg:my-8 flex flex-col items-center justify-center"
 
 
 export enum AppRoutes {

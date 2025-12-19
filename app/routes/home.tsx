@@ -63,7 +63,7 @@ const Home = () => {
                 secondaryButtonLink="/contact"
             />
 
-            <Flex className='gap-4'>
+            <Flex className="gap-4 flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap">
                 {stats.map((stat, index) => (
                     <StatCard
                         key={index}
@@ -83,7 +83,7 @@ const Home = () => {
             <FeaturedProjects />
 
             <WhyChooseUsSection
-                title="Why Choose Us"
+                title="Why Choose"
                 subtitle="Aiwaan"
                 features={whyChooseUsFeatures}
                 image="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600"

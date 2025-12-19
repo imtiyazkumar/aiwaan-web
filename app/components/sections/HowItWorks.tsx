@@ -88,10 +88,6 @@ const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             </Div>
 
             <Div className="relative px-6  mx-auto">
-                <Div className="hidden lg:block absolute top-24 left-0 right-0 h-1">
-                    <Div className="h-full bg-gradient-to-r from-transparent via-primary-200 to-transparent" />
-                </Div>
-
                 <Div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
                     {howItWorksSteps.map((s, i) => (
                         <StepCard key={s.number} step={s} isLast={i === howItWorksSteps.length - 1} />

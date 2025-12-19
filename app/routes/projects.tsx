@@ -37,7 +37,7 @@ const projects = () => {
                 <TitleCard title="Our Portfolio" />
                 <Flex className="flex-wrap gap-4">
                     {ourProjects.map((project, index) => (
-                        <Div key={project.id} className='max-w-[32.7%] cursor-pointer w-full' onClick={() => navigate(`/projects/${project.id}`)}>
+                        <Div key={project.id} className='md:max-w-[32.7%] cursor-pointer w-full flex-col md:flex-row' onClick={() => navigate(`/projects/${project.id}`)}>
                             <ProjectCard index={index} project={project} />
                         </Div>
                     ))}

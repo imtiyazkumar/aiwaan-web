@@ -36,7 +36,7 @@ const services = () => {
                 <TitleCard title="Our Services" />
                 <Flex className="flex-wrap gap-4">
                     {ourServices.map((service, index) => (
-                        <Div key={index} className='max-w-[32.7%] w-full'>
+                        <Div key={index} className='md:max-w-[32.7%] w-full'>
                             <ServiceCard
                                 title={service.title}
                                 description={service.description}

@@ -67,7 +67,7 @@ const about = () => {
                 imagePosition="right"
             />
 
-            <Flex className='gap-4'>
+            <Flex className="gap-4 flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap">
                 {stats.map((stat, index) => (
                     <StatCard
                         key={index}
