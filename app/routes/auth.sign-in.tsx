@@ -11,6 +11,7 @@ export default function SignIn() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+
     const { login } = useAuth();
     const navigate = useNavigate();
 
@@ -30,10 +31,11 @@ export default function SignIn() {
     }
 
     return (
-        <Flex className="min-h-[calc(100vh-4rem)] items-center justify-center px-4">
-            <Div className="w-full max-w-md">
-                <Div className={`${wrapperBaseClass} px-6 sm:px-8 py-8 sm:py-10`}>
-                    <FlexColumn className="text-center mb-6 gap-2">
+        <Flex className=" items-center justify-center w-full">
+            <Div className={`${wrapperBaseClass}  max-w-2xl px-6 sm:px-10 py-10 `}>
+                <FlexColumn className="gap-6 w-full md:px-6">
+
+                    <FlexColumn className="text-center gap-2">
                         <h1 className="text-2xl sm:text-3xl font-bold text-secondary-900">
                             Welcome Back
                         </h1>
@@ -43,12 +45,12 @@ export default function SignIn() {
                     </FlexColumn>
 
                     {error && (
-                        <Div className="mb-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+                        <Div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
                             {error}
                         </Div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-5">
                         <TextInput
                             label="Email"
                             type="email"
@@ -68,7 +70,7 @@ export default function SignIn() {
                         <Flex className="justify-end">
                             <Link
                                 to="/auth/request-reset"
-                                className="text-xs sm:text-sm font-medium text-primary-base hover:text-primary-dark transition-colors"
+                                className="text-sm font-medium text-primary-base hover:text-primary-dark transition-colors"
                             >
                                 Forgot password?
                             </Link>
@@ -76,16 +78,16 @@ export default function SignIn() {
 
                         <Button
                             type="submit"
-                            disabled={loading}
                             variant="primary_filled"
                             height="large"
-                            className="w-full mt-2 disabled:opacity-60"
+                            disabled={loading}
+                            className="w-full"
                         >
                             {loading ? "Signing in…" : "Sign In"}
                         </Button>
                     </form>
 
-                    <Div className="mt-6 text-center text-sm text-secondary-600">
+                    <Div className="text-center text-sm text-secondary-600">
                         Don’t have an account?
                         <Link
                             to="/auth/sign-up"
@@ -94,7 +96,8 @@ export default function SignIn() {
                             Create one
                         </Link>
                     </Div>
-                </Div>
+
+                </FlexColumn>
             </Div>
         </Flex>
     );

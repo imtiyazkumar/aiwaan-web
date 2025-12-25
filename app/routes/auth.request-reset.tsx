@@ -29,9 +29,10 @@ export default function RequestResetPassword() {
     }
 
     return (
-        <Flex className="min-h-[calc(100vh-4rem)] items-center justify-center px-4">
-            <Div className="w-full max-w-md">
-                <Div className={`${wrapperBaseClass} px-6 sm:px-8 py-8 sm:py-10`}>
+        <Flex className="items-center justify-center w-full">
+            <Div className={`${wrapperBaseClass} max-w-2xl px-6 sm:px-10 py-10`}>
+                <FlexColumn className="gap-6 w-full md:px-6">
+
                     {success ? (
                         <FlexColumn className="text-center gap-4">
                             <h1 className="text-2xl sm:text-3xl font-bold text-secondary-900">
@@ -40,18 +41,17 @@ export default function RequestResetPassword() {
                             <p className="text-sm text-secondary-600">
                                 We’ve sent a password reset link to
                                 <span className="font-medium text-secondary-900"> {email}</span>.
-                                Please check your inbox.
                             </p>
                             <Link
                                 to="/auth/sign-in"
-                                className="mt-2 inline-block font-medium text-primary-base hover:text-primary-dark transition-colors"
+                                className="font-medium text-primary-base hover:text-primary-dark transition-colors"
                             >
                                 Back to Sign In
                             </Link>
                         </FlexColumn>
                     ) : (
                         <>
-                            <FlexColumn className="text-center mb-6 gap-2">
+                            <FlexColumn className="text-center gap-2">
                                 <h1 className="text-2xl sm:text-3xl font-bold text-secondary-900">
                                     Reset Password
                                 </h1>
@@ -61,12 +61,12 @@ export default function RequestResetPassword() {
                             </FlexColumn>
 
                             {error && (
-                                <Div className="mb-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+                                <Div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
                                     {error}
                                 </Div>
                             )}
 
-                            <form onSubmit={handleSubmit} className="space-y-4">
+                            <form onSubmit={handleSubmit} className="space-y-5">
                                 <TextInput
                                     label="Email"
                                     type="email"
@@ -77,16 +77,16 @@ export default function RequestResetPassword() {
 
                                 <Button
                                     type="submit"
-                                    disabled={loading}
                                     variant="primary_filled"
                                     height="large"
-                                    className="w-full mt-2 disabled:opacity-60"
+                                    disabled={loading}
+                                    className="w-full"
                                 >
                                     {loading ? "Sending…" : "Send Reset Link"}
                                 </Button>
                             </form>
 
-                            <Div className="mt-6 text-center text-sm text-secondary-600">
+                            <Div className="text-center text-sm text-secondary-600">
                                 <Link
                                     to="/auth/sign-in"
                                     className="font-medium text-primary-base hover:text-primary-dark transition-colors"
@@ -96,7 +96,8 @@ export default function RequestResetPassword() {
                             </Div>
                         </>
                     )}
-                </Div>
+
+                </FlexColumn>
             </Div>
         </Flex>
     );

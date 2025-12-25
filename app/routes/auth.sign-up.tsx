@@ -13,6 +13,7 @@ export default function SignUp() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+
     const { register } = useAuth();
     const navigate = useNavigate();
 
@@ -43,10 +44,11 @@ export default function SignUp() {
     }
 
     return (
-        <Flex className="min-h-[calc(100vh-4rem)] items-center justify-center px-4">
-            <Div className="w-full max-w-md">
-                <Div className={`${wrapperBaseClass} px-6 sm:px-8 py-8 sm:py-10`}>
-                    <FlexColumn className="text-center mb-6 gap-2">
+        <Flex className="items-center justify-center w-full">
+            <Div className={`${wrapperBaseClass} max-w-2xl px-6 sm:px-10 py-10`}>
+                <FlexColumn className="gap-6 w-full md:px-6">
+
+                    <FlexColumn className="text-center gap-2">
                         <h1 className="text-2xl sm:text-3xl font-bold text-secondary-900">
                             Create Account
                         </h1>
@@ -56,12 +58,12 @@ export default function SignUp() {
                     </FlexColumn>
 
                     {error && (
-                        <Div className="mb-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+                        <Div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
                             {error}
                         </Div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-5">
                         <TextInput
                             label="Name"
                             value={name}
@@ -95,16 +97,16 @@ export default function SignUp() {
 
                         <Button
                             type="submit"
-                            disabled={loading}
                             variant="primary_filled"
                             height="large"
-                            className="w-full mt-2 disabled:opacity-60"
+                            disabled={loading}
+                            className="w-full"
                         >
                             {loading ? "Creating account…" : "Sign Up"}
                         </Button>
                     </form>
 
-                    <Div className="mt-6 text-center text-sm text-secondary-600">
+                    <Div className="text-center text-sm text-secondary-600">
                         Already have an account?
                         <Link
                             to="/auth/sign-in"
@@ -113,7 +115,8 @@ export default function SignUp() {
                             Sign in
                         </Link>
                     </Div>
-                </Div>
+
+                </FlexColumn>
             </Div>
         </Flex>
     );
