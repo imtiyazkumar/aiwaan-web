@@ -1,21 +1,29 @@
-import { useState } from "react";
-import { Link, useSearchParams, useNavigate } from "react-router";
-import { account } from "~/lib/appwrite";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router";
+import { supabase } from "~/lib/supabase";
 import { Div, Flex, FlexColumn } from "~/components/general/BaseComponents";
 import Button from "~/components/buttons/Button";
 import { wrapperBaseClass } from "~/utils/constants";
 import TextInput from "~/components/general/TextInput";
 
 export default function ResetPassword() {
-    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const userId = searchParams.get("userId");
-    const secret = searchParams.get("secret");
+    useEffect(() => {
+        // Optional: Check if we have a session (which implies the recovery link worked)
+        // If not, might redirect to login, but let's assume the flow handles it.
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (!session) {
+                // If no session, the link might be invalid or expired, 
+                // but checking this immediately might be racy with the auto-recovery.
+                // Let's just let the user try to update.
+            }
+        });
+    }, []);
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -31,15 +39,13 @@ export default function ResetPassword() {
             return;
         }
 
-        if (!userId || !secret) {
-            setError("Invalid reset link");
-            return;
-        }
-
         setLoading(true);
 
         try {
-            await account.updateRecovery(userId, secret, password);
+            const { error } = await supabase.auth.updateUser({ password: password });
+            if (error) throw error;
+
+            // Success
             navigate("/auth/sign-in");
         } catch (err: any) {
             setError(err.message || "Failed to reset password");
@@ -55,7 +61,7 @@ export default function ResetPassword() {
                     <FlexColumn className="text-center mb-6 gap-2">
                         <h1 className="text-2xl sm:text-3xl font-bold text-secondary-900">
                             Reset Password
-                        </h1>s
+                        </h1>
                         <p className="text-sm text-secondary-600">
                             Enter your new password below
                         </p>

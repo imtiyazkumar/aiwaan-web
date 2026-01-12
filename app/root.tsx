@@ -13,6 +13,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { Flex, FlexColumn } from "~/components/general/BaseComponents";
 import Footer from "~/components/sections/Footer";
 import Navbar from "~/components/Navbar";
+import { QueryProvider } from "~/providers/QueryProvider";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },

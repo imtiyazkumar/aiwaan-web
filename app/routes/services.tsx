@@ -17,6 +17,40 @@ import ButtonBanner from "~/components/sections/BottomBanner";
 import HeroSection from "~/components/sections/HeroSection";
 import HowItWorksSection from "~/components/sections/HowItWorks";
 import { ourServices, wrapperBaseClass } from "~/utils/constants";
+import ServiceQuery from "~/apiService/service/serviceQuery";
+
+const ServiceList = () => {
+    const { data, isLoading } = ServiceQuery.useQueryGetServices({});
+    const services = data?.services || [];
+
+    if (isLoading) {
+        return <div className="w-full text-center py-10">Loading...</div>;
+    }
+
+    return (
+        <Flex className="flex-wrap gap-4">
+            {(services.length > 0 ? services : []).map((service, index) => (
+                <Div key={index} className='md:max-w-[32.7%] w-full'>
+                    <ServiceCard
+                        title={service.title}
+                        description={service.description}
+                        imageUrl={service.image_url || service.imageUrl || ""}
+                        features={service.features || []}
+                        buttonTitle={service.button_title || service.buttonTitle || "Explore"}
+                        index={index + 1}
+                        tag={service.tag || ""}
+                        onClick={() => console.log('Clicked', service.title)}
+                    />
+                </Div>
+            ))}
+            {services.length === 0 && (
+                <div className="w-full text-center py-10 text-gray-500">
+                    No services found.
+                </div>
+            )}
+        </Flex>
+    );
+};
 
 const services = () => {
     return (
@@ -34,22 +68,7 @@ const services = () => {
 
             <FlexColumn className={`${wrapperBaseClass}`}>
                 <TitleCard title="Our Services" />
-                <Flex className="flex-wrap gap-4">
-                    {ourServices.map((service, index) => (
-                        <Div key={index} className='md:max-w-[32.7%] w-full'>
-                            <ServiceCard
-                                title={service.title}
-                                description={service.description}
-                                imageUrl={service.imageUrl}
-                                features={service.features}
-                                buttonTitle={service.buttonTitle}
-                                index={index + 1}
-                                tag={service.tag}
-                                onClick={service.onClick}
-                            />
-                        </Div>
-                    ))}
-                </Flex>
+                <ServiceList />
             </FlexColumn>
 
             <HowItWorksSection

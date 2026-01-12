@@ -38,11 +38,11 @@ export const RouteDefinitions = [
     { key: AppRoutes.ResetPassword, label: "Reset" },
     { key: AppRoutes.RequestResetPassword, label: "Request Reset Password" },
     { key: AppRoutes.Profile, label: "profile" },
-    { key: AppRoutes.AdminProjects, label: "Admin Projects", isAdmin: true },
-    { key: AppRoutes.Billing, label: "Billing", isAdmin: true },
+    { key: AppRoutes.AdminProjects, label: "Admin Projects" },
+    { key: AppRoutes.Billing, label: "Billing" },
     { key: AppRoutes.Faq, label: "faq" },
     { key: AppRoutes.PrivacyPolicy, label: "Privacy Policy" },
-    { key: AppRoutes.Administration, label: "Administration", isAdmin: true },
+    { key: AppRoutes.Administration, label: "Admin Panel", isAdmin: true },
 ];
 
 export const ourServices = [

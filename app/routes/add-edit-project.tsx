@@ -1,172 +1,339 @@
+
+
 import { ProtectedRoute } from '~/components/ProtectedRoute';
 import { useSearchParams, useNavigate } from 'react-router';
 import { useState, useEffect } from 'react';
+import { Div, Flex, FlexColumn } from '~/components/general/BaseComponents';
+import TextInput from '~/components/general/TextInput';
+import Button from '~/components/buttons/Button';
+import { wrapperBaseClass } from '~/utils/constants';
+import { supabase } from '~/lib/supabase';
+import { X, Upload } from 'lucide-react';
+
+import ProjectQuery from '~/apiService/project/projectQuery';
 
 function AddEditProjectContent() {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const projectId = searchParams.get('id');
-  const isEditMode = !!projectId;
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const projectId = searchParams.get('id');
+    const isEditMode = !!projectId;
+    const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    category: '',
-    status: 'active',
-    imageUrl: '',
-    tags: '',
-  });
+    // Query for existing project
+    const { data: projectData, isLoading: isProjectLoading } = ProjectQuery.useQueryGetProject(projectId || undefined);
 
-  useEffect(() => {
-    if (isEditMode && projectId) {
-      const dummyProject = {
-        title: 'Sample Project ' + projectId,
-        description: 'This is a sample project description for editing.',
-        category: 'Web Development',
+    // Mutations
+    const createMutation = ProjectQuery.useMutationCreateProject();
+    const updateMutation = ProjectQuery.useMutationUpdateProject();
+
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        type: '',
         status: 'active',
-        imageUrl: 'https://via.placeholder.com/400x300',
-        tags: 'react, typescript, tailwind',
-      };
-      setFormData(dummyProject);
-    }
-  }, [isEditMode, projectId]);
+        image_url: '',
+        location: '',
+        client: '',
+        year: new Date().getFullYear().toString(),
+        tags: '',
+        is_featured: false,
+        gallery: [] as string[]
+    });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+    useEffect(() => {
+        if (isEditMode && projectData) {
+            setFormData({
+                title: projectData.title || '',
+                description: projectData.description || '',
+                type: projectData.type || '',
+                status: projectData.status || 'active',
+                image_url: projectData.image_url || '',
+                location: projectData.location || '',
+                client: projectData.client || '',
+                year: projectData.year || '',
+                tags: projectData.tags ? projectData.tags.join(', ') : '',
+                is_featured: projectData.is_featured || false,
+                gallery: projectData.gallery || []
+            });
+        }
+    }, [isEditMode, projectData]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log(isEditMode ? 'Updating project:' : 'Creating project:', formData);
-    alert(isEditMode ? 'Project updated successfully!' : 'Project created successfully!');
-    navigate('/admin/projects');
-  };
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto p-6">
-        <h1 className="text-4xl font-bold text-gray-900 mb-6">
-          {isEditMode ? 'Edit Project' : 'Add New Project'}
-        </h1>
-        
-        <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-6 space-y-6">
-          <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-              Project Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        if ((e.target as HTMLInputElement).type === 'checkbox') {
+            setFormData(prev => ({ ...prev, [name]: (e.target as HTMLInputElement).checked }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
+    };
 
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              required
-              rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+    const handleGalleryAdd = () => {
+        const url = prompt("Enter image URL for gallery:");
+        if (url) {
+            setFormData(prev => ({ ...prev, gallery: [...prev.gallery, url] }));
+        }
+    };
 
-          <div>
-            <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
-              Category
-            </label>
-            <input
-              type="text"
-              id="category"
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+    const handleGalleryRemove = (index: number) => {
+        setFormData(prev => ({
+            ...prev,
+            gallery: prev.gallery.filter((_, i) => i !== index)
+        }));
+    };
 
-          <div>
-            <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
-              Status
-            </label>
-            <select
-              id="status"
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="active">Active</option>
-              <option value="completed">Completed</option>
-              <option value="archived">Archived</option>
-            </select>
-          </div>
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'image_url' | 'gallery') => {
+        const file = e.target.files?.[0];
+        if (!file) return;
 
-          <div>
-            <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 mb-2">
-              Image URL
-            </label>
-            <input
-              type="url"
-              id="imageUrl"
-              name="imageUrl"
-              value={formData.imageUrl}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+        try {
+            setLoading(true);
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Math.random()}.${fileExt}`;
+            const filePath = `${fileName}`;
 
-          <div>
-            <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-2">
-              Tags (comma-separated)
-            </label>
-            <input
-              type="text"
-              id="tags"
-              name="tags"
-              value={formData.tags}
-              onChange={handleChange}
-              placeholder="e.g., react, nodejs, design"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+            const { error: uploadError } = await supabase.storage
+                .from('project-images')
+                .upload(filePath, file);
 
-          <div className="flex gap-4">
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {isEditMode ? 'Update Project' : 'Create Project'}
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/admin/projects')}
-              className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('project-images')
+                .getPublicUrl(filePath);
+
+            if (field === 'image_url') {
+                setFormData(prev => ({ ...prev, image_url: publicUrl }));
+            } else {
+                setFormData(prev => ({ ...prev, gallery: [...prev.gallery, publicUrl] }));
+            }
+
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Failed to upload image');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const projectPayload = {
+            title: formData.title,
+            description: formData.description,
+            type: formData.type,
+            status: formData.status,
+            image_url: formData.image_url,
+            location: formData.location,
+            client: formData.client,
+            year: formData.year,
+            tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
+            is_featured: formData.is_featured,
+            gallery: formData.gallery
+        };
+
+        const options = {
+            onSuccess: () => {
+                alert(isEditMode ? 'Project updated successfully!' : 'Project created successfully!');
+                navigate('/admin/projects');
+            },
+            onError: (error: any) => {
+                console.error('Error saving project:', error);
+                alert('Failed to save project: ' + error.message);
+            }
+        };
+
+        if (isEditMode && projectId) {
+            updateMutation.mutate({ ...projectPayload, id: projectId }, options);
+        } else {
+            createMutation.mutate(projectPayload, options);
+        }
+    };
+
+    return (
+        <Flex className="items-center justify-center w-full">
+            <Div className={`${wrapperBaseClass} max-w-4xl`}>
+                <FlexColumn className="text-center gap-2 mb-6">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-secondary-900">
+                        {isEditMode ? 'Edit Project' : 'Add New Project'}
+                    </h1>
+                </FlexColumn>
+
+                <form onSubmit={handleSubmit} className="space-y-6 w-full">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <TextInput
+                            label="Project Title"
+                            name="title"
+                            value={formData.title}
+                            onChange={handleChange}
+                            required
+                        />
+                        <TextInput
+                            label="Type / Category"
+                            name="type"
+                            value={formData.type}
+                            onChange={handleChange}
+                            required
+                            placeholder="e.g. Residential, Commercial"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-secondary-700 mb-1">
+                            Description
+                        </label>
+                        <textarea
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            required
+                            rows={4}
+                            className="w-full rounded-xl border px-4 py-2.5 text-sm transition focus:outline-none focus:ring-2 focus:ring-primary-base/40 focus:border-primary-base border-secondary-200"
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <TextInput
+                            label="Client"
+                            name="client"
+                            value={formData.client}
+                            onChange={handleChange}
+                        />
+                        <TextInput
+                            label="Location"
+                            name="location"
+                            value={formData.location}
+                            onChange={handleChange}
+                        />
+                        <TextInput
+                            label="Year"
+                            name="year"
+                            value={formData.year}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-sm font-medium text-secondary-700 mb-1">
+                                Status
+                            </label>
+                            <select
+                                name="status"
+                                value={formData.status}
+                                onChange={handleChange}
+                                className="w-full rounded-xl border px-4 py-2.5 text-sm transition focus:outline-none focus:ring-2 focus:ring-primary-base/40 focus:border-primary-base border-secondary-200 bg-white"
+                            >
+                                <option value="active">Active</option>
+                                <option value="completed">Completed</option>
+                                <option value="archived">Archived</option>
+                            </select>
+                        </div>
+                        <TextInput
+                            label="Tags (comma-separated)"
+                            name="tags"
+                            value={formData.tags}
+                            onChange={handleChange}
+                            placeholder="e.g., react, nodejs, design"
+                        />
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <input
+                            type="checkbox"
+                            id="is_featured"
+                            name="is_featured"
+                            checked={formData.is_featured}
+                            onChange={handleChange}
+                            className="w-4 h-4 text-primary-base border-gray-300 rounded focus:ring-primary-base"
+                        />
+                        <label htmlFor="is_featured" className="text-sm font-medium text-secondary-700">
+                            Feature this project on homepage
+                        </label>
+                    </div>
+
+                    <div className="border-t pt-4">
+                        <label className="block text-sm font-medium text-secondary-700 mb-2">
+                            Featured Image
+                        </label>
+                        <Flex className="gap-4 items-center mb-2">
+                            <TextInput
+                                className="w-full"
+                                label="Image URL"
+                                name="image_url"
+                                value={formData.image_url}
+                                onChange={handleChange}
+                                placeholder="Image URL"
+                            />
+                            <div className="relative overflow-hidden inline-[button] bg-white border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm font-medium text-gray-700">
+                                <Upload size={16} className="inline mr-2" /> Upload
+                                <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleFileUpload(e, 'image_url')} accept="image/*" />
+                            </div>
+                        </Flex>
+                        {formData.image_url && (
+                            <img src={formData.image_url} alt="Preview" className="h-32 w-auto object-cover rounded-lg border" />
+                        )}
+                    </div>
+
+                    <div className="border-t pt-4">
+                        <Flex className="justify-between items-center mb-2">
+                            <label className="block text-sm font-medium text-secondary-700">
+                                Project Gallery
+                            </label>
+                            <div className="flex gap-2">
+                                <button type="button" onClick={handleGalleryAdd} className="text-xs bg-gray-100 px-2 py-1 rounded hover:bg-gray-200">Add URL</button>
+                                <div className="relative overflow-hidden inline-[button] bg-white border border-gray-300 rounded-lg px-3 py-1 hover:bg-gray-50 cursor-pointer text-xs font-medium text-gray-700">
+                                    <Upload size={12} className="inline mr-1" /> Upload
+                                    <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleFileUpload(e, 'gallery')} accept="image/*" />
+                                </div>
+                            </div>
+                        </Flex>
+
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+                            {formData.gallery.map((url, idx) => (
+                                <div key={idx} className="relative group rounded-lg overflow-hidden border bg-gray-50 h-24">
+                                    <img src={url} alt={`Gallery ${idx}`} className="h-full w-full object-cover" />
+                                    <button
+                                        type="button"
+                                        onClick={() => handleGalleryRemove(idx)}
+                                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <X size={12} />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <Flex className="gap-4 pt-4">
+                        <Button
+                            type="submit"
+                            variant="primary_filled"
+                            height="medium"
+                            disabled={loading}
+                        >
+                            {createMutation.isPending || updateMutation.isPending || loading ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Project' : 'Create Project')}
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => navigate('/admin/projects')}
+                            variant="dark_outlined"
+                            height="medium"
+                        >
+                            Cancel
+                        </Button>
+                    </Flex>
+                </form>
+            </Div>
+        </Flex>
+    );
 }
 
 export default function AddEditProject() {
-  return (
-    <ProtectedRoute>
-      <AddEditProjectContent />
-    </ProtectedRoute>
-  );
+    return (
+        <ProtectedRoute>
+            <AddEditProjectContent />
+        </ProtectedRoute>
+    );
 }

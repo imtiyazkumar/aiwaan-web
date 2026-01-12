@@ -1,14 +1,19 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { account } from '~/lib/appwrite';
+import { supabase } from '~/lib/supabase';
+import type { Session, User } from '@supabase/supabase-js';
 
-interface User {
-    $id: string;
-    name: string;
-    email: string;
+// Extend the User interface if needed, or use Supabase's
+interface Profile {
+    id: string;
+    email: string | undefined; // Supabase user email
+    full_name: string | null;
+    avatar_url: string | null;
+    is_admin: boolean;
 }
 
 interface AuthContextType {
     user: User | null;
+    profile: Profile | null;
     loading: boolean;
     login: (email: string, password: string) => Promise<void>;
     register: (email: string, password: string, name: string) => Promise<void>;
@@ -20,47 +25,97 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
+    const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        checkUser();
+        // Check active session
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setUser(session?.user ?? null);
+            if (session?.user) {
+                fetchProfile(session.user.id);
+            } else {
+                setLoading(false);
+            }
+        });
+
+        // Listen for auth changes
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange(async (_event, session) => {
+            setUser(session?.user ?? null);
+            if (session?.user) {
+                await fetchProfile(session.user.id);
+            } else {
+                setProfile(null);
+                setLoading(false);
+            }
+        });
+
+        return () => subscription.unsubscribe();
     }, []);
 
-    async function checkUser() {
+    async function fetchProfile(userId: string) {
         try {
-            const currentUser = await account.get();
-            setUser(currentUser);
+            // Give trigger a moment if this is a fresh signup? 
+            // Better: fetch, if not found, wait/retry or just use auth metadata
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+                .single();
+
+            if (error) {
+                console.error('Error fetching profile:', error);
+            }
+
+            if (data) {
+                setProfile(data);
+            }
         } catch (error) {
-            setUser(null);
+            console.error('Unexpected error fetching profile:', error);
         } finally {
             setLoading(false);
         }
     }
 
     async function login(email: string, password: string) {
-        await account.createEmailPasswordSession(email, password);
-        await checkUser();
+        const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+        if (error) throw error;
     }
 
     async function register(email: string, password: string, name: string) {
-        await account.create('unique()', email, password, name);
-        await login(email, password);
+        const { error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    full_name: name,
+                },
+            },
+        });
+        if (error) throw error;
     }
 
     async function logout() {
-        await account.deleteSession('current');
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
         setUser(null);
+        setProfile(null);
     }
 
     async function resetPassword(email: string) {
-        await account.createRecovery(
-            email,
-            `${window.location.origin}/auth/reset`
-        );
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${window.location.origin}/auth/reset`,
+        });
+        if (error) throw error;
     }
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, register, logout, resetPassword }}>
+        <AuthContext.Provider value={{ user, profile, loading, login, register, logout, resetPassword }}>
             {children}
         </AuthContext.Provider>
     );
