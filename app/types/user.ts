@@ -6,4 +6,5 @@ export interface IProfile {
     avatar_url: string | null;
     website: string | null;
     is_admin: boolean | null;
+    role: string | null;
 }

@@ -8,22 +8,18 @@ const FeaturedServices = () => {
     return (
         <FlexColumn className={`${wrapperBaseClass}`}>
             <TitleCard title="Featured Services" />
-
-            <Flex className='w-full h-full gap-4 flex-col md:flex-row'>
+            <Flex className='w-full flex-row flex-wrap justify-center gap-4 sm:gap-6 lg:gap-4'>
                 {ourServices.filter(s => s.isFeatured).map((service, index) => (
                     <ServiceCard
-                        title={service.title}
-                        description={service.description}
-                        imageUrl={service.imageUrl}
-                        features={service.features}
-                        buttonTitle={service.buttonTitle}
+                        key={index}
+                        service={service}
                         index={index + 1}
-                        tag={service.tag}
-                        onClick={service.onClick}
                     />
                 ))}
             </Flex>
         </FlexColumn>
+
+
     );
 };
 

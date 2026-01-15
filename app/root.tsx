@@ -30,7 +30,7 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <head>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -46,17 +46,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
     );
 };
 
+import ChatWidget from "~/components/ChatWidget";
+
 export default function App() {
     return (
-        <AuthProvider>
-            <FlexColumn className="w-full justify-center items-center bg-slate-200">
-                <Navbar />
-                <FlexColumn className="w-full justify-center items-center px-1 sm:px-2 lg:px-4 py-1 sm:py-2 gap-2 lg:py-4">
-                    <Outlet />
+        <QueryProvider>
+            <AuthProvider>
+                <FlexColumn className="w-full justify-center items-center bg-slate-200">
+                    <Navbar />
+                    <FlexColumn className="w-full justify-center items-center px-1 sm:px-2 lg:px-4 py-1 sm:py-2 gap-2 lg:py-4">
+                        <Outlet />
+                    </FlexColumn>
+                    <Footer />
+                    <ChatWidget />
                 </FlexColumn>
-                <Footer />
-            </FlexColumn>
-        </AuthProvider>
+            </AuthProvider>
+        </QueryProvider>
     );
 };
 

@@ -38,7 +38,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ title, subtitle, description,
                     className="w-full h-full object-cover scale-105"
                 />
             </Div>
-            <Div className="absolute inset-0 bg-gradient-to-br from-primary-900/90 via-secondary-800/80 to-primary-600/90 z-10" />
+            <Div className="absolute inset-0 bg-linear-to-br from-primary-900/90 via-secondary-800/80 to-primary-600/90 z-10" />
             <Div className="container mx-auto px-4 py-16 md:py-24 relative z-20 text-center text-white">
                 <Div className="max-w-4xl mx-auto">
                     <Div className="text-48 md:text-64 font-bold leading-tight mb-4 font-display animate-fade-in">

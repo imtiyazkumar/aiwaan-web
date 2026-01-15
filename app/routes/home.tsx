@@ -18,6 +18,7 @@ import WhyChooseUsSection from '~/components/sections/WhyChooseSection';
 import ButtonBanner from '~/components/sections/BottomBanner';
 import FeaturedProjects from '~/components/sections/FeaturedProjects';
 import FeaturedServices from '~/components/sections/FeaturedServices';
+import TestimonialsSection from '~/components/sections/TestimonialsSection';
 
 export const stats = [
     { icon: <Award size={24} />, number: "150+", label: "Projects Completed", description: "Successfully delivered" },
@@ -94,6 +95,8 @@ const Home = () => {
             />
 
             <FeaturedServices />
+
+            <TestimonialsSection />
 
             <ButtonBanner
                 title="Ready to Transform Your Space?"

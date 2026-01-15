@@ -1,14 +1,19 @@
 export interface IService {
     id: string;
+    index?: number;
+
     title: string;
     description: string;
-    image_url: string | null;
-    tag: string | null;
-    features: string[] | null;
-    created_at: string;
-    updated_at: string;
-    // adding legacy compatibility if needed
-    imageUrl?: string;
+
+    imageUrl: string;
+    images?: string[] | null;
+
+    tag?: string;
+    isFeatured: boolean;
+
+    features?: string[];
     buttonTitle?: string;
-    button_title?: string | null;
+
+    icon?: string;
+    onClick?: () => void;
 }

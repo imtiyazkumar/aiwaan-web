@@ -11,7 +11,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
 
     return (
         <GlassCard className="flex-1 p-4">
-            <Div className="mb-4 h-[200px]  md:h-[400px] lg:h-[600px] w-full overflow-hidden rounded-xl">
+            <Div className="mb-4 h-50  md:h-100 lg:h-150 w-full overflow-hidden rounded-xl">
                 <img
                     src={images[active]}
                     alt="Project view"

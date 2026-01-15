@@ -3,13 +3,14 @@ export interface IProject {
     created_at: string;
     title: string;
     description: string | null;
-    type: string | null;
+    category: string | null;
     location: string | null;
-    image_url: string | null;
+    cover_image: string | null;
     gallery: string[] | null;
     status: string | null;
     client: string | null;
     year: string | null;
     tags: string[] | null;
     is_featured: boolean | null;
+    created_by: string | null;
 }

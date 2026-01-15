@@ -1,10 +1,10 @@
 import { ProtectedRoute } from '~/components/ProtectedRoute';
 
-import { CreditCard, Check } from "lucide-react";
+import { CreditCard, Check, Plus } from "lucide-react";
 import { Div, Flex, FlexColumn } from "~/components/general/BaseComponents";
 import Button from "~/components/buttons/Button";
 import { wrapperBaseClass } from "~/utils/constants";
-import { supabase } from "~/lib/supabase";
+// import { supabase } from "~/lib/supabase"; // Removed
 import { useEffect, useState } from "react";
 import { useAuth } from "~/contexts/AuthContext";
 
@@ -20,12 +20,19 @@ function BillingContent() {
 
   return (
     <FlexColumn className="w-full gap-8">
-      <FlexColumn className="gap-2">
-        <h1 className="text-3xl font-bold text-secondary-900">Billing & Subscription</h1>
-        <p className="text-secondary-600">
-          Manage your plan, billing history, and payment methods.
-        </p>
-      </FlexColumn>
+      <Flex className="justify-between items-center w-full">
+        <FlexColumn className="gap-2">
+          <h1 className="text-3xl font-bold text-secondary-900">Billing & Subscription</h1>
+          <p className="text-secondary-600">
+            Manage your plan, billing history, and payment methods.
+          </p>
+        </FlexColumn>
+        {user &&
+          <Button variant="primary_filled" onClick={() => window.location.href = '/add-edit-bill'}>
+            <Plus size={20} className="mr-2" /> Add Bill
+          </Button>
+        }
+      </Flex>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Current Plan */}

@@ -89,10 +89,7 @@ export default function SignIn() {
 
                     <Div className="text-center text-sm text-secondary-600">
                         Don’t have an account?
-                        <Link
-                            to="/auth/sign-up"
-                            className="ml-1 font-medium text-primary-base hover:text-primary-dark transition-colors"
-                        >
+                        <Link to="/auth/sign-up" className="ml-1 font-medium text-primary-base hover:text-primary-dark transition-colors">
                             Create one
                         </Link>
                     </Div>

@@ -20,11 +20,18 @@ export default [
   route("faq", "routes/faq.tsx"),
   route("privacy-policy", "routes/privacy-policy.tsx"),
   route("about", "routes/about.tsx"),
+  route("testimonials", "routes/testimonials.tsx"),
+  route("add-edit-testimonial", "routes/add-edit-testimonial.tsx"),
+  // route("api/chat", "routes/api.chat.ts"), // Removed
 
   layout("routes/admin.tsx", [
     index("routes/admin._index.tsx"),
     route("admin/projects", "routes/admin.projects.tsx"),
+    route("admin/orders", "routes/admin.orders.tsx"),
     route("add-edit-project", "routes/add-edit-project.tsx"),
+    route("add-edit-service", "routes/add-edit-service.tsx"),
+    route("add-edit-order", "routes/add-edit-order.tsx"),
+    route("add-edit-bill", "routes/add-edit-bill.tsx"),
     route("billing", "routes/billing.tsx"),
   ]),
 

@@ -1,53 +1,66 @@
 import { ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router';
 import Button from '~/components/buttons/Button';
 import { Div, Flex, Span } from '~/components/general/BaseComponents'
+import type { IService } from '~/types/service';
 
 
 interface IServiceCardProps {
-    title: string;
-    description: string;
-    imageUrl: string;
-    tag: string;
-    features: string[];
-    buttonTitle: string;
-    onClick: () => void;
     index: number;
+    service: IService;
 }
 
-const ServiceCard: React.FC<IServiceCardProps> = ({ title, description, imageUrl, tag, index, features, buttonTitle, onClick }) => {
+const ServiceCard: React.FC<IServiceCardProps> = ({ service, index }) => {
+    const navigate = useNavigate();
+
     return (
-        <Flex className="group relative min-w-80 md:min-w-125 w-full min-h-80 md:min-h-125 md:max-w-150 md:max-h-150 overflow-hidden rounded-3xl shadow-xl">
+        <Flex className="group relative w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-21px)] min-h-100 sm:min-h-112.5 lg:min-h-125 overflow-hidden rounded-2xl lg:rounded-3xl shadow-xl">
             <img
-                src={imageUrl}
-                alt="Interior Design"
+                src={service.imageUrl}
+                alt={service.title}
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
-            <Div className="absolute inset-0 bg-linear-to-b from-black/0 via-black/40 to-slate-800/80 transition-colors duration-500 group-hover:from-black/10 group-hover:via-emerald-900/60" />
-            <Div className="absolute bottom-12 left-0 z-10 w-full text-white">
-                <Div className="px-8 pb-12">
-                    <Span className="mb-4 inline-block rounded-full bg-white/20 px-4 py-1 text-xs font-bold tracking-widest backdrop-blur">
-                        {index}/{tag}
+            <Div className="absolute inset-0 bg-linear-to-b from-black/20 via-black/50 to-slate-900/90 transition-colors duration-500 group-hover:from-black/30 group-hover:via-emerald-900/50" />
+
+            <Div className="absolute inset-0 z-10 flex flex-col justify-end text-white p-6 sm:p-8">
+                <Div className="space-y-3 sm:space-y-4">
+                    <Span className="inline-block rounded-full bg-white/20 px-3 sm:px-4 py-1 sm:py-1.5 text-10 sm:text-xs font-bold tracking-widest backdrop-blur">
+                        {index}/{service.tag}
                     </Span>
-                    <h3 className="mb-4 text-3xl font-extrabold leading-tight">{title}</h3>
-                    <Div className="max-h-0 overflow-hidden opacity-0 transition-all duration-800 ease-out group-hover:max-h-60 group-hover:opacity-100">
-                        <p className="mb-4 text-sm text-white/90">{description}</p>
-                        <Flex className="flex-wrap gap-3">
-                            {features.map(item => (
-                                <Span key={item} className="rounded-full bg-white/15 px-4 py-2 text-xs backdrop-blur">
+
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight">
+                        {service.title}
+                    </h3>
+
+                    {/* Expandable content on hover */}
+                    <Div className="max-h-0 overflow-hidden opacity-0 transition-all duration-700 ease-out group-hover:max-h-75 group-hover:opacity-100">
+                        <p className="mb-4 text-sm sm:text-base text-white/90 leading-relaxed">
+                            {service.description}
+                        </p>
+                        <Flex className="flex-wrap gap-2">
+                            {service?.features?.map(item => (
+                                <Span key={item} className="rounded-full bg-white/20 px-3 py-1.5 text-xs backdrop-blur">
                                     {item}
                                 </Span>
                             ))}
                         </Flex>
                     </Div>
                 </Div>
-                <Flex className="absolute bottom-1 right-4 w-full translate-y-10 opacity-0 transition-all justify-end duration-500 ease-out group-hover:translate-y-6 group-hover:opacity-100">
-                    <Button onClick={onClick} variant="primary_filled" height="medium" className="border-2 border-primary-base/10 w-fit mt-4" >
-                        <Flex>
-                            {buttonTitle}
-                            <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+
+                {/* Explore button */}
+                <Div className="mt-6 translate-y-8 opacity-0 transition-all  duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+                    <Button
+                        onClick={() => navigate(`/services/${service.id}`)}
+                        variant="primary_filled"
+                        height="medium"
+                        className="border-2 border-white/10 w-full sm:w-auto ml-auto"
+                    >
+                        <Flex className="items-center justify-center gap-2">
+                            <span>Explore</span>
+                            <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
                         </Flex>
                     </Button>
-                </Flex>
+                </Div>
             </Div>
         </Flex>
     )

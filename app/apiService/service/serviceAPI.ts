@@ -1,47 +1,48 @@
-/**
- * Project Aiwaan
- *
- * @author     Imtiyaz Ahmad
- * @copyright  Imtiyaz Ahmad
- *
- * Built by Imtiyaz Ahmad
- * @link https://aiwaan.in
- *
- */
-
-import { supabase } from "~/lib/supabase";
+import { api } from "~/lib/api";
 import type { IService } from "../../types/service";
 import type { ISearchSortFilter } from "../../utils";
 
-// Helper type for API responses if needed, though Supabase returns { data, error }
 export type TApiSuccessResponse<T> = T;
 
 const getAll = async (params: ISearchSortFilter) => {
-    // Basic implementation: fetch all services. 
-    // If pagination/search is needed, we'd add .range() or .ilike() here based on params.
-    let query = supabase.from('services').select('*');
+    // Pass params to server if needed
+    const queryParams: Record<string, any> = {};
+    if (params.search) queryParams.search = params.search;
 
-    if (params.search) {
-        query = query.ilike('title', `%${params.search}%`);
-    }
-
-    // Default sort by created_at
-    query = query.order('created_at', { ascending: true });
-
-    const { data, error } = await query;
-
-    if (error) {
-        throw error;
-    }
+    const { data } = await api.get<{ data: IService[] }>('/services', queryParams);
 
     return {
-        services: data as IService[],
-        total: data.length, // accurate count requires { count: 'exact' } in query
+        services: data,
+        total: data.length,
         page: params.page || 1,
-        lastPage: 1 // TODO: implement real pagination calc if needed
+        lastPage: 1
     };
+};
+
+const getOne = async (id: string) => {
+    const { data } = await api.get<{ data: IService }>(`/services/${id}`);
+    return data;
+};
+
+const create = async (service: Partial<IService>) => {
+    const { data } = await api.post<{ data: IService }>('/services', service);
+    return data;
+};
+
+const update = async (id: string, service: Partial<IService>) => {
+    const { data } = await api.put<{ data: IService }>(`/services/${id}`, service);
+    return data;
+};
+
+const destroy = async (id: string) => {
+    await api.delete(`/services/${id}`);
+    return true;
 };
 
 export default {
     getAll,
+    getOne,
+    create,
+    update,
+    destroy
 };

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import { supabase } from "~/lib/supabase";
+// import { supabase } from "~/lib/supabase"; // Removed
 import { Div, Flex, FlexColumn } from "~/components/general/BaseComponents";
 import Button from "~/components/buttons/Button";
 import { wrapperBaseClass } from "~/utils/constants";
@@ -14,15 +14,16 @@ export default function ResetPassword() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // Optional: Check if we have a session (which implies the recovery link worked)
-        // If not, might redirect to login, but let's assume the flow handles it.
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            if (!session) {
-                // If no session, the link might be invalid or expired, 
-                // but checking this immediately might be racy with the auto-recovery.
-                // Let's just let the user try to update.
+        // Parse hash check for recovery token from Supabase email link
+        const hash = window.location.hash;
+        if (hash) {
+            const params = new URLSearchParams(hash.substring(1)); // remove #
+            const accessToken = params.get('access_token');
+            if (accessToken) {
+                // Set token so the PUT request is authenticated
+                import('~/lib/api').then(({ api }) => api.setToken(accessToken));
             }
-        });
+        }
     }, []);
 
     async function handleSubmit(e: React.FormEvent) {
@@ -42,8 +43,8 @@ export default function ResetPassword() {
         setLoading(true);
 
         try {
-            const { error } = await supabase.auth.updateUser({ password: password });
-            if (error) throw error;
+            const { api } = await import('~/lib/api');
+            await api.put('/auth/password', { password });
 
             // Success
             navigate("/auth/sign-in");

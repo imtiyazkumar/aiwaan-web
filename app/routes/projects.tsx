@@ -19,13 +19,8 @@ import { wrapperBaseClass } from '~/utils/constants';
 import ProjectQuery from '~/apiService/project/projectQuery';
 
 const projects = () => {
-    const navigate = useNavigate();
     const { data, isLoading } = ProjectQuery.useQueryGetProjects({});
     const projectList = data?.projects || [];
-
-    if (isLoading) {
-        return <div className="w-full text-center py-20">Loading projects...</div>;
-    }
 
     return (
         <FlexColumn className='w-full'>
@@ -41,31 +36,15 @@ const projects = () => {
             />
 
             <FlexColumn className={`${wrapperBaseClass}`}>
-                <TitleCard title="Our Portfolio" />
-                <Flex className="flex-wrap gap-4">
-                    {projectList.length === 0 ? (
-                        <div className="w-full text-center py-10 text-gray-500">No projects found.</div>
-                    ) : (
-                        projectList.map((project, index) => (
-                            <Div key={project.id} className='md:max-w-[32.7%] cursor-pointer w-full flex-col md:flex-row' onClick={() => navigate(`/projects/${project.id}`)}>
-                                <ProjectCard
-                                    index={index}
-                                    project={{
-                                        ...project,
-                                        image: project.image_url || "", // Adapter for legacy component prop
-                                        images: project.gallery || [],
-                                        type: project.type || "", // Ensure string type, not null
-                                        description: project.description || "",
-                                        location: project.location || "",
-                                        client: project.client || "",
-                                        year: project.year || "",
-                                        status: (project.status || "") as any,
-                                        tags: project.tags || []
-                                    } as any}
-                                />
-                            </Div>
-                        ))
-                    )}
+                <TitleCard title="Our Projects" />
+                <Flex className='w-full flex-row flex-wrap justify-center gap-4 sm:gap-6 lg:gap-4'>
+                    {projectList.map((project, index) => (
+                        <ProjectCard
+                            key={project.id || index}
+                            project={project}
+                            index={index}
+                        />
+                    ))}
                 </Flex>
             </FlexColumn>
 

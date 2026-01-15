@@ -3,11 +3,11 @@
 
 import { cn } from "../../utils/helper";
 
-interface DivProps extends React.HTMLAttributes<HTMLDivElement> {}
-interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {}
-interface ImgProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
-interface LabelProps extends React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement> {}
-interface TableProps extends React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTableElement>, HTMLTableElement> {}
+interface DivProps extends React.HTMLAttributes<HTMLDivElement> { }
+interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> { }
+interface ImgProps extends React.ImgHTMLAttributes<HTMLImageElement> { }
+interface LabelProps extends React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement> { }
+interface TableProps extends React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTableElement>, HTMLTableElement> { }
 
 export const Div: React.FC<DivProps> = ({ children, ...props }) => <div {...props}>{children}</div>;
 
@@ -30,6 +30,14 @@ export const Flex: React.FC<DivProps> = ({ className, children, ...props }) => {
 export const FlexColumn: React.FC<DivProps> = ({ className, children, ...props }) => {
     return (
         <div {...props} className={cn("flex flex-col justify-center", className)}>
+            {children}
+        </div>
+    );
+};
+
+export const Grid: React.FC<DivProps> = ({ className, children, ...props }) => {
+    return (
+        <div {...props} className={cn("grid", className)}>
             {children}
         </div>
     );

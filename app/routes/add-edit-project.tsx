@@ -7,7 +7,7 @@ import { Div, Flex, FlexColumn } from '~/components/general/BaseComponents';
 import TextInput from '~/components/general/TextInput';
 import Button from '~/components/buttons/Button';
 import { wrapperBaseClass } from '~/utils/constants';
-import { supabase } from '~/lib/supabase';
+// import { supabase } from '~/lib/supabase'; // Removed
 import { X, Upload } from 'lucide-react';
 
 import ProjectQuery from '~/apiService/project/projectQuery';
@@ -29,9 +29,9 @@ function AddEditProjectContent() {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        type: '',
+        category: '',
         status: 'active',
-        image_url: '',
+        cover_image: '',
         location: '',
         client: '',
         year: new Date().getFullYear().toString(),
@@ -45,9 +45,9 @@ function AddEditProjectContent() {
             setFormData({
                 title: projectData.title || '',
                 description: projectData.description || '',
-                type: projectData.type || '',
+                category: projectData.category || '',
                 status: projectData.status || 'active',
-                image_url: projectData.image_url || '',
+                cover_image: projectData.cover_image || '',
                 location: projectData.location || '',
                 client: projectData.client || '',
                 year: projectData.year || '',
@@ -82,28 +82,50 @@ function AddEditProjectContent() {
         }));
     };
 
-    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'image_url' | 'gallery') => {
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'cover_image' | 'gallery') => {
         const file = e.target.files?.[0];
         if (!file) return;
 
         try {
             setLoading(true);
+            const { api } = await import('~/lib/api');
+
             const fileExt = file.name.split('.').pop();
             const fileName = `${Math.random()}.${fileExt}`;
             const filePath = `${fileName}`;
 
-            const { error: uploadError } = await supabase.storage
-                .from('project-images')
-                .upload(filePath, file);
+            // We need to send FormData for file upload or just use the body if api helper supports text/blob?
+            // api.post implementation stringifies body. We need a way to upload File.
+            // Let's assume we can fetch directly or modify api.ts. 
+            // For now, let's use standard fetch to our server proxy endpoint.
+            // The api.ts we created does JSON.stringify by default.
+            // We should use raw fetch here for FormData.
 
-            if (uploadError) throw uploadError;
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('bucket', 'project-images');
+            formData.append('path', filePath);
 
-            const { data: { publicUrl } } = supabase.storage
-                .from('project-images')
-                .getPublicUrl(filePath);
+            const token = api.getToken();
 
-            if (field === 'image_url') {
-                setFormData(prev => ({ ...prev, image_url: publicUrl }));
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/storage/upload`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                const err = await response.json() as any;
+                throw new Error(err.message || 'Upload failed');
+            }
+
+            const data = await response.json() as any;
+            const publicUrl = data.publicUrl;
+
+            if (field === 'cover_image') {
+                setFormData(prev => ({ ...prev, cover_image: publicUrl }));
             } else {
                 setFormData(prev => ({ ...prev, gallery: [...prev.gallery, publicUrl] }));
             }
@@ -122,15 +144,16 @@ function AddEditProjectContent() {
         const projectPayload = {
             title: formData.title,
             description: formData.description,
-            type: formData.type,
+            category: formData.category,
             status: formData.status,
-            image_url: formData.image_url,
+            cover_image: formData.cover_image,
             location: formData.location,
             client: formData.client,
             year: formData.year,
             tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
             is_featured: formData.is_featured,
-            gallery: formData.gallery
+            gallery: formData.gallery,
+            created_by: null
         };
 
         const options = {
@@ -170,9 +193,9 @@ function AddEditProjectContent() {
                             required
                         />
                         <TextInput
-                            label="Type / Category"
-                            name="type"
-                            value={formData.type}
+                            label="Category"
+                            name="category"
+                            value={formData.category}
                             onChange={handleChange}
                             required
                             placeholder="e.g. Residential, Commercial"
@@ -260,19 +283,19 @@ function AddEditProjectContent() {
                         <Flex className="gap-4 items-center mb-2">
                             <TextInput
                                 className="w-full"
-                                label="Image URL"
-                                name="image_url"
-                                value={formData.image_url}
+                                label="Cover Image URL"
+                                name="cover_image"
+                                value={formData.cover_image}
                                 onChange={handleChange}
                                 placeholder="Image URL"
                             />
                             <div className="relative overflow-hidden inline-[button] bg-white border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm font-medium text-gray-700">
                                 <Upload size={16} className="inline mr-2" /> Upload
-                                <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleFileUpload(e, 'image_url')} accept="image/*" />
+                                <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleFileUpload(e, 'cover_image')} accept="image/*" />
                             </div>
                         </Flex>
-                        {formData.image_url && (
-                            <img src={formData.image_url} alt="Preview" className="h-32 w-auto object-cover rounded-lg border" />
+                        {formData.cover_image && (
+                            <img src={formData.cover_image} alt="Preview" className="h-32 w-auto object-cover rounded-lg border" />
                         )}
                     </div>
 

@@ -1,7 +1,7 @@
-import type { IProject } from "~/components/cards/ProjectCard";
+import type { IProject } from "~/types/project";
+import type { IService } from "~/types/service";
 
-export const wrapperBaseClass = "w-full gap-2.5 md:gap-0 bg-white rounded-2xl shadow-lg overflow-hidden px-4 sm:px-6 lg:px-10 py-4 sm:py-8 lg:py-10 my-2 sm:my-4 lg:my-8 flex flex-col items-center justify-center"
-
+export const wrapperBaseClass = "w-full gap-2.5 md:gap-0 bg-white rounded-2xl shadow-lg overflow-hidden px-3 sm:px-4 lg:px-6 py-3 sm:py-5 lg:py-6 my-2 sm:my-3 lg:my-6 flex flex-col items-center justify-center"
 
 export enum AppRoutes {
     Home = "/",
@@ -24,6 +24,7 @@ export enum AppRoutes {
     ErrorConnectionError = "/error/connection-error",
     Administration = "/admin",
     About = "/about",
+    AdminOrders = "/admin/orders",
     AddEditProject = "/add-edit-project",
     Billing = "/billing",
 }
@@ -39,14 +40,17 @@ export const RouteDefinitions = [
     { key: AppRoutes.RequestResetPassword, label: "Request Reset Password" },
     { key: AppRoutes.Profile, label: "profile" },
     { key: AppRoutes.AdminProjects, label: "Admin Projects" },
+    { key: AppRoutes.AdminOrders, label: "Manage Orders", isAdmin: true },
     { key: AppRoutes.Billing, label: "Billing" },
     { key: AppRoutes.Faq, label: "faq" },
     { key: AppRoutes.PrivacyPolicy, label: "Privacy Policy" },
     { key: AppRoutes.Administration, label: "Admin Panel", isAdmin: true },
 ];
 
-export const ourServices = [
+export const ourServices: IService[] = [
     {
+        id: "srv-1f9c2a6e-3b74-4a5a-9c8a-01a2b3c4d501",
+
         title: "3D Architectural Visualization",
         description:
             "Transform blueprints into photorealistic 3D renders that help clients visualize the final build before construction begins.",
@@ -70,6 +74,7 @@ export const ourServices = [
         ]
     },
     {
+        id: "srv-1f9c2a6se-3b74-4a5a-9c8a-01a2b3c4d501",
         title: "2D Floor Plans & Layouts",
         description:
             "Accurate, presentation-ready floor plans with precise dimensions and furniture layouts for residential and commercial projects.",
@@ -93,6 +98,8 @@ export const ourServices = [
         ]
     },
     {
+        id: "ssrv-1f9c2a6se-3b74-4a5a-9c8a-01a2b3c4d501",
+
         title: "Interior Design & Styling",
         description:
             "Curated interior concepts blending Kashmiri craftsmanship with modern aesthetics, tailored to your lifestyle and space.",
@@ -117,6 +124,8 @@ export const ourServices = [
     },
 
     {
+        id: "srv-1f9c2a6se-3b74dd-4a5a-9c8a-01a2b3c4d501",
+
         title: "Exterior Elevation Design",
         description:
             "Striking exterior elevation designs that define architectural character and enhance curb appeal.",
@@ -139,6 +148,8 @@ export const ourServices = [
         ]
     },
     {
+        id: "srv-1f9c2a6se-3b74-4a5a-9c8a-01a2b3c4d50sss1",
+
         title: "Walkthrough Animations",
         description:
             "Cinematic 3D walkthrough animations that bring architectural spaces to life before they are built.",
@@ -161,6 +172,8 @@ export const ourServices = [
         ]
     },
     {
+        id: "srv-1f9c2a6se-3b74-4assad5a-9c8a-01a2b3c4d501",
+
         title: "Virtual Reality (VR) Experiences",
         description:
             "Immersive VR experiences allowing clients to explore spaces in real scale and real time.",
@@ -183,6 +196,8 @@ export const ourServices = [
         ]
     },
     {
+        id: "srv-1f9c2a6se-3b74-4afs-s-df5a-9c8a-01a2b3c4d501",
+
         title: "Landscape Design Visualization",
         description:
             "Beautiful landscape visualizations integrating greenery, lighting, and outdoor elements.",
@@ -205,6 +220,8 @@ export const ourServices = [
         ]
     },
     {
+        id: "srv-1f9c2a6se-3b74-4add5a-9c8a-01a2b3c4d501",
+
         title: "Commercial Space Planning",
         description:
             "Optimized layouts for offices, retail, and commercial environments focused on functionality and flow.",
@@ -227,6 +244,8 @@ export const ourServices = [
         ]
     },
     {
+        id: "srv-1f9c2a6se-3b74-4a5a-9c8a-01a2b3ddc4d501",
+
         title: "Lighting Design & Visualization",
         description:
             "Professional lighting plans and renders showcasing mood, ambience, and architectural highlights.",
@@ -255,145 +274,181 @@ export const ourProjects: IProject[] = [
     {
         id: "showcase-1",
         title: "Modern Kashmir Villa",
-        type: "Residential",
+        category: "Residential",
         description: "A stunning blend of traditional Kashmiri architecture with modern amenities, featuring intricate woodwork and contemporary design elements.",
         location: "Srinagar, Kashmir",
-        image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600",
+        cover_image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Private Client",
         year: "2024",
-        images: [
+        gallery: [
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
-        ]
+        ],
+        created_at: new Date().toISOString(),
+        created_by: null,
+        tags: [],
+        is_featured: false
     },
     {
         id: "showcase-2",
         title: "Heritage Hotel Design",
-        type: "Commercial",
+        category: "Commercial",
         description: "Restoration and modernization of a heritage property into a boutique hotel, preserving cultural authenticity while adding luxury amenities.",
         location: "Sopore, Kashmir",
-        image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600",
+        cover_image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Heritage Hotels Ltd",
         year: "2023",
-        images: [
+        gallery: [
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
-        ]
+        ],
+        created_at: new Date().toISOString(),
+        created_by: null,
+        tags: [],
+        is_featured: false
     },
     {
         id: "showcase-3",
         title: "Contemporary Office Space",
-        type: "Commercial",
+        category: "Commercial",
         description: "Modern office design incorporating natural light and local materials, creating an inspiring workspace for a tech company.",
         location: "Srinagar, Kashmir",
-        image: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=600",
+        cover_image: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Tech Innovations",
         year: "2024",
-        images: [
+        gallery: [
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
-        ]
+        ],
+        created_at: new Date().toISOString(),
+        created_by: null,
+        tags: [],
+        is_featured: false
     },
     {
         id: "showcase-4",
         title: "Luxury Apartment Interior",
-        type: "Interior",
+        category: "Interior",
         description: "Elegant interior design for a luxury apartment, featuring custom furniture and traditional Kashmiri craftsmanship.",
         location: "Srinagar, Kashmir",
-        image: "https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=600",
+        cover_image: "https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Private Residence",
         year: "2023",
-        images: [
+        gallery: [
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
-        ]
+        ],
+        created_at: new Date().toISOString(),
+        created_by: null,
+        tags: [],
+        is_featured: false
     },
     {
         id: "showcase-5",
         title: "Garden Landscape Design",
-        type: "Landscape",
+        category: "Landscape",
         description: "Beautiful garden design incorporating traditional Mughal garden elements with contemporary landscaping techniques.",
         location: "Sopore, Kashmir",
-        image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600",
+        cover_image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Private Estate",
         year: "2024",
-        images: [
+        gallery: [
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
-        ]
+        ],
+        created_at: new Date().toISOString(),
+        created_by: null,
+        tags: [],
+        is_featured: false
     },
     {
         id: "showcase-6",
         title: "Cultural Center Design",
-        type: "Commercial",
+        category: "Commercial",
         description: "Design for a cultural center celebrating Kashmiri arts and crafts, featuring exhibition spaces and workshop areas.",
         location: "Srinagar, Kashmir",
-        image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600",
+        cover_image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Cultural Foundation",
         year: "2023",
-        images: [
+        gallery: [
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
-        ]
+        ],
+        created_at: new Date().toISOString(),
+        created_by: null,
+        tags: [],
+        is_featured: false
     },
     {
         id: "showcase-7",
         title: "Mountain Resort Design",
-        type: "Residential",
+        category: "Residential",
         description: "Eco-friendly mountain resort design that harmonizes with the natural landscape while providing luxury accommodations.",
         location: "Gulmarg, Kashmir",
-        image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600",
+        cover_image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Mountain Resorts",
         year: "2024",
-        images: [
+        gallery: [
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
-        ]
+        ],
+        created_at: new Date().toISOString(),
+        created_by: null,
+        tags: [],
+        is_featured: false
     },
     {
         id: "showcase-8",
         title: "Traditional Houseboat Renovation",
-        type: "Residential",
+        category: "Residential",
         description: "Careful renovation of a traditional Kashmiri houseboat, preserving heritage while adding modern comforts.",
         location: "Dal Lake, Srinagar",
-        image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600",
+        cover_image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Heritage Tourism",
         year: "2023",
-        images: [
+        gallery: [
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
-        ]
+        ],
+        created_at: new Date().toISOString(),
+        created_by: null,
+        tags: [],
+        is_featured: false
     },
     {
         id: "showcase-9",
         title: "Artisan Workshop Complex",
-        type: "Commercial",
+        category: "Commercial",
         description: "Design for a complex of workshops dedicated to traditional Kashmiri crafts, promoting local artisans and cultural heritage.",
         location: "Sopore, Kashmir",
-        image: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=600",
+        cover_image: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=600",
         status: "completed",
         client: "Craft Council",
         year: "2024",
-        images: [
+        gallery: [
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&auto=format&fit=crop&q=80",
             "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&auto=format&fit=crop&q=80"
-        ]
+        ],
+        created_at: new Date().toISOString(),
+        created_by: null,
+        tags: [],
+        is_featured: false
     }
 ];
