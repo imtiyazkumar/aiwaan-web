@@ -8,6 +8,11 @@ const getProfile = async (userId: string) => {
     return data;
 };
 
+const getAdminAll = async () => {
+    const { data } = await api.get<{ data: IProfile[] }>('/users');
+    return data; // Usually returns array
+};
+
 const updateProfile = async (profile: Partial<IProfile> & { id: string }) => {
     // We only implemented PUT /users/me. So we can only update OURSELF.
     // If the profile.id matches current user, we use /users/me endpoint logic on client side 
@@ -20,5 +25,6 @@ const updateProfile = async (profile: Partial<IProfile> & { id: string }) => {
 
 export default {
     getProfile,
+    getAdminAll,
     updateProfile,
 };

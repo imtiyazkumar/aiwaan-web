@@ -1,6 +1,5 @@
 import { api } from "~/lib/api";
 
-// Define interface if not available elsewhere, matching server schema
 export interface IOrder {
     id: string;
     created_at: string;
@@ -8,11 +7,16 @@ export interface IOrder {
     amount: number;
     status: string;
     details: Record<string, any>;
-    created_by: string;
+    created_by?: string;
 }
 
 const getAll = async () => {
     const { data } = await api.get<{ data: IOrder[] }>('/orders');
+    return { orders: data };
+};
+
+const getAdminAll = async () => {
+    const { data } = await api.get<{ data: IOrder[] }>('/orders/admin');
     return { orders: data };
 };
 
@@ -22,7 +26,6 @@ const getOne = async (id: string) => {
 };
 
 const create = async (order: Partial<IOrder>) => {
-    // Server expects: service_id, amount, status, details
     const { data } = await api.post<{ data: IOrder }>('/orders', order);
     return data;
 };
@@ -39,6 +42,7 @@ const destroy = async (id: string) => {
 
 export default {
     getAll,
+    getAdminAll,
     getOne,
     create,
     update,

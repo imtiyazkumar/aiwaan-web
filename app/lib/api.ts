@@ -18,12 +18,11 @@ async function handleResponse<T>(response: Response): Promise<T> {
             const errorData = await response.json() as any;
             errorMessage = errorData.error || errorData.message || errorMessage;
         } catch (e) {
-            // Ignore JSON parse error
+
         }
         throw new Error(errorMessage);
     }
 
-    // Check if response is empty (e.g. 204 No Content)
     if (response.status === 204) {
         return {} as T;
     }
@@ -75,7 +74,6 @@ export const api = {
         return handleResponse<T>(response);
     },
 
-    // Auth specific helper to set token
     setToken: (token: string) => {
         if (typeof localStorage !== 'undefined') {
             localStorage.setItem('access_token', token);

@@ -2,13 +2,12 @@ import { api } from "~/lib/api";
 import type { IBill } from "../../types/billing";
 
 const getUserBills = async (userId: string) => {
-    // Server currently has GET /bills (all bills, if admin)
-    // Server doesn't seem to have GET /bills?user_id=... or GET /users/:id/bills
-    // But GET /bills returns all bills (if admin) or maybe RLS filters it?
-    // Let's assume GET /bills returns MY bills if I am user.
-    // The server route `bills.get('/', ...)` selects * from bills. 
-    // RLS should filter it.
     const { data } = await api.get<{ data: IBill[] }>('/bills');
+    return { bills: data };
+};
+
+const getAdminBills = async () => {
+    const { data } = await api.get<{ data: IBill[] }>('/bills/admin');
     return { bills: data };
 };
 
@@ -29,6 +28,7 @@ const destroy = async (id: string) => {
 
 export default {
     getUserBills,
+    getAdminBills,
     create,
     update,
     destroy

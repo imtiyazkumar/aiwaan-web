@@ -14,6 +14,11 @@ const getAll = async (params?: ISearchSortFilter) => {
     return { projects: data };
 };
 
+const getAdminAll = async () => {
+    const { data } = await api.get<{ data: IProject[] }>('/projects/admin');
+    return { projects: data };
+};
+
 const getOne = async (id: string) => {
     const { data } = await api.get<{ data: IProject }>(`/projects/${id}`);
     return data;
@@ -36,6 +41,7 @@ const destroy = async (id: string) => {
 
 export default {
     getAll,
+    getAdminAll,
     getOne,
     create,
     update,

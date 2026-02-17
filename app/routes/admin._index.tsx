@@ -15,19 +15,47 @@ export default function AdminIndex() {
       color: "bg-blue-50"
     },
     {
+      title: "Manage Users",
+      description: "View and manage all registered users.",
+      icon: <FolderKanban size={32} className="text-indigo-600" />,
+      link: "/admin/users",
+      color: "bg-indigo-50"
+    },
+    {
+      title: "Manage Orders",
+      description: "View and track all client orders.",
+      icon: <CreditCard size={32} className="text-orange-600" />,
+      link: "/admin/orders",
+      color: "bg-orange-50"
+    },
+    {
+      title: "Manage Bills",
+      description: "View and manage all bills and invoices.",
+      icon: <CreditCard size={32} className="text-pink-600" />,
+      link: "/admin/bills",
+      color: "bg-pink-50"
+    },
+    {
+      title: "Testimonials",
+      description: "Approve and manage client testimonials.",
+      icon: <FolderKanban size={32} className="text-yellow-600" />,
+      link: "/admin/testimonials",
+      color: "bg-yellow-50"
+    },
+    {
+      title: "Support Chat",
+      description: "View and reply to customer support threads.",
+      icon: <FolderKanban size={32} className="text-teal-600" />,
+      link: "/admin/messages",
+      color: "bg-teal-50"
+    },
+    {
       title: "Add New Project",
       description: "Create a new project entry with details, images, and categories.",
       icon: <PlusCircle size={32} className="text-green-600" />,
       link: "/add-edit-project",
       color: "bg-green-50"
     },
-    {
-      title: "Billing & Subscription",
-      description: "Manage your subscription plan, payment methods, and invoices.",
-      icon: <CreditCard size={32} className="text-purple-600" />,
-      link: "/billing",
-      color: "bg-purple-50"
-    }
   ];
 
   return (

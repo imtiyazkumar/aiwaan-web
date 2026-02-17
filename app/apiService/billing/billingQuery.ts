@@ -14,6 +14,13 @@ const useQueryGetUserBills = (userId: string | undefined) => {
     });
 };
 
+const useQueryGetAdminBills = () => {
+    return useQuery({
+        queryKey: [BILLING_Query_Key.BILLING, 'admin'],
+        queryFn: () => BillingAPI.getAdminBills(),
+    });
+};
+
 const useMutationCreateBill = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -46,6 +53,7 @@ const useMutationDeleteBill = () => {
 
 export default {
     useQueryGetUserBills,
+    useQueryGetAdminBills,
     useMutationCreateBill,
     useMutationUpdateBill,
     useMutationDeleteBill,

@@ -2,7 +2,7 @@ export interface ITestimonial {
     id: string;
     created_at: string;
     client_name: string;
-    user_id: string | null;
+    user_id?: string | null;
     content: string;
     rating: number;
     verified_at: string | null;

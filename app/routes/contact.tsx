@@ -4,7 +4,36 @@ import { wrapperBaseClass } from "~/utils/constants";
 import TextInput from "~/components/general/TextInput";
 import Title from "~/components/general/Title";
 
+import { useState } from "react";
+import ContactQuery from "~/apiService/contact/contactQuery";
+
 export default function Contact() {
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        message: ""
+    });
+
+    const createMutation = ContactQuery.useMutationCreateContact();
+
+    const handleSubmit = () => {
+        if (!formData.name || !formData.email || !formData.message) {
+            alert("Please fill in all required fields.");
+            return;
+        }
+        createMutation.mutate(formData, {
+            onSuccess: () => {
+                alert("Message sent successfully!");
+                setFormData({ name: "", email: "", phone: "", message: "" });
+            },
+            onError: (error) => {
+                console.error("Error sending message:", error);
+                alert("Failed to send message.");
+            }
+        });
+    };
+
     return (
         <FlexColumn className={`${wrapperBaseClass} max-w-6xl px-2 sm:px-10 py-12`}>
             <FlexColumn className="text-center gap-1 w-full mb-2 lg:mb-6">
@@ -44,9 +73,25 @@ export default function Contact() {
                 </FlexColumn>
 
                 <FlexColumn className="gap-6 md:max-w-1/2 w-full">
-                    <TextInput label="Full Name" required />
-                    <TextInput label="Email Address" type="email" required />
-                    <TextInput label="Phone Number" type="tel" />
+                    <TextInput
+                        label="Full Name"
+                        required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    />
+                    <TextInput
+                        label="Email Address"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    />
+                    <TextInput
+                        label="Phone Number"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    />
 
                     <Div>
                         <label className="block text-sm font-medium text-secondary-700 mb-1">
@@ -56,6 +101,8 @@ export default function Contact() {
                             rows={5}
                             className="w-full rounded-xl border border-secondary-200 px-4 py-3 text-sm transition focus:outline-none focus:ring-2 focus:ring-primary-base/40 focus:border-primary-base resize-none"
                             placeholder="Tell us about your project…"
+                            value={formData.message}
+                            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         />
                     </Div>
 
@@ -63,8 +110,10 @@ export default function Contact() {
                         variant="primary_filled"
                         height="large"
                         className="w-fit ml-auto"
+                        onClick={handleSubmit}
+                        disabled={createMutation.isPending}
                     >
-                        Send Message
+                        {createMutation.isPending ? "Sending..." : "Send Message"}
                     </Button>
                 </FlexColumn>
             </Flex>

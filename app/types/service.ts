@@ -6,6 +6,7 @@ export interface IService {
     description: string;
 
     imageUrl: string;
+    image_url?: string; // DB field
     images?: string[] | null;
 
     tag?: string;
@@ -13,6 +14,7 @@ export interface IService {
 
     features?: string[];
     buttonTitle?: string;
+    button_title?: string; // DB field
 
     icon?: string;
     onClick?: () => void;

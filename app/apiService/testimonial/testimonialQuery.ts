@@ -15,10 +15,33 @@ const useQueryGetTestimonials = () => {
     });
 };
 
+const useQueryGetAdminTestimonials = () => {
+    return useQuery({
+        queryKey: [Testimonial_Query_Key.TESTIMONIAL, 'admin'],
+        queryFn: () => TestimonialAPI.getAdminAll(),
+    });
+};
+
 const useQueryGetFeaturedTestimonials = () => {
     return useQuery({
         queryKey: [Testimonial_Query_Key.FEATURED],
         queryFn: () => TestimonialAPI.getFeatured(),
+    });
+};
+
+const useQueryGetTestimonialById = (id: string | undefined) => {
+    return useQuery({
+        queryKey: [Testimonial_Query_Key.TESTIMONIAL, id],
+        queryFn: () => TestimonialAPI.getById(id!),
+        enabled: !!id,
+    });
+};
+
+const useQueryGetMyTestimonial = () => {
+    return useQuery({
+        queryKey: [Testimonial_Query_Key.TESTIMONIAL, 'mine'],
+        queryFn: () => TestimonialAPI.getMine(),
+        retry: false,
     });
 };
 
@@ -52,11 +75,25 @@ const useMutationDeleteTestimonial = () => {
     });
 };
 
+const useMutationVerifyTestimonial = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: TestimonialAPI.verify,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [Testimonial_Query_Key.TESTIMONIAL] });
+        },
+    });
+};
+
 const TestimonialQuery = {
     useQueryGetTestimonials,
+    useQueryGetTestimonialById,
+    useQueryGetMyTestimonial,
+    useQueryGetAdminTestimonials,
     useQueryGetFeaturedTestimonials,
     useMutationCreateTestimonial,
     useMutationUpdateTestimonial,
+    useMutationVerifyTestimonial,
     useMutationDeleteTestimonial
 };
 

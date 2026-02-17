@@ -14,6 +14,13 @@ const useQueryGetUser = (userId: string | undefined) => {
     });
 };
 
+const useQueryGetAdminUsers = () => {
+    return useQuery({
+        queryKey: [USER_Query_Key.USER, 'admin'],
+        queryFn: () => UserAPI.getAdminAll(),
+    });
+};
+
 const useMutationUpdateUser = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -28,5 +35,6 @@ const useMutationUpdateUser = () => {
 
 export default {
     useQueryGetUser,
+    useQueryGetAdminUsers,
     useMutationUpdateUser,
 };

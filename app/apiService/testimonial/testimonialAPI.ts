@@ -8,6 +8,11 @@ const getAll = async () => {
     };
 };
 
+const getAdminAll = async () => {
+    const { data } = await api.get<{ data: ITestimonial[] }>('/testimonials/admin');
+    return { testimonials: data };
+};
+
 const getFeatured = async () => {
     // Server doesn't have specific featured endpoint, but we can filter on client or add param
     // Let's assume we can filter client side from getAll or simply returning all for now.
@@ -34,11 +39,30 @@ const destroy = async (id: string) => {
     return true;
 };
 
+const getById = async (id: string) => {
+    const { data } = await api.get<{ data: ITestimonial }>(`/testimonials/${id}`);
+    return data;
+};
+
+const getMine = async () => {
+    const { data } = await api.get<{ data: ITestimonial | null }>('/testimonials/mine');
+    return data;
+};
+
+const verify = async (id: string) => {
+    const { data } = await api.put<{ data: ITestimonial }>(`/testimonials/${id}/verify`, {});
+    return data;
+};
+
 const TestimonialAPI = {
     getAll,
+    getAdminAll,
     getFeatured,
     create,
     update,
+    getById,
+    getMine,
+    verify,
     destroy
 };
 

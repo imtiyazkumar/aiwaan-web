@@ -10,52 +10,72 @@
  */
 
 import { useNavigate } from 'react-router';
-import ProjectCard from '~/components/cards/ProjectCard';
 import TitleCard from '~/components/cards/TitleCard';
-import { Div, Flex, FlexColumn } from '~/components/general/BaseComponents';
-import ButtonBanner from '~/components/sections/BottomBanner';
-import HeroSection from '~/components/sections/HeroSection';
+import { Flex, FlexColumn } from '~/components/general/BaseComponents';
 import { wrapperBaseClass } from '~/utils/constants';
 import ProjectQuery from '~/apiService/project/projectQuery';
+import { Table, type Column } from '~/components/ui/Table';
 
 const AdminProjects = () => {
-    const { data, isLoading } = ProjectQuery.useQueryGetProjects({});
+    const navigate = useNavigate();
+    const { data, isLoading } = ProjectQuery.useQueryGetAdminProjects();
     const projectList = data?.projects || [];
+
+    const columns: Column<any>[] = [
+        {
+            header: "Title",
+            accessor: (p) => (
+                <div className="flex items-center">
+                    {p.cover_image && (
+                        <img src={p.cover_image} alt={p.title} className="w-10 h-10 rounded object-cover mr-3" />
+                    )}
+                    <span className="font-medium text-gray-900">{p.title}</span>
+                </div>
+            )
+        },
+        {
+            header: "Category",
+            accessor: (p) => <span className="text-gray-500">{p.category}</span>
+        },
+        {
+            header: "Client",
+            accessor: (p) => <span className="text-gray-500">{p.client || '-'}</span>
+        },
+        {
+            header: "Location",
+            accessor: (p) => <span className="text-gray-500">{p.location || '-'}</span>
+        },
+        {
+            header: "Status",
+            accessor: (p) => (
+                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${p.status === 'completed' ? 'bg-green-100 text-green-800' : p.status === 'active' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
+                    {p.status || 'Active'}
+                </span>
+            )
+        }
+    ];
 
     return (
         <FlexColumn className='w-full'>
-            <HeroSection
-                title="Our"
-                subtitle="Portfolio"
-                description="Explore our collection of architectural visualization projects that showcase the beauty and innovation of Kashmiri design combined with modern techniques."
-                backgroundImage="https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=1200"
-                primaryButtonText="Explore Our Services"
-                primaryButtonLink="/services"
-                secondaryButtonText="Request a Quote"
-                secondaryButtonLink="/contact"
-            />
-
             <FlexColumn className={`${wrapperBaseClass}`}>
-                <TitleCard title="Our Projects" />
-                <Flex className='w-full flex-row flex-wrap justify-center gap-4 sm:gap-6 lg:gap-4'>
-                    {projectList.map((project, index) => (
-                        <ProjectCard
-                            key={project.id || index}
-                            project={project}
-                            index={index}
-                        />
-                    ))}
+                <Flex className="w-full justify-between items-center mb-6">
+                    <TitleCard title="All Projects" className="mb-0 mx-0" />
+                    <button
+                        onClick={() => navigate('/add-edit-project')}
+                        className="bg-primary-base text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors"
+                    >
+                        + Add Project
+                    </button>
                 </Flex>
+
+                <Table
+                    data={projectList}
+                    columns={columns}
+                    isLoading={isLoading}
+                    onRowClick={(p) => navigate(`/add-edit-project?id=${p.id}`)}
+                    emptyMessage="No projects found."
+                />
             </FlexColumn>
-
-            <ButtonBanner
-                title="Have a Project in Mind?"
-                description="Ready to bring your architectural vision to life? Contact us today to discuss your project requirements and get a personalized quote for our services."
-                primaryButtonText="Start New Project"
-                primaryButtonLink="/contact"
-                backgroundGradient="secondary"
-            />
-
         </FlexColumn>);
 };
 

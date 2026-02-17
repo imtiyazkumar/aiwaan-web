@@ -12,5 +12,6 @@ export interface IProject {
     year: string | null;
     tags: string[] | null;
     is_featured: boolean | null;
-    created_by: string | null;
+    is_public?: boolean | null;
+    created_by?: string | null;
 }

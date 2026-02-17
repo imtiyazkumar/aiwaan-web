@@ -14,6 +14,13 @@ const useQueryGetProjects = (params?: ISearchSortFilter) => {
     });
 };
 
+const useQueryGetAdminProjects = () => {
+    return useQuery({
+        queryKey: [PROJECT_Query_Key.PROJECT, 'admin'],
+        queryFn: () => ProjectAPI.getAdminAll(),
+    });
+};
+
 const useQueryGetProject = (id: string | undefined) => {
     return useQuery({
         queryKey: [PROJECT_Query_Key.PROJECT, id],
@@ -55,6 +62,7 @@ const useMutationDeleteProject = () => {
 
 export default {
     useQueryGetProjects,
+    useQueryGetAdminProjects,
     useQueryGetProject,
     useMutationCreateProject,
     useMutationUpdateProject,

@@ -1,14 +1,22 @@
-
 import { ProtectedRoute } from '~/components/ProtectedRoute';
 import { useSearchParams, useNavigate } from 'react-router';
 import { useState, useEffect } from 'react';
-import { Div, Flex, FlexColumn } from '~/components/general/BaseComponents';
+import { Div, Flex } from '~/components/general/BaseComponents';
 import TextInput from '~/components/general/TextInput';
 import Button from '~/components/buttons/Button';
-import { wrapperBaseClass } from '~/utils/constants';
+import TitleCard from '~/components/cards/TitleCard';
+import SelectInput from '~/components/general/Select';
 
 import BillingQuery from '~/apiService/billing/billingQuery';
-import { api } from '~/lib/api'; // Use direct api for users list if no query exists yet
+import ProjectQuery from '~/apiService/project/projectQuery';
+import OrderQuery from '~/apiService/order/orderQuery';
+import { api } from '~/lib/api';
+
+function generateInvoiceId() {
+    const year = new Date().getFullYear();
+    const rand = Math.random().toString(36).substring(2, 8).toUpperCase();
+    return `INV-${year}-${rand}`;
+}
 
 function AddEditBillContent() {
     const [searchParams] = useSearchParams();
@@ -16,100 +24,198 @@ function AddEditBillContent() {
     const billId = searchParams.get('id');
     const isEditMode = !!billId;
 
-    // We need users to assign bill to
+    const { data: projectData } = ProjectQuery.useQueryGetProjects({});
+
+    const { data: orderData } = OrderQuery.useQueryGetAdminOrders();
+
+    const projects = projectData?.projects || [];
+    const orders = orderData?.orders || [];
+
     const [users, setUsers] = useState<any[]>([]);
     useEffect(() => {
-        api.get('/users').then(res => setUsers((res.data as any).data || []));
+        api.get('/users').then((res: any) => setUsers(res.data || []));
     }, []);
 
-    // For editing, we need to fetch the specific bill. Currently query is getUserBills (list).
-    // We might need getBill(id). For now, let's assume we pass data or fetch from list logic if practical,
-    // OR just use list query and find? But ID based fetch is better.
-    // I added delete/update to API but not getOne. 
-    // Let's implement getOne in API if needed or relies on list. 
-    // Actually, let's just use the form for CREATE primarily for now to satisfy requirements.
-    // Edit might require getOne which I didn't add to client API yet (only update).
-    // I'll stick to Create for "Add Bill" request. If edit is needed, I'll add getOne later.
-
-    // Actually, I should add getOne to billingAPI to make this complete.
-    // But for this step, I'll focus on Add.
-
     const createMutation = BillingQuery.useMutationCreateBill();
-    // const updateMutation = BillingQuery.useMutationUpdateBill();
 
     const [formData, setFormData] = useState({
+        user_id: '',
+        project_id: '',
+        order_id: '',
         amount: 0,
+        discount: 0,
+        final_amount: 0,
         status: 'pending',
         due_date: '',
-        reference_id: '',
-        user_id: ''
+        invoice_id: generateInvoiceId()
     });
+
+    useEffect(() => {
+        const finalAmount = Math.max(
+            Number(formData.amount) - Number(formData.discount),
+            0
+        );
+        setFormData(prev => ({ ...prev, final_amount: finalAmount }));
+    }, [formData.amount, formData.discount]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleOrderChange = (orderId: string) => {
+        const order = orders.find(o => o.id === orderId);
+        setFormData(prev => ({
+            ...prev,
+            order_id: orderId,
+            amount: order?.amount || 0
+        }));
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
         const payload = {
+            user_id: formData.user_id,
+            project_id: formData.project_id || null,
+            order_id: formData.order_id || null,
+            invoice_id: formData.invoice_id,
             amount: Number(formData.amount),
+            discount: Number(formData.discount),
+            final_amount: Number(formData.final_amount),
             status: formData.status,
-            due_date: formData.due_date,
-            reference_id: formData.reference_id,
-            user_id: formData.user_id
+            due_date: formData.due_date || null
         };
 
         createMutation.mutate(payload as any, {
             onSuccess: () => {
-                alert('Bill created!');
-                navigate('/billing');
+                alert(isEditMode ? 'Bill updated successfully!' : 'Bill created successfully!');
+                navigate('/admin/bills');
             },
-            onError: (err: any) => alert('Error: ' + err.message)
+            onError: (err: any) => {
+                alert('Failed to save bill: ' + err.message);
+            }
         });
     };
 
     return (
-        <Flex className="items-center justify-center w-full">
-            <Div className={`${wrapperBaseClass} max-w-2xl`}>
-                <h1 className="text-2xl font-bold mb-6 text-center">Create New Bill</h1>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="flex flex-col">
-                        <label className="text-sm font-medium mb-1">User / Client</label>
-                        <select name="user_id" value={formData.user_id} onChange={handleChange} required className="border rounded-xl px-4 py-2 bg-white">
-                            <option value="">Select User</option>
-                            {users.map(u => (
-                                <option key={u.id} value={u.id}>{u.full_name || u.email || u.id}</option>
-                            ))}
-                        </select>
-                    </div>
+        <Div className="w-full rounded-2xl lg:rounded-3xl shadow-2xl overflow-hidden">
+            <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
+                <TitleCard title={isEditMode ? 'Edit Bill' : 'Create New Bill'} />
 
-                    <TextInput label="Amount" name="amount" type="number" value={formData.amount} onChange={handleChange} required />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <SelectInput
+                        label="User / Client"
+                        name="user_id"
+                        value={formData.user_id}
+                        onChange={handleChange}
+                        options={[
+                            { label: 'Select User', value: '' },
+                            ...users.map(u => ({
+                                label: u.full_name || u.email || u.id,
+                                value: u.id
+                            }))
+                        ]}
+                    />
 
-                    <div className="flex flex-col">
-                        <label className="text-sm font-medium mb-1">Status</label>
-                        <select name="status" value={formData.status} onChange={handleChange} className="border rounded-xl px-4 py-2 bg-white">
-                            <option value="pending">Pending</option>
-                            <option value="paid">Paid</option>
-                            <option value="overdue">Overdue</option>
-                        </select>
-                    </div>
+                    <TextInput
+                        label="Invoice ID"
+                        name="invoice_id"
+                        value={formData.invoice_id}
+                        disabled
+                    />
+                </div>
 
-                    <TextInput label="Due Date" name="due_date" type="date" value={formData.due_date} onChange={handleChange} />
-                    <TextInput label="Reference ID" name="reference_id" value={formData.reference_id} onChange={handleChange} placeholder="Invoice #" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <SelectInput
+                        label="Project"
+                        name="project_id"
+                        value={formData.project_id}
+                        onChange={handleChange}
+                        options={[
+                            { label: 'Select Project (optional)', value: '' },
+                            ...projects.map(p => ({ label: p.title, value: p.id }))
+                        ]}
+                    />
 
-                    <Flex className="gap-4 pt-4">
-                        <Button type="submit" variant="primary_filled" height="medium" disabled={createMutation.isPending}>
-                            {createMutation.isPending ? 'Creating...' : 'Create Bill'}
-                        </Button>
-                        <Button type="button" onClick={() => navigate('/billing')} variant="dark_outlined" height="medium">Cancel</Button>
-                    </Flex>
-                </form>
-            </Div>
-        </Flex>
+                    <SelectInput
+                        label="Order"
+                        name="order_id"
+                        value={formData.order_id}
+                        onChange={e => handleOrderChange(e.target.value)}
+                        options={[
+                            { label: 'Select Order (optional)', value: '' },
+                            ...orders.map(o => ({ label: o.id, value: o.id }))
+                        ]}
+                    />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <TextInput
+                        label="Amount"
+                        name="amount"
+                        type="number"
+                        value={formData.amount}
+                        disabled
+                    />
+
+                    <TextInput
+                        label="Discount"
+                        name="discount"
+                        type="number"
+                        value={formData.discount}
+                        onChange={handleChange}
+                    />
+
+                    <TextInput
+                        label="Final Payable Amount"
+                        name="final_amount"
+                        type="number"
+                        value={formData.final_amount}
+                        disabled
+                    />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <SelectInput
+                        label="Status"
+                        name="status"
+                        value={formData.status}
+                        onChange={handleChange}
+                        options={[
+                            { label: 'Pending', value: 'pending' },
+                            { label: 'Paid', value: 'paid' },
+                            { label: 'Overdue', value: 'overdue' }
+                        ]}
+                    />
+
+                    <TextInput
+                        label="Due Date"
+                        name="due_date"
+                        type="date"
+                        value={formData.due_date}
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <Flex className="gap-4 pt-4 justify-end">
+                    <Button type="button" onClick={() => navigate('/admin/bills')} variant="dark_outlined" height="medium">
+                        Cancel
+                    </Button>
+
+                    <Button type="submit" variant="primary_filled" height="medium" disabled={createMutation.isPending}>
+                        {createMutation.isPending ? 'Saving...' : isEditMode ? 'Update Bill' : 'Create Bill'}
+                    </Button>
+                </Flex>
+            </form>
+        </Div>
     );
 }
 
 export default function AddEditBill() {
-    return <ProtectedRoute><AddEditBillContent /></ProtectedRoute>;
+    return (
+        <ProtectedRoute>
+            <AddEditBillContent />
+        </ProtectedRoute>
+    );
 }

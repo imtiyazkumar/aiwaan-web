@@ -10,8 +10,7 @@ const AdminMenu = [
     { label: "Bills", to: "/admin/bills" },
     { label: "Orders", to: "/admin/orders" },
     { label: "Users", to: "/admin/users" },
-    { label: "Contact Messages", to: "/admin/contacts" },
-    { label: "Chat Messages", to: "/admin/chats" },
+    { label: "Support Chat", to: "/admin/messages" },
     { label: "Testimonials", to: "/admin/testimonials" },
 ];
 

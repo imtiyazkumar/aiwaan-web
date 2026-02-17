@@ -9,6 +9,13 @@ const useQueryGetOrders = () => {
     });
 };
 
+const useQueryGetAdminOrders = () => {
+    return useQuery({
+        queryKey: ["orders", "admin"],
+        queryFn: OrderAPI.getAdminAll,
+    });
+};
+
 const useQueryGetOrder = (id?: string) => {
     return useQuery({
         queryKey: ["orders", id],
@@ -50,6 +57,7 @@ const useMutationDeleteOrder = () => {
 
 const OrderQuery = {
     useQueryGetOrders,
+    useQueryGetAdminOrders,
     useQueryGetOrder,
     useMutationCreateOrder,
     useMutationUpdateOrder,
