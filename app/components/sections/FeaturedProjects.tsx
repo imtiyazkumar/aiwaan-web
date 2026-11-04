@@ -8,7 +8,7 @@ import TitleCard from "~/components/cards/TitleCard";
 import projectQuery from "~/apiService/project/projectQuery";
 
 export default function FeaturedProjects() {
-    const { data, isLoading } = projectQuery.useQueryGetProjects({});
+    const { data, isLoading, error } = projectQuery.useQueryGetProjects({});
     const projects = data?.projects.filter(p => p.is_featured) || [];
 
     const [current, setCurrent] = useState(0);
@@ -72,7 +72,7 @@ export default function FeaturedProjects() {
         <FlexColumn className={`${wrapperBaseClass} px-4 sm:px-6 lg:px-10`}>
             <TitleCard title="Featured Projects" />
 
-            {(isLoading || !projects.length) ? <Div className="w-full text-center py-20 text-gray-600">Loading featured projects...</Div> :
+            {(isLoading || !projects.length) ? <Div className="w-full text-center py-20 text-gray-600">{isLoading ? 'Loading featured projects...' : error ? 'Unable to load projects.' : 'No featured projects yet.'}</Div> :
                 <Flex className="w-full justify-center items-center gap-4 sm:gap-6 relative min-h-105 sm:min-h-130 lg:min-h-162.5 overflow-hidden">
                     {getSlides().map(({ index, offset }) => {
                         const isCenter = offset === 0;

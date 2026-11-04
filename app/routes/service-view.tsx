@@ -2,13 +2,15 @@ import React from 'react';
 import { useParams, Link } from 'react-router';
 import { ArrowLeft, CheckCircle2, Sparkles } from 'lucide-react';
 import { Div } from '~/components/general/BaseComponents';
-import { ourServices } from '~/utils/constants';
+import ServiceQuery from '~/apiService/service/serviceQuery';
 import FeaturedServices from '~/components/sections/FeaturedServices';
 import ButtonBanner from '~/components/sections/BottomBanner';
 
 export default function ServiceView() {
     const { id } = useParams<{ id: string }>();
-    const service = ourServices.find(s => s.id === id);
+    const { data: service, isLoading, error } = ServiceQuery.useQueryGetService(id);
+    if (isLoading) return <p>Loading service...</p>;
+    if (error) return <p role="alert">{error.message}</p>;
 
     if (!service) {
         return (

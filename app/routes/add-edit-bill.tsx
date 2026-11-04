@@ -24,7 +24,7 @@ function AddEditBillContent() {
     const billId = searchParams.get('id');
     const isEditMode = !!billId;
 
-    const { data: projectData } = ProjectQuery.useQueryGetProjects({});
+    const { data: projectData } = ProjectQuery.useQueryGetAdminProjects();
 
     const { data: orderData } = OrderQuery.useQueryGetAdminOrders();
 
@@ -37,6 +37,7 @@ function AddEditBillContent() {
     }, []);
 
     const createMutation = BillingQuery.useMutationCreateBill();
+    const updateMutation = BillingQuery.useMutationUpdateBill();
 
     const [formData, setFormData] = useState({
         user_id: '',
@@ -57,6 +58,11 @@ function AddEditBillContent() {
         );
         setFormData(prev => ({ ...prev, final_amount: finalAmount }));
     }, [formData.amount, formData.discount]);
+
+    useEffect(() => {
+        if (!billId) return;
+        api.get<{ data: any }>(`/bills/${billId}`).then(({ data }) => setFormData({ user_id: data.user_id || '', project_id: data.project_id || '', order_id: data.order_id || '', amount: data.amount || 0, discount: data.discount || 0, final_amount: data.final_amount ?? data.amount, status: data.status || 'pending', due_date: data.due_date?.slice(0, 10) || '', invoice_id: data.invoice_id || generateInvoiceId() })).catch(error => alert(error.message));
+    }, [billId]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -87,7 +93,8 @@ function AddEditBillContent() {
             due_date: formData.due_date || null
         };
 
-        createMutation.mutate(payload as any, {
+        const mutation = billId ? updateMutation : createMutation;
+        mutation.mutate({ ...payload, ...(billId ? { id: billId } : {}) } as any, {
             onSuccess: () => {
                 alert(isEditMode ? 'Bill updated successfully!' : 'Bill created successfully!');
                 navigate('/admin/bills');
@@ -156,7 +163,8 @@ function AddEditBillContent() {
                         name="amount"
                         type="number"
                         value={formData.amount}
-                        disabled
+                        onChange={handleChange}
+                        required
                     />
 
                     <TextInput
@@ -203,7 +211,7 @@ function AddEditBillContent() {
                         Cancel
                     </Button>
 
-                    <Button type="submit" variant="primary_filled" height="medium" disabled={createMutation.isPending}>
+                    <Button type="submit" variant="primary_filled" height="medium" disabled={createMutation.isPending || updateMutation.isPending}>
                         {createMutation.isPending ? 'Saving...' : isEditMode ? 'Update Bill' : 'Create Bill'}
                     </Button>
                 </Flex>

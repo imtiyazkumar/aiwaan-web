@@ -5,6 +5,7 @@ import { Flex, FlexColumn } from '~/components/general/BaseComponents';
 import { wrapperBaseClass } from '~/utils/constants';
 import OrderQuery from '~/apiService/order/orderQuery';
 import { Table, type Column } from '~/components/ui/Table';
+import DeleteRecordButton from '~/components/buttons/DeleteRecordButton';
 
 const AdminOrders = () => {
     const navigate = useNavigate();
@@ -12,6 +13,7 @@ const AdminOrders = () => {
     const orders = data?.orders || [];
 
     const columns: Column<any>[] = [
+        { header: 'Actions', accessor: order => <DeleteRecordButton resource="orders" id={order.id} queryKey="orders" /> },
         {
             header: "Order ID",
             accessor: (order) => <span className="font-medium text-gray-900">#{order.id?.slice(0, 8)}</span>

@@ -86,20 +86,7 @@ function AddEditProjectContent() {
             body.append('bucket', 'project-images');
             body.append('path', fileName);
 
-            const token = api.getToken();
-
-            const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/storage/upload`,
-                {
-                    method: 'POST',
-                    headers: { Authorization: `Bearer ${token}` },
-                    body
-                }
-            );
-
-            if (!response.ok) throw new Error('Upload failed');
-
-            const data = await response.json();
+            const data = await api.upload(body);
             const publicUrl = data.publicUrl;
 
             setFormData(prev => ({

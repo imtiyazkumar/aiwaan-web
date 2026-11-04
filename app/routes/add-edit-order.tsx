@@ -1,5 +1,5 @@
 import { ProtectedRoute } from '~/components/ProtectedRoute';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { useState, useEffect } from 'react';
 import { useAuth } from '~/contexts/AuthContext';
 import { Div, Flex } from '~/components/general/BaseComponents';
@@ -14,11 +14,14 @@ import ProjectQuery from '~/apiService/project/projectQuery';
 import { api } from '~/lib/api';
 
 function AddEditOrderContent() {
-    const { profile } = useAuth();
+    const [searchParams] = useSearchParams();
+    const orderId = searchParams.get("id");
+    const { data: existingOrder } = OrderQuery.useQueryGetOrder(orderId || undefined);
+    const updateMutation = OrderQuery.useMutationUpdateOrder();
     const navigate = useNavigate();
 
-    const { data: serviceData } = ServiceQuery.useQueryGetServices({});
-    const { data: projectData } = ProjectQuery.useQueryGetProjects({});
+    const { data: serviceData } = ServiceQuery.useQueryGetAdminServices();
+    const { data: projectData } = ProjectQuery.useQueryGetAdminProjects();
     const services = serviceData?.services || [];
     const projects = projectData?.projects || [];
 
@@ -38,6 +41,10 @@ function AddEditOrderContent() {
         notes: ''
     });
 
+    useEffect(() => {
+        if (existingOrder) setFormData({ service_id: existingOrder.service_id || '', project_id: existingOrder.project_id || '', user_id: existingOrder.user_id || '', amount: String(existingOrder.amount || 0), status: existingOrder.status || 'pending', notes: String(existingOrder.details?.notes || '') });
+    }, [existingOrder]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -55,7 +62,8 @@ function AddEditOrderContent() {
             details: { notes: formData.notes }
         };
 
-        createMutation.mutate(payload as any, {
+        const mutation = orderId ? updateMutation : createMutation;
+        mutation.mutate({ ...payload, ...(orderId ? { id: orderId } : {}) } as any, {
             onSuccess: () => {
                 alert('Order created successfully!');
                 navigate('/admin/orders');
@@ -72,7 +80,7 @@ function AddEditOrderContent() {
                 onSubmit={handleSubmit}
                 className="space-y-6 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100"
             >
-                <TitleCard title="Create New Order" />
+                <TitleCard title={orderId ? "Edit Order" : "Create New Order"} />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <SelectInput
@@ -164,9 +172,9 @@ function AddEditOrderContent() {
                         type="submit"
                         variant="primary_filled"
                         height="medium"
-                        disabled={createMutation.isPending}
+                        disabled={createMutation.isPending || updateMutation.isPending}
                     >
-                        {createMutation.isPending ? 'Creating Order...' : 'Create Order'}
+                        {createMutation.isPending || updateMutation.isPending ? 'Saving...' : orderId ? 'Update Order' : 'Create Order'}
                     </Button>
                 </Flex>
             </form>

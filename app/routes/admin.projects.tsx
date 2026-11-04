@@ -15,6 +15,7 @@ import { Flex, FlexColumn } from '~/components/general/BaseComponents';
 import { wrapperBaseClass } from '~/utils/constants';
 import ProjectQuery from '~/apiService/project/projectQuery';
 import { Table, type Column } from '~/components/ui/Table';
+import DeleteRecordButton from '~/components/buttons/DeleteRecordButton';
 
 const AdminProjects = () => {
     const navigate = useNavigate();
@@ -22,6 +23,7 @@ const AdminProjects = () => {
     const projectList = data?.projects || [];
 
     const columns: Column<any>[] = [
+        { header: 'Actions', accessor: p => <DeleteRecordButton resource="projects" id={p.id} queryKey="project" /> },
         {
             header: "Title",
             accessor: (p) => (

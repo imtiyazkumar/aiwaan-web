@@ -12,6 +12,7 @@ export default function SignUp() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
 
     const { register } = useAuth();
@@ -34,8 +35,9 @@ export default function SignUp() {
         setLoading(true);
 
         try {
-            await register(email, password, name);
-            navigate("/");
+            const signedIn = await register(email, password, name);
+            if (signedIn) navigate("/");
+            else setSuccess("Check your email to confirm your account, then sign in.");
         } catch (err: any) {
             setError(err.message || "Failed to create account");
         } finally {
@@ -57,6 +59,7 @@ export default function SignUp() {
                         </p>
                     </FlexColumn>
 
+                    {success && <p role="status" className="text-green-700">{success}</p>}
                     {error && (
                         <Div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
                             {error}

@@ -18,9 +18,13 @@ import { Div, Flex, FlexColumn } from "~/components/general/BaseComponents";
 import ButtonBanner from "~/components/sections/BottomBanner";
 import HeroSection from "~/components/sections/HeroSection";
 import HowItWorksSection from "~/components/sections/HowItWorks";
-import { ourServices, wrapperBaseClass } from "~/utils/constants";
+import { wrapperBaseClass } from "~/utils/constants";
 
-const services = () => {
+import ServiceQuery from "~/apiService/service/serviceQuery";
+
+const Services = () => {
+    const { data, isLoading, error } = ServiceQuery.useQueryGetServices({});
+    const services = data?.services || [];
     return (
         <FlexColumn className='w-full'>
             <HeroSection
@@ -35,9 +39,12 @@ const services = () => {
             />
 
             <FlexColumn className={`${wrapperBaseClass}`}>
+                {isLoading && <p>Loading services...</p>}
+                {error && <p role="alert">{error.message}</p>}
+                {!isLoading && !error && !services.length && <p>No services published yet.</p>}
                 <TitleCard title="Our Services" />
                 <Flex className='w-full flex-row flex-wrap justify-center gap-4 sm:gap-6 lg:gap-4'>
-                    {ourServices.map((service, index) => (
+                    {services.map((service, index) => (
                         <ServiceCard
                             key={index}
                             service={service}
@@ -64,4 +71,4 @@ const services = () => {
     );
 };
 
-export default services;
+export default Services;

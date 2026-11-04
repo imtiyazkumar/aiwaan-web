@@ -4,6 +4,8 @@ export interface IOrder {
     id: string;
     created_at: string;
     service_id: string;
+    project_id?: string | null;
+    user_id?: string | null;
     amount: number;
     status: string;
     details: Record<string, any>;

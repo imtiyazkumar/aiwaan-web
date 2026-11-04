@@ -2,6 +2,8 @@ import { api } from "~/lib/api";
 import type { IService } from "../../types/service";
 import type { ISearchSortFilter } from "../../utils";
 
+const normalizeService = (service: IService & { is_featured?: boolean }) => ({ ...service, imageUrl: service.image_url || '', isFeatured: service.is_featured || false, buttonTitle: service.button_title || 'Explore' });
+
 export type TApiSuccessResponse<T> = T;
 
 const getAll = async (params: ISearchSortFilter) => {
@@ -12,7 +14,7 @@ const getAll = async (params: ISearchSortFilter) => {
     const { data } = await api.get<{ data: IService[] }>('/services', queryParams);
 
     return {
-        services: data,
+        services: data.map(normalizeService),
         total: data.length,
         page: params.page || 1,
         lastPage: 1
@@ -21,17 +23,22 @@ const getAll = async (params: ISearchSortFilter) => {
 
 const getOne = async (id: string) => {
     const { data } = await api.get<{ data: IService }>(`/services/${id}`);
-    return data;
+    return normalizeService(data);
+};
+
+const getAdminAll = async () => {
+    const { data } = await api.get<{ data: IService[] }>('/services/admin');
+    return { services: data.map(normalizeService), total: data.length, page: 1, lastPage: 1 };
 };
 
 const create = async (service: Partial<IService>) => {
     const { data } = await api.post<{ data: IService }>('/services', service);
-    return data;
+    return normalizeService(data);
 };
 
 const update = async (id: string, service: Partial<IService>) => {
     const { data } = await api.put<{ data: IService }>(`/services/${id}`, service);
-    return data;
+    return normalizeService(data);
 };
 
 const destroy = async (id: string) => {
@@ -41,6 +48,7 @@ const destroy = async (id: string) => {
 
 export default {
     getAll,
+    getAdminAll,
     getOne,
     create,
     update,

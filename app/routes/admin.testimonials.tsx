@@ -5,6 +5,7 @@ import { Flex, FlexColumn } from '~/components/general/BaseComponents';
 import { wrapperBaseClass } from '~/utils/constants';
 import TestimonialQuery from '~/apiService/testimonial/testimonialQuery';
 import { Table, type Column } from '~/components/ui/Table';
+import DeleteRecordButton from '~/components/buttons/DeleteRecordButton';
 
 const AdminTestimonials = () => {
     const navigate = useNavigate();
@@ -12,6 +13,7 @@ const AdminTestimonials = () => {
     const testimonials = data?.testimonials || [];
 
     const columns: Column<any>[] = [
+        { header: 'Actions', accessor: t => <DeleteRecordButton resource="testimonials" id={t.id} queryKey="TESTIMONIAL" /> },
         {
             header: "Client Name",
             accessor: (t) => <span className="font-medium text-gray-900">{t.client_name}</span>

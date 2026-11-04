@@ -11,7 +11,6 @@ const AdminUsers = () => {
 
     const { data: users, isLoading } = UserQuery.useQueryGetAdminUsers();
 
-    console.log('AdminUsers users:', users);
 
     const columns: Column<any>[] = [
         {
@@ -35,6 +34,10 @@ const AdminUsers = () => {
     return (
         <FlexColumn className='w-full'>
             <FlexColumn className={`${wrapperBaseClass}`}>
+                <Flex className="w-full justify-between items-center mb-6">
+                    <TitleCard title="All Users" className="mb-0 mx-0" />
+                    <button onClick={() => navigate('/add-edit-user')} className="bg-primary-base text-white px-4 py-2 rounded-lg text-sm font-medium">+ Add User</button>
+                </Flex>
                 <Table
                     data={users ?? []}
                     columns={columns}

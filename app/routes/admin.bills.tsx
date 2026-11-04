@@ -5,6 +5,7 @@ import { Flex, FlexColumn } from '~/components/general/BaseComponents';
 import { wrapperBaseClass } from '~/utils/constants';
 import BillingQuery from '~/apiService/billing/billingQuery';
 import { Table, type Column } from '~/components/ui/Table';
+import DeleteRecordButton from '~/components/buttons/DeleteRecordButton';
 
 const AdminBills = () => {
     const navigate = useNavigate();
@@ -12,6 +13,7 @@ const AdminBills = () => {
     const bills = data?.bills || [];
 
     const columns: Column<any>[] = [
+        { header: 'Actions', accessor: bill => <DeleteRecordButton resource="bills" id={bill.id} queryKey="billing" /> },
         {
             header: "Bill ID",
             accessor: (bill) => <span className="font-medium text-gray-900">#{bill.id?.slice(0, 8)}</span>

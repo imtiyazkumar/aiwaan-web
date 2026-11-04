@@ -43,13 +43,6 @@ export default function AdminIndex() {
       color: "bg-yellow-50"
     },
     {
-      title: "Support Chat",
-      description: "View and reply to customer support threads.",
-      icon: <FolderKanban size={32} className="text-teal-600" />,
-      link: "/admin/messages",
-      color: "bg-teal-50"
-    },
-    {
       title: "Add New Project",
       description: "Create a new project entry with details, images, and categories.",
       icon: <PlusCircle size={32} className="text-green-600" />,

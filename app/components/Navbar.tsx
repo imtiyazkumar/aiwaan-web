@@ -6,16 +6,17 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 const AdminMenu = [
+    { label: "Services", to: "/admin/services" },
+    { label: "Contact Messages", to: "/admin/contact" },
     { label: "All Projects", to: "/admin/projects" },
     { label: "Bills", to: "/admin/bills" },
     { label: "Orders", to: "/admin/orders" },
     { label: "Users", to: "/admin/users" },
-    { label: "Support Chat", to: "/admin/messages" },
     { label: "Testimonials", to: "/admin/testimonials" },
 ];
 
 const Navbar = () => {
-    const { user, logout } = useAuth();
+    const { user, profile, logout } = useAuth();
     const [open, setOpen] = useState(false);
     const [adminOpen, setAdminOpen] = useState(false);
 
@@ -59,7 +60,7 @@ const Navbar = () => {
                             {user ? (
                                 <>
                                     {/* Admin Dropdown */}
-                                    <Div className="relative">
+                                    {profile?.is_admin && <Div className="relative">
                                         <button
                                             onClick={() => setAdminOpen(!adminOpen)}
                                             className="flex items-center gap-1 text-sm font-medium text-secondary-500 hover:text-primary-base"
@@ -70,7 +71,7 @@ const Navbar = () => {
 
                                         {adminOpen && (
                                             <Div className="absolute right-0 mt-3 w-56 rounded-xl bg-white shadow-xl border border-gray-100 overflow-hidden">
-                                                {AdminMenu.map(item => (
+                                                {(profile?.is_admin ? AdminMenu : []).map(item => (
                                                     <Link
                                                         key={item.to}
                                                         to={item.to}
@@ -82,8 +83,11 @@ const Navbar = () => {
                                                 ))}
                                             </Div>
                                         )}
-                                    </Div>
+                                    </Div>}
 
+                                    <Link to="/profile">Profile</Link>
+                                    <Link to="/orders">Orders</Link>
+                                    <Link to="/billing">Billing</Link>
                                     <button
                                         onClick={logout}
                                         className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
@@ -134,9 +138,13 @@ const Navbar = () => {
                     {user && (
                         <Div className="mt-6 border-t pt-4 space-y-2">
                             <Div className="text-xs font-semibold text-gray-400 uppercase px-2">
-                                Admin
+                                Account
                             </Div>
-                            {AdminMenu.map(item => (
+                            <Link to="/profile" onClick={() => setOpen(false)}>Profile</Link>
+                            <Link to="/orders" onClick={() => setOpen(false)}>Orders</Link>
+                            <Link to="/billing" onClick={() => setOpen(false)}>Billing</Link>
+                            <button onClick={logout}>Logout</button>
+                            {(profile?.is_admin ? AdminMenu : []).map(item => (
                                 <Link
                                     key={item.to}
                                     to={item.to}

@@ -5,40 +5,29 @@ import { Flex, FlexColumn } from '~/components/general/BaseComponents';
 import { wrapperBaseClass } from '~/utils/constants';
 import ServiceQuery from '~/apiService/service/serviceQuery';
 import { Table, type Column } from '~/components/ui/Table';
+import DeleteRecordButton from '~/components/buttons/DeleteRecordButton';
 
 const AdminServices = () => {
     const navigate = useNavigate();
-    const { data, isLoading } = ServiceQuery.useQueryGetServices({});
+    const { data, isLoading } = ServiceQuery.useQueryGetAdminServices();
     const services = data?.services || [];
 
     const columns: Column<any>[] = [
+        { header: 'Actions', accessor: s => <DeleteRecordButton resource="services" id={s.id} queryKey="service" /> },
         {
             header: "Title",
             accessor: (s) => (
                 <div className="flex items-center">
-                    {s.cover_image && (
-                        <img src={s.cover_image} alt={s.title} className="w-10 h-10 rounded object-cover mr-3" />
+                    {s.image_url && (
+                        <img src={s.image_url} alt={s.title} className="w-10 h-10 rounded object-cover mr-3" />
                     )}
                     <span className="font-medium text-gray-900">{s.title}</span>
                 </div>
             )
         },
-        {
-            header: "Category",
-            accessor: (s) => <span className="text-gray-500">{s.category || '-'}</span>
-        },
-        {
-            header: "Price",
-            accessor: (s) => <span className="text-gray-500">${s.price || 0}</span>
-        },
-        {
-            header: "Status",
-            accessor: (s) => (
-                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${s.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                    {s.is_active ? 'Active' : 'Inactive'}
-                </span>
-            )
-        }
+        { header: "Description", accessor: (s) => <span>{s.description || '-'}</span> },
+        { header: "Featured", accessor: (s) => <span>{s.is_featured ? 'Yes' : 'No'}</span> }
+
     ];
 
     return (

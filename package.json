@@ -5,20 +5,19 @@
   "scripts": {
     "dev": "react-router dev",
     "build": "react-router build",
-    "postbuild": "echo '{\"version\":1,\"include\":[\"/*\"],\"exclude\":[]}' > build/client/_routes.json",
-    "deploy": "wrangler pages deploy build/client",
+    "build:production": "node scripts/build-production.mjs",
+    "verify:production": "node scripts/verify-production.mjs",
+    "deploy": "npm run build:production && wrangler pages deploy build/client --project-name aiwaan --branch main",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
     "@react-router/node": "^7.11.0",
     "@react-router/serve": "^7.11.0",
-    "@supabase/supabase-js": "^2.89.0",
     "@tanstack/react-query": "^5.90.16",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "isbot": "^5.1.32",
     "lucide-react": "^0.562.0",
-    "openai": "^6.16.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-router": "^7.11.0",
@@ -35,6 +34,7 @@
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3",
     "vite": "^7.3.0",
-    "vite-tsconfig-paths": "^6.0.3"
+    "vite-tsconfig-paths": "^6.0.3",
+    "wrangler": "^4.59.1"
   }
 }

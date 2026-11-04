@@ -12,7 +12,7 @@ function AdminLayout() {
 
 export default function Admin() {
     return (
-        <ProtectedRoute>
+        <ProtectedRoute adminOnly>
             <AdminLayout />
         </ProtectedRoute>
     );

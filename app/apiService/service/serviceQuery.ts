@@ -33,6 +33,11 @@ const useQueryGetService = (id?: string) => {
     });
 };
 
+const useQueryGetAdminServices = () => useQuery({
+    queryKey: [Service_Query_Key.SERVICE, 'admin'],
+    queryFn: ServiceAPI.getAdminAll,
+});
+
 const useMutationCreateService = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -65,6 +70,7 @@ const useMutationDeleteService = () => {
 
 export default {
     useQueryGetServices,
+    useQueryGetAdminServices,
     useQueryGetService,
     useMutationCreateService,
     useMutationUpdateService,

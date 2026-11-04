@@ -46,7 +46,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     );
 };
 
-import ChatWidget from "~/components/ChatWidget";
+
 
 export default function App() {
     return (
@@ -58,7 +58,6 @@ export default function App() {
                         <Outlet />
                     </FlexColumn>
                     <Footer />
-                    <ChatWidget />
                 </FlexColumn>
             </AuthProvider>
         </QueryProvider>

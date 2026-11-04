@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useState, useEffect } from 'react';
 import { api } from '~/lib/api';
 
@@ -46,7 +47,7 @@ interface AuthContextType {
     profile: Profile | null;
     loading: boolean;
     login: (email: string, password: string) => Promise<void>;
-    register: (email: string, password: string, name: string) => Promise<void>;
+    register: (email: string, password: string, name: string) => Promise<boolean>;
     logout: () => Promise<void>;
     resetPassword: (email: string) => Promise<void>;
 }
@@ -54,6 +55,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+    const queryClient = useQueryClient();
     const [user, setUser] = useState<User | null>(null);
     const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
@@ -70,6 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         try {
+            if (localStorage.getItem("refresh_token")) await api.refresh();
             const { user } = await api.get<{ user: User }>('/auth/me');
             if (user) {
                 setUser(user);
@@ -101,44 +104,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     async function login(email: string, password: string) {
-        const response = await api.post<{ data: { session: { access_token: string, user: User } } }>('/auth/signin', {
+        const response = await api.post<{ data: { session: { access_token: string, refresh_token: string, expires_at: number, user: User } } }>('/auth/signin', {
             email,
             password,
         });
 
         const { session } = response.data;
-        api.setToken(session.access_token);
+        queryClient.clear();
+        api.setSession(session);
         setUser(session.user);
         await fetchProfile(session.user.id);
     }
 
     async function register(email: string, password: string, name: string) {
-        const response = await api.post<{ data: { session: { access_token: string, user: User } | null, user: User | null } }>('/auth/signup', {
+        const response = await api.post<{ data: { session: { access_token: string, refresh_token: string, expires_at: number, user: User } | null, user: User | null } }>('/auth/signup', {
             email,
             password,
             full_name: name,
         });
 
         if (response.data.session) {
-            api.setToken(response.data.session.access_token);
+            api.setSession(response.data.session);
             setUser(response.data.user);
+            if (response.data.user) await fetchProfile(response.data.user.id);
+            return true;
         }
+        return false;
     }
 
     async function logout() {
-        try {
-
-        } catch (e) {
-
-        }
+        queryClient.clear();
         api.removeToken();
         setUser(null);
         setProfile(null);
     }
 
     async function resetPassword(email: string) {
-        console.warn("Reset password not implemented on server yet");
-        throw new Error("Password reset not yet supported via new server");
+        await api.post('/auth/request-reset', { email });
     }
 
     return (

@@ -1,95 +1,51 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8787';
-
-function getHeaders() {
-    const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-    };
-    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('access_token') : null;
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
-    return headers;
+export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8787';
+type Session = { access_token: string; refresh_token?: string; expires_at?: number };
+const storage = () => typeof localStorage === 'undefined' ? null : localStorage;
+function setSession(session: Session) {
+ storage()?.setItem('access_token', session.access_token);
+ if (session.refresh_token) storage()?.setItem('refresh_token', session.refresh_token);
+ if (session.expires_at) storage()?.setItem('expires_at', String(session.expires_at));
 }
-
-async function handleResponse<T>(response: Response): Promise<T> {
-    if (!response.ok) {
-        let errorMessage = response.statusText;
-        try {
-            const errorData = await response.json() as any;
-            errorMessage = errorData.error || errorData.message || errorMessage;
-        } catch (e) {
-
-        }
-        throw new Error(errorMessage);
-    }
-
-    if (response.status === 204) {
-        return {} as T;
-    }
-
-    return response.json();
+function removeToken() { for (const key of ['access_token', 'refresh_token', 'expires_at']) storage()?.removeItem(key); }
+let refreshing: Promise<boolean> | null = null;
+async function refresh() {
+ if (!refreshing) refreshing = (async () => {
+  const token = storage()?.getItem('refresh_token');
+  if (!token) return false;
+  const response = await fetch(`${API_URL}/auth/refresh`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ refresh_token: token }) });
+  if (!response.ok) { removeToken(); return false; }
+  const { data } = await response.json();
+  if (!data.session) { removeToken(); return false; }
+  setSession(data.session); return true;
+ })().finally(() => { refreshing = null; });
+ return refreshing;
 }
-
+async function request<T>(method: string, endpoint: string, body?: unknown, retry = true): Promise<T> {
+ const headers: Record<string, string> = {};
+ const token = storage()?.getItem('access_token');
+ if (token) headers.Authorization = `Bearer ${token}`;
+ const multipart = body instanceof FormData;
+ if (body !== undefined && !multipart) headers['Content-Type'] = 'application/json';
+ const response = await fetch(`${API_URL}${endpoint}`, { method, headers, body: body === undefined ? undefined : multipart ? body : JSON.stringify(body) });
+ if (response.status === 401 && retry && (!endpoint.startsWith('/auth/') || endpoint === '/auth/me') && await refresh()) return request<T>(method, endpoint, body, false);
+ if (!response.ok) {
+  const data = await response.json().catch(() => null);
+  const error = data?.error;
+  throw new Error(typeof error === 'string' ? error : error?.issues?.map((issue: { message: string }) => issue.message).join(', ') || data?.message || response.statusText);
+ }
+ return response.status === 204 ? {} as T : response.json();
+}
 export const api = {
-    get: async <T>(endpoint: string, params?: Record<string, any>): Promise<T> => {
-        const url = new URL(`${API_URL}${endpoint}`);
-        if (params) {
-            Object.keys(params).forEach(key => {
-                if (params[key] !== undefined && params[key] !== null) {
-                    url.searchParams.append(key, String(params[key]));
-                }
-            });
-        }
-
-        const response = await fetch(url.toString(), {
-            method: 'GET',
-            headers: getHeaders(),
-        });
-        return handleResponse<T>(response);
-    },
-
-    post: async <T>(endpoint: string, body: any): Promise<T> => {
-        const response = await fetch(`${API_URL}${endpoint}`, {
-            method: 'POST',
-            headers: getHeaders(),
-            body: JSON.stringify(body),
-        });
-        return handleResponse<T>(response);
-    },
-
-    put: async <T>(endpoint: string, body: any): Promise<T> => {
-        const response = await fetch(`${API_URL}${endpoint}`, {
-            method: 'PUT',
-            headers: getHeaders(),
-            body: JSON.stringify(body),
-        });
-        return handleResponse<T>(response);
-    },
-
-    delete: async <T>(endpoint: string): Promise<T> => {
-        const response = await fetch(`${API_URL}${endpoint}`, {
-            method: 'DELETE',
-            headers: getHeaders(),
-        });
-        return handleResponse<T>(response);
-    },
-
-    setToken: (token: string) => {
-        if (typeof localStorage !== 'undefined') {
-            localStorage.setItem('access_token', token);
-        }
-    },
-
-    removeToken: () => {
-        if (typeof localStorage !== 'undefined') {
-            localStorage.removeItem('access_token');
-        }
-    },
-
-    getToken: () => {
-        if (typeof localStorage !== 'undefined') {
-            return localStorage.getItem('access_token');
-        }
-        return null;
-    }
+ get: <T>(endpoint: string, params?: Record<string, unknown>) => {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params || {})) if (value !== undefined && value !== null) query.set(key, String(value));
+  return request<T>('GET', `${endpoint}${query.size ? `?${query}` : ''}`);
+ },
+ post: <T>(endpoint: string, body: unknown) => request<T>('POST', endpoint, body),
+ put: <T>(endpoint: string, body: unknown) => request<T>('PUT', endpoint, body),
+ delete: <T>(endpoint: string) => request<T>('DELETE', endpoint),
+ upload: (body: FormData) => request<{ publicUrl: string; path: string }>('POST', '/storage/upload', body),
+ setSession, refresh, removeToken,
+ setToken: (token: string) => storage()?.setItem('access_token', token),
+ getToken: () => storage()?.getItem('access_token') || null,
 };

@@ -1,8 +1,8 @@
 import { Navigate } from 'react-router';
 import { useAuth } from '~/contexts/AuthContext';
 
-export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+export function ProtectedRoute({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
+  const { user, profile, loading } = useAuth();
 
   if (loading) {
     return (
@@ -18,6 +18,8 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   if (!user) {
     return <Navigate to="/auth/sign-in" replace />;
   }
+
+  if (adminOnly && !profile?.is_admin) return <Navigate to="/profile" replace />;
 
   return <>{children}</>;
 }

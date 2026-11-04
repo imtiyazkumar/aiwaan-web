@@ -2,6 +2,7 @@ import { ProtectedRoute } from '~/components/ProtectedRoute';
 import { useAuth } from '~/contexts/AuthContext';
 import { useNavigate } from 'react-router';
 import UserQuery from '~/apiService/user/userQuery';
+import { useEffect, useState } from 'react';
 
 function ProfileContent() {
     const { user, logout } = useAuth();
@@ -13,6 +14,9 @@ function ProfileContent() {
     }
 
     const { data: profile } = UserQuery.useQueryGetUser(user?.id);
+    const update = UserQuery.useMutationUpdateUser();
+    const [fullName, setFullName] = useState('');
+    useEffect(() => { setFullName(profile?.full_name || ''); }, [profile?.full_name]);
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -29,20 +33,22 @@ function ProfileContent() {
                             </div>
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-700">Username</label>
-                            <p className="mt-1 text-gray-900">{profile?.username || 'N/A'}</p>
-                        </div>
+                        <form onSubmit={event => {
+                            event.preventDefault();
+                            if (profile) update.mutate({ id: profile.id, full_name: fullName });
+                        }} className="space-y-3">
+                            <label className="block text-sm font-semibold text-gray-700" htmlFor="full-name">Full Name</label>
+                            <input id="full-name" value={fullName} onChange={event => setFullName(event.target.value)} className="border rounded px-3 py-2" />
+                            <button type="submit" disabled={update.isPending} className="bg-primary-base text-white rounded px-4 py-2">{update.isPending ? 'Saving...' : 'Save Profile'}</button>
+                            {update.error && <p role="alert" className="text-red-700">{update.error.message}</p>}
+                            {update.isSuccess && <p role="status">Profile saved.</p>}
+                        </form>
 
                         <div>
                             <label className="block text-sm font-semibold text-gray-700">Email</label>
                             <p className="mt-1 text-gray-900">{user?.email || 'N/A'}</p>
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-700">Website</label>
-                            <p className="mt-1 text-gray-900">{profile?.website || 'N/A'}</p>
-                        </div>
 
                         <div className="pt-4">
                             <button

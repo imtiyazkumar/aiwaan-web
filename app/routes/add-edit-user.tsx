@@ -7,12 +7,15 @@ import TitleCard from '~/components/cards/TitleCard';
 import { api } from '~/lib/api';
 import userQuery from '~/apiService/user/userQuery';
 import SelectInput from '~/components/general/Select';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function EditUser() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const userid = searchParams.get('id');
     const [loading, setLoading] = useState(false);
+    const queryClient = useQueryClient();
+    const [password, setPassword] = useState('');
 
     const { data: user, isLoading } = userQuery.useQueryGetUser(userid ?? '');
 
@@ -24,11 +27,6 @@ export default function EditUser() {
     });
 
     useEffect(() => {
-        if (!userid) {
-            navigate('/admin/users');
-            return;
-        }
-
         if (user) {
             setFormData({
                 email: user.email ?? '',
@@ -49,11 +47,14 @@ export default function EditUser() {
         setLoading(true);
 
         try {
-            await api.put(`/users/admin/${userid}`, {
+            const values = {
                 full_name: formData.full_name,
                 role: formData.role
-            });
-            alert('User updated successfully');
+            };
+            if (userid) await api.put(`/users/admin/${userid}`, values);
+            else await api.post('/users/admin', { ...values, email: formData.email, password });
+            await queryClient.invalidateQueries({ queryKey: ['user'] });
+            alert(userid ? 'User updated successfully' : 'User created successfully');
             navigate('/admin/users');
         } catch (error: any) {
             alert(error.response?.data?.error || error.message);
@@ -76,7 +77,7 @@ export default function EditUser() {
                 onSubmit={handleSubmit}
                 className="space-y-6 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100"
             >
-                <TitleCard title="Edit User" />
+                <TitleCard title={userid ? 'Edit User' : 'Create User'} />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <TextInput
@@ -92,8 +93,10 @@ export default function EditUser() {
                         name="email"
                         type="email"
                         value={formData.email}
-                        disabled
+                        disabled={!!userid}
+                        required
                     />
+                    {!userid && <TextInput label="Initial Password" name="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} />}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <SelectInput
@@ -133,7 +136,7 @@ export default function EditUser() {
                         disabled={loading}
                         height="medium"
                     >
-                        {loading ? 'Updating...' : 'Update User'}
+                        {loading ? 'Saving...' : userid ? 'Update User' : 'Create User'}
                     </Button>
                 </Flex>
             </form>

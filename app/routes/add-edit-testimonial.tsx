@@ -40,7 +40,7 @@ export default function AddEditTestimonial() {
 
     useEffect(() => {
         if (!loading && user && !isEditMode && myTestimonial) {
-            navigate(`/admin/testimonials/edit?id=${myTestimonial.id}`);
+            navigate(`/add-edit-testimonial?id=${myTestimonial.id}`);
         }
     }, [user, loading, isEditMode, myTestimonial, navigate]);
 

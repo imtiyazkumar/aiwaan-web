@@ -10,6 +10,9 @@ export default [
     route("auth/request-reset", "routes/auth.request-reset.tsx"),
   ]),
 
+  route("orders", "routes/orders.tsx"),
+  route("billing", "routes/billing.tsx"),
+  route("add-edit-testimonial", "routes/add-edit-testimonial.tsx"),
   route("profile", "routes/profile.tsx"),
   route("services", "routes/services.tsx"),
   route("services/:id", "routes/service-view.tsx"),
@@ -21,28 +24,25 @@ export default [
   route("privacy-policy", "routes/privacy-policy.tsx"),
   route("about", "routes/about.tsx"),
   route("testimonials", "routes/testimonials.tsx"),
-  // route("add-edit-testimonial", "routes/add-edit-testimonial.tsx"), // Moved to admin layout
-  // route("api/chat", "routes/api.chat.ts"), // Removed
 
   layout("routes/admin.tsx", [
-    index("routes/admin._index.tsx"),
+    route("admin", "routes/admin._index.tsx"),
+    route("admin/contact", "routes/admin.contact.tsx"),
+    route("admin/services", "routes/admin.services.tsx"),
     route("admin/projects", "routes/admin.projects.tsx"),
     route("admin/users", "routes/admin.users.tsx"),
     route("admin/orders", "routes/admin.orders.tsx"),
     route("admin/bills", "routes/admin.bills.tsx"),
     route("admin/testimonials", "routes/admin.testimonials.tsx"),
-    route("admin/messages", "routes/admin.threads.tsx"),
     route("add-edit-project", "routes/add-edit-project.tsx"),
     route("add-edit-service", "routes/add-edit-service.tsx"),
     route("add-edit-user", "routes/add-edit-user.tsx"),
     route("add-edit-order", "routes/add-edit-order.tsx"),
     route("add-edit-bill", "routes/add-edit-bill.tsx"),
-    route("add-edit-testimonial", "routes/add-edit-testimonial.tsx"),
-    route("billing", "routes/billing.tsx"),
   ]),
 
   layout("routes/error.tsx", [
-    index("routes/error._index.tsx"),
+    route("error", "routes/error._index.tsx"),
     route("error/404", "routes/error.404.tsx"),
     route("error/session-expired", "routes/error.session-expired.tsx"),
     route("error/connection-error", "routes/error.connection-error.tsx"),

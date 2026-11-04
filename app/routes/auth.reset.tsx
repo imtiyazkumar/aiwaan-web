@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-// import { supabase } from "~/lib/supabase"; // Removed
+import { api } from "~/lib/api";
 import { Div, Flex, FlexColumn } from "~/components/general/BaseComponents";
 import Button from "~/components/buttons/Button";
 import { wrapperBaseClass } from "~/utils/constants";
@@ -21,7 +21,8 @@ export default function ResetPassword() {
             const accessToken = params.get('access_token');
             if (accessToken) {
                 // Set token so the PUT request is authenticated
-                import('~/lib/api').then(({ api }) => api.setToken(accessToken));
+                api.setSession({ access_token: accessToken, refresh_token: params.get('refresh_token') || undefined });
+                window.history.replaceState(null, '', window.location.pathname);
             }
         }
     }, []);
@@ -47,6 +48,7 @@ export default function ResetPassword() {
             await api.put('/auth/password', { password });
 
             // Success
+            api.removeToken();
             navigate("/auth/sign-in");
         } catch (err: any) {
             setError(err.message || "Failed to reset password");

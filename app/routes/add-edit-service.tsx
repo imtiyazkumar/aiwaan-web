@@ -28,6 +28,7 @@ function AddEditServiceContent() {
         icon: '',
         features: [] as string[],
         button_title: 'Explore',
+        is_featured: false,
     });
 
     useEffect(() => {
@@ -40,6 +41,7 @@ function AddEditServiceContent() {
                 icon: serviceData.icon || '',
                 features: serviceData.features || [],
                 button_title: serviceData.button_title || 'Explore',
+                is_featured: serviceData.isFeatured || false,
             });
         }
     }, [isEditMode, serviceData]);
@@ -78,15 +80,7 @@ function AddEditServiceContent() {
             formData.append('bucket', 'service-images');
             formData.append('path', filePath);
 
-            const token = api.getToken();
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/storage/upload`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
-                body: formData
-            });
-
-            if (!response.ok) throw new Error('Upload failed');
-            const data = await response.json() as any;
+            const data = await api.upload(formData);
             setFormData(prev => ({ ...prev, image_url: data.publicUrl }));
         } catch (error) {
             console.error('Error uploading image:', error);
@@ -168,6 +162,7 @@ function AddEditServiceContent() {
                         </ul>
                     </div>
 
+                    <label className="flex items-center gap-2"><input type="checkbox" checked={formData.is_featured} onChange={e => setFormData(prev => ({ ...prev, is_featured: e.target.checked }))} /> Feature on homepage</label>
                     <Flex className="gap-4 pt-4 justify-end">
                         <Button type="button" onClick={() => navigate('/admin/services')} variant="dark_outlined" height="medium">Cancel</Button>
                         <Button type="submit" variant="primary_filled" height="medium" disabled={loading}>
