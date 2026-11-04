@@ -12,6 +12,8 @@ export default [
 
   route("orders", "routes/orders.tsx"),
   route("billing", "routes/billing.tsx"),
+  route("billing/:id", "routes/bill-view.tsx"),
+  route("records/:kind/:id", "routes/record-view.tsx"),
   route("add-edit-testimonial", "routes/add-edit-testimonial.tsx"),
   route("profile", "routes/profile.tsx"),
   route("services", "routes/services.tsx"),
@@ -24,6 +26,7 @@ export default [
   route("privacy-policy", "routes/privacy-policy.tsx"),
   route("about", "routes/about.tsx"),
   route("testimonials", "routes/testimonials.tsx"),
+  route("testimonials/:id", "routes/testimonial-view.tsx"),
 
   layout("routes/admin.tsx", [
     route("admin", "routes/admin._index.tsx"),

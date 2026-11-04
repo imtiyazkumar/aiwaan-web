@@ -13,14 +13,16 @@ interface TableProps<T> {
     isLoading?: boolean;
     onRowClick?: (row: T) => void;
     emptyMessage?: string;
+    error?: { message: string } | null;
 }
 
-export function Table<T>({ data, columns, isLoading, onRowClick, emptyMessage = "No data found." }: TableProps<T>) {
+export function Table<T>({ data, columns, isLoading, onRowClick, emptyMessage = "No data found.", error }: TableProps<T>) {
     return (
         <div className="w-full overflow-x-auto border rounded-xl shadow-sm bg-white border-gray-100">
             {isLoading && <div className="p-8 text-center text-gray-500">Loading...</div>}
-            {!isLoading && data.length === 0 && <div className="p-8 text-center text-gray-500">{emptyMessage}</div>}
-            {!isLoading && data.length > 0 && (
+            {error && <p role="alert" className="p-6 text-red-700">{error.message}</p>}
+            {!error && !isLoading && data.length === 0 && <div className="p-8 text-center text-gray-500">{emptyMessage}</div>}
+            {!error && !isLoading && data.length > 0 && (
                 <table className="min-w-full divide-y divide-gray-100">
                     <thead className="bg-gray-50">
                         <tr>
@@ -37,12 +39,19 @@ export function Table<T>({ data, columns, isLoading, onRowClick, emptyMessage = 
                     <tbody className="bg-white divide-y divide-gray-100">
                         {data.map((row, rowIndex) => (
                             <tr
-                                key={rowIndex}
+                                key={typeof row === 'object' && row !== null && 'id' in row ? String(row.id) : rowIndex}
+                                tabIndex={onRowClick ? 0 : undefined}
+                                onKeyDown={(event) => {
+                                    if (event.target === event.currentTarget && onRowClick && (event.key === "Enter" || event.key === " ")) {
+                                        event.preventDefault();
+                                        onRowClick(row);
+                                    }
+                                }}
                                 onClick={() => onRowClick && onRowClick(row)}
                                 className={`transition-colors ${onRowClick ? 'cursor-pointer hover:bg-gray-50' : ''}`}
                             >
                                 {columns.map((col, colIndex) => (
-                                    <td key={colIndex} className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                    <td key={colIndex} className={`px-6 py-4 whitespace-nowrap text-sm text-gray-700 ${col.className || ''}`}>
                                         {col.accessor(row)}
                                     </td>
                                 ))}

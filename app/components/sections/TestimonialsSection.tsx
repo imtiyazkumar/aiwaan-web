@@ -39,7 +39,6 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
     const { data: testimonialData, isLoading } =
         TestimonialQuery.useQueryGetTestimonials();
 
-    const deleteMutation = TestimonialQuery.useMutationDeleteTestimonial();
 
     let testimonials = (testimonialData?.testimonials || []).slice(0, 4);
 
@@ -52,17 +51,12 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
         if (!user) {
             navigate("/auth/sign-in");
         } else if (myTestimonial) {
-            navigate(`/add-edit-testimonial?id=${myTestimonial.id}`);
+            navigate(`/testimonials/${myTestimonial.id}`);
         } else {
             navigate("/add-edit-testimonial");
         }
     };
 
-    const handleDelete = (id: string) => {
-        if (confirm("Are you sure you want to delete your review?")) {
-            deleteMutation.mutate(id);
-        }
-    };
 
     return (
         <FlexColumn className={`${wrapperBaseClass} ${bgClass[backgroundColor]}`}>
@@ -85,15 +79,13 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                     </div>
                 ) : testimonials.length > 0 ? (
                     testimonials.map(t => {
-                        const isOwner = user && user.id === t.user_id;
+                        const isOwner = profile && profile.id === t.user_id;
                         const isAdmin = profile?.is_admin;
 
                         return (
                             <TestimonialCard
                                 key={t.id}
                                 testimonial={t}
-                                showActions={Boolean(isOwner || isAdmin)}
-                                onDelete={handleDelete}
                             />
                         );
                     })

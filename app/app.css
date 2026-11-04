@@ -240,56 +240,145 @@
     --color-primary-base: #115E59;
 }
 
-.side-left {
-    border-top-right-radius: 2rem;
-    border-bottom-right-radius: 2rem;
-    overflow: hidden;
-}
-
-.side-right {
-    border-top-left-radius: 2rem;
-    border-bottom-left-radius: 2rem;
-    overflow: hidden;
-}
-
-@keyframes slide-left {
-    0% {
-        transform: translateX(20%);
-        opacity: 0.6;
-    }
-
-    50% {
-        opacity: 0.8;
-    }
-
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes slide-right {
-    0% {
-        transform: translateX(-20%);
-        opacity: 0.6;
-    }
-
-    50% {
-        opacity: 0.8;
-    }
-
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-.animate-slide-left {
-    animation: slide-left 0.6s ease-in-out;
-}
-
-.animate-slide-right {
-    animation: slide-right 0.6s ease-in-out;
-}
-
 @layer components, utilities;
+
+.confirmation-dialog {
+    width: calc(100% - 2rem);
+    max-width: 28rem;
+    max-height: calc(100dvh - 2rem);
+    margin: auto;
+    padding: 0;
+    overflow: auto;
+    border: 0;
+    border-radius: 1.25rem;
+    background: white;
+    box-shadow: 0 24px 80px rgb(15 23 42 / 20%);
+}
+
+.confirmation-dialog::backdrop {
+    background: rgb(15 23 42 / 50%);
+    backdrop-filter: blur(4px);
+}
+
+.entity-editor-dialog {
+    max-width: 52rem;
+}
+
+.confirmation-dialog[open] {
+    animation: confirmation-enter 160ms ease-out;
+}
+
+@keyframes confirmation-enter {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .confirmation-dialog[open] { animation: none; }
+}
+
+.account-summary-grid {
+    display: grid;
+    width: 100%;
+    max-width: 64rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .account-summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@keyframes hero-enter {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 12px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.hero-enter {
+    animation: hero-enter 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-enter-description {
+    animation-delay: 120ms;
+}
+
+.hero-enter-actions {
+    animation-delay: 240ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-enter {
+        animation: none;
+    }
+}
+
+.featured-projects-carousel {
+    width: 100%;
+    padding-block: 12px 20px;
+    --swiper-wrapper-transition-timing-function: cubic-bezier(0.22, 0.68, 0.18, 1);
+}
+
+.featured-projects-carousel .swiper-slide,
+.featured-projects-placeholder {
+    height: 420px;
+}
+
+.featured-projects-carousel .swiper-slide {
+    width: calc(100% - 24px);
+    opacity: 0.5;
+    transition-property: transform, opacity;
+    transition-timing-function: var(--swiper-wrapper-transition-timing-function);
+}
+
+.featured-projects-carousel .swiper-slide-active {
+    opacity: 1;
+}
+
+.featured-project-caption {
+    opacity: 0;
+    transition: opacity 550ms cubic-bezier(0.22, 0.68, 0.18, 1);
+}
+
+.swiper-slide-active .featured-project-caption {
+    opacity: 1;
+}
+
+.featured-projects-carousel.featured-projects-single .swiper-slide {
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .featured-projects-carousel .swiper-slide {
+        width: 68%;
+    }
+    .featured-projects-carousel .swiper-slide,
+    .featured-projects-placeholder {
+        height: 520px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .featured-projects-carousel .swiper-slide {
+        width: 70%;
+    }
+    .featured-projects-carousel .swiper-slide,
+    .featured-projects-placeholder {
+        height: 650px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .featured-projects-carousel .swiper-wrapper,
+    .featured-projects-carousel .swiper-slide,
+    .featured-project-caption {
+        transition-duration: 0ms !important;
+    }
+}

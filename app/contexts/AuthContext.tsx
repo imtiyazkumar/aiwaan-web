@@ -50,6 +50,7 @@ interface AuthContextType {
     register: (email: string, password: string, name: string) => Promise<boolean>;
     logout: () => Promise<void>;
     resetPassword: (email: string) => Promise<void>;
+    refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -76,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const { user } = await api.get<{ user: User }>('/auth/me');
             if (user) {
                 setUser(user);
-                await fetchProfile(user.id);
+                await fetchProfile();
             } else {
                 api.removeToken();
                 setUser(null);
@@ -92,7 +93,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     }
 
-    async function fetchProfile(userId: string) {
+    async function fetchProfile() {
         try {
             const { data } = await api.get<{ data: Profile }>('/users/me');
             if (data) {
@@ -113,7 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         queryClient.clear();
         api.setSession(session);
         setUser(session.user);
-        await fetchProfile(session.user.id);
+        await fetchProfile();
     }
 
     async function register(email: string, password: string, name: string) {
@@ -126,7 +127,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (response.data.session) {
             api.setSession(response.data.session);
             setUser(response.data.user);
-            if (response.data.user) await fetchProfile(response.data.user.id);
+            if (response.data.user) await fetchProfile();
             return true;
         }
         return false;
@@ -144,7 +145,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     return (
-        <AuthContext.Provider value={{ user, profile, loading, login, register, logout, resetPassword }}>
+        <AuthContext.Provider value={{ user, profile, loading, login, register, logout, resetPassword, refreshProfile: fetchProfile }}>
             {children}
         </AuthContext.Provider>
     );

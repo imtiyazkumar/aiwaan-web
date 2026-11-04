@@ -148,7 +148,7 @@ function AddEditProjectContent() {
     return (
         <Div className="w-full rounded-2xl lg:rounded-3xl shadow-2xl overflow-hidden">
             <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
-                <TitleCard title={isEditMode ? 'Edit Project' : 'Add New Project'} />
+                <div className="mb-6 flex items-center justify-between gap-4"><TitleCard title={isEditMode ? 'Edit Project' : 'Add New Project'} className="mx-0 mb-0 sm:mb-0" /></div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <TextInput label="Project Title" name="title" value={formData.title} onChange={handleChange} required />

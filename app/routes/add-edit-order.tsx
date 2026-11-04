@@ -80,7 +80,7 @@ function AddEditOrderContent() {
                 onSubmit={handleSubmit}
                 className="space-y-6 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100"
             >
-                <TitleCard title={orderId ? "Edit Order" : "Create New Order"} />
+                <div className="mb-6 flex items-center justify-between gap-4"><TitleCard title={orderId ? "Edit Order" : "Create New Order"} className="mx-0 mb-0 sm:mb-0" /></div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <SelectInput

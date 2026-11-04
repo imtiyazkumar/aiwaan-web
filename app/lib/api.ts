@@ -8,11 +8,22 @@ function setSession(session: Session) {
 }
 function removeToken() { for (const key of ['access_token', 'refresh_token', 'expires_at']) storage()?.removeItem(key); }
 let refreshing: Promise<boolean> | null = null;
+async function send(url: string, options: RequestInit): Promise<Response> {
+ const delays = options.method === 'GET' ? [250, 750] : [];
+ for (let attempt = 0; ; attempt++) {
+  try { return await fetch(url, options); }
+  catch (error) {
+   if (!(error instanceof TypeError)) throw error;
+   if (attempt >= delays.length) throw new Error('Unable to connect to the server. Please try again in a moment.');
+   await new Promise(resolve => setTimeout(resolve, delays[attempt]));
+  }
+ }
+}
 async function refresh() {
  if (!refreshing) refreshing = (async () => {
   const token = storage()?.getItem('refresh_token');
   if (!token) return false;
-  const response = await fetch(`${API_URL}/auth/refresh`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ refresh_token: token }) });
+  const response = await send(`${API_URL}/auth/refresh`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ refresh_token: token }) });
   if (!response.ok) { removeToken(); return false; }
   const { data } = await response.json();
   if (!data.session) { removeToken(); return false; }
@@ -26,7 +37,7 @@ async function request<T>(method: string, endpoint: string, body?: unknown, retr
  if (token) headers.Authorization = `Bearer ${token}`;
  const multipart = body instanceof FormData;
  if (body !== undefined && !multipart) headers['Content-Type'] = 'application/json';
- const response = await fetch(`${API_URL}${endpoint}`, { method, headers, body: body === undefined ? undefined : multipart ? body : JSON.stringify(body) });
+ const response = await send(`${API_URL}${endpoint}`, { method, headers, body: body === undefined ? undefined : multipart ? body : JSON.stringify(body) });
  if (response.status === 401 && retry && (!endpoint.startsWith('/auth/') || endpoint === '/auth/me') && await refresh()) return request<T>(method, endpoint, body, false);
  if (!response.ok) {
   const data = await response.json().catch(() => null);

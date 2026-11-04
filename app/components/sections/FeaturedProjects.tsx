@@ -1,135 +1,142 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { Link, useNavigate } from "react-router";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCoverflow } from "swiper/modules";
+import type { Swiper as SwiperInstance } from "swiper";
 import { Div, Flex, FlexColumn } from "~/components/general/BaseComponents";
 import Button from "~/components/buttons/Button";
-import { useNavigate } from "react-router";
 import { wrapperBaseClass } from "~/utils/constants";
 import TitleCard from "~/components/cards/TitleCard";
 import projectQuery from "~/apiService/project/projectQuery";
+import "swiper/css";
+import "swiper/css/effect-coverflow";
 
 export default function FeaturedProjects() {
-    const { data, isLoading, error } = projectQuery.useQueryGetProjects({});
-    const projects = data?.projects.filter(p => p.is_featured) || [];
-
+    const { data, isLoading, error, refetch } = projectQuery.useQueryGetProjects({});
+    const projects = useMemo(() => data?.projects.filter(project => project.is_featured) || [], [data?.projects]);
+    const carousel = useRef<SwiperInstance | null>(null);
     const [current, setCurrent] = useState(0);
-    const [animating, setAnimating] = useState(false);
-    const [direction, setDirection] = useState<"left" | "right">("right");
-    const [dragX, setDragX] = useState(0);
-    const startX = useRef<number | null>(null);
+    const [reducedMotion, setReducedMotion] = useState(false);
+    const navigate = useNavigate();
+    const canSlide = projects.length > 1;
 
-    const next = () => {
-        if (animating) return;
-        setDirection("right");
-        setAnimating(true);
-        setCurrent(c => (c + 1) % projects.length);
-    };
-
-    const prev = () => {
-        if (animating) return;
-        setDirection("left");
-        setAnimating(true);
-        setCurrent(c => (c - 1 + projects.length) % projects.length);
-    };
+    // Enough physical slides for a continuous loop, including two-project collections.
+    // Cards stay mounted throughout each transition; only their transforms change.
+    const slides = useMemo(() => {
+        const copies = projects.length > 1 ? Math.ceil(6 / projects.length) : 1;
+        return Array.from({ length: copies }, (_, copy) => projects.map(project => ({ project, key: `${project.id}-${copy}` }))).flat();
+    }, [projects]);
 
     useEffect(() => {
-        if (animating) {
-            const t = setTimeout(() => {
-                setAnimating(false);
-                setDragX(0);
-            }, 600);
-            return () => clearTimeout(t);
-        }
-    }, [animating]);
+        const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const update = () => setReducedMotion(preference.matches);
+        update();
+        preference.addEventListener("change", update);
+        return () => preference.removeEventListener("change", update);
+    }, []);
 
-    const getSlides = () =>
-        [-1, 0, 1].map(offset => ({
-            offset,
-            index: (current + offset + projects.length) % projects.length
-        }));
-
-    const onTouchStart = (e: React.TouchEvent) => {
-        startX.current = e.touches[0].clientX;
+    const move = (direction: "previous" | "next") => {
+        const instance = carousel.current;
+        if (!canSlide || !instance || instance.destroyed || instance.animating) return;
+        if (direction === "next") instance.slideNext();
+        else instance.slidePrev();
     };
-
-    const onTouchMove = (e: React.TouchEvent) => {
-        if (startX.current === null) return;
-        setDragX(e.touches[0].clientX - startX.current);
-    };
-
-    const onTouchEnd = () => {
-        if (Math.abs(dragX) > 80) {
-            dragX < 0 ? next() : prev();
-        } else {
-            setDragX(0);
-        }
-        startX.current = null;
-    };
-
-    const navigate = useNavigate();
 
     return (
-
-        <FlexColumn className={`${wrapperBaseClass} px-4 sm:px-6 lg:px-10`}>
+        <FlexColumn className={`${wrapperBaseClass} min-w-0 px-4 sm:px-6 lg:px-10`}>
             <TitleCard title="Featured Projects" />
 
-            {(isLoading || !projects.length) ? <Div className="w-full text-center py-20 text-gray-600">{isLoading ? 'Loading featured projects...' : error ? 'Unable to load projects.' : 'No featured projects yet.'}</Div> :
-                <Flex className="w-full justify-center items-center gap-4 sm:gap-6 relative min-h-105 sm:min-h-130 lg:min-h-162.5 overflow-hidden">
-                    {getSlides().map(({ index, offset }) => {
-                        const isCenter = offset === 0;
-                        const project = projects[index];
-                        const animClass = animating && direction === "right" ? "animate-slide-left" : animating && direction === "left" ? "animate-slide-right" : "";
-
-                        return (
-                            <Div
-                                key={`${index}-${offset}`}
-                                onClick={() => { if (offset === 1) next(); if (offset === -1) prev(); }}
-                                onTouchStart={isCenter ? onTouchStart : undefined}
-                                onTouchMove={isCenter ? onTouchMove : undefined}
-                                onTouchEnd={isCenter ? onTouchEnd : undefined}
-                                style={{
-                                    transform: isCenter ? `translateX(${dragX}px)` : undefined,
-                                    transition: animating || dragX === 0 ? "transform 0.6s ease" : "none"
-                                }}
-                                className={`cursor-pointer flex flex-col overflow-hidden relative rounded-2xl sm:rounded-3xl shadow-xl ${animClass} ${isCenter
-                                    ? "w-full sm:w-[65%] lg:w-[70%] z-20 scale-100 opacity-100"
-                                    : "hidden sm:flex sm:w-[15%] z-10 scale-90 opacity-60 blur-[1px] grayscale-30"
-                                    } h-105 sm:h-130 lg:h-162.5`}
-                            >
-                                <Div className="absolute inset-0 bg-black/20" />
-                                <img src={project.cover_image ?? ""} alt={project.title} className="w-full h-full object-cover" />
-
-                                <Div
-                                    onClick={() => navigate(`/projects/${project.id}`)}
-                                    className={`absolute bottom-0 left-0 w-full bg-linear-to-t from-black/90 via-black/50 to-transparent p-4 sm:p-6 lg:p-8 text-white transition-opacity duration-500 flex flex-col gap-2 ${isCenter ? "opacity-100" : "opacity-0"}`}>
-                                    <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-wide">{project.title}</h3>
-                                    <Div className="flex flex-wrap items-center gap-3 text-gray-200 mt-1 sm:mt-2">
-                                        <Div className="flex items-center gap-1">
-                                            <MapPin size={16} className="text-primary-base" />
-                                            <span className="text-xs sm:text-sm font-medium">{project.location}</span>
+            {isLoading ? (
+                <Div role="status" className="featured-projects-placeholder flex w-full items-center justify-center rounded-3xl bg-slate-100 text-gray-600">Loading featured projects...</Div>
+            ) : error ? (
+                <Div role="alert" className="w-full py-16 text-center text-gray-600">
+                    <p className="mb-4">Unable to load featured projects.</p>
+                    <Button variant="dark_outlined" className="mx-auto" onClick={() => refetch()}>Try Again</Button>
+                </Div>
+            ) : !projects.length ? (
+                <Div className="w-full py-16 text-center text-gray-600">No featured projects yet.</Div>
+            ) : (
+                <section
+                    className="w-full min-w-0"
+                    aria-label="Featured projects"
+                    aria-roledescription="carousel"
+                    tabIndex={canSlide ? 0 : undefined}
+                    onKeyDown={event => {
+                        if (canSlide && (event.key === "ArrowLeft" || event.key === "ArrowRight")) {
+                            event.preventDefault();
+                            move(event.key === "ArrowLeft" ? "previous" : "next");
+                        }
+                    }}
+                >
+                    <Swiper
+                        key={projects.map(project => project.id).join(":")}
+                        className={`featured-projects-carousel ${canSlide ? "" : "featured-projects-single"}`}
+                        modules={[EffectCoverflow]}
+                        effect="coverflow"
+                        coverflowEffect={{ rotate: 0, stretch: 0, depth: 0, scale: 0.9, modifier: 1, slideShadows: false }}
+                        slidesPerView="auto"
+                        centeredSlides
+                        spaceBetween={16}
+                        breakpoints={{ 640: { spaceBetween: 24 }, 1024: { spaceBetween: 32 } }}
+                        speed={reducedMotion ? 0 : 750}
+                        loop={canSlide}
+                        loopPreventsSliding
+                        allowTouchMove={canSlide}
+                        grabCursor={canSlide}
+                        threshold={8}
+                        preventClicks
+                        preventClicksPropagation
+                        lazyPreloadPrevNext={2}
+                        onSwiper={instance => { carousel.current = instance; setCurrent(instance.realIndex % projects.length); }}
+                        onSlideChange={instance => setCurrent(instance.realIndex % projects.length)}
+                        onBeforeDestroy={() => { carousel.current = null; }}
+                    >
+                        {slides.map(({ project, key }, index) => (
+                            <SwiperSlide key={key}>
+                                {({ isActive }) => (
+                                    <Link
+                                        to={`/projects/${project.id}`}
+                                        className="featured-project-card relative block h-full overflow-hidden rounded-2xl bg-slate-800 shadow-lg sm:rounded-3xl focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-emerald-400"
+                                        aria-label={`View ${project.title}`}
+                                        aria-hidden={!isActive}
+                                        tabIndex={isActive ? 0 : -1}
+                                        draggable={false}
+                                        onClick={event => {
+                                            if (!isActive) {
+                                                event.preventDefault();
+                                                if (!carousel.current?.animating) carousel.current?.slideToLoop(index);
+                                            }
+                                        }}
+                                    >
+                                        {project.cover_image && <img src={project.cover_image} alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" draggable={false} />}
+                                        <Div className="pointer-events-none absolute inset-0 bg-black/10" />
+                                        <Div className="featured-project-caption absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-linear-to-t from-black/90 via-black/55 to-transparent p-5 pt-20 text-white sm:p-7 sm:pt-24 lg:p-9 lg:pt-28">
+                                            <h3 className="text-xl font-bold tracking-wide sm:text-2xl lg:text-3xl">{project.title}</h3>
+                                            <Div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-2 text-gray-200">
+                                                {project.location && <Flex className="gap-1.5"><MapPin size={16} className="shrink-0 text-emerald-300" /><span className="text-xs font-medium sm:text-sm">{project.location}</span></Flex>}
+                                                {project.category && <span className="text-xs font-medium uppercase tracking-wider text-emerald-300 sm:text-sm">{project.category}</span>}
+                                            </Div>
+                                            <span className="mt-2 inline-flex items-center gap-2 text-sm font-medium">View project <ArrowRight size={16} /></span>
                                         </Div>
-                                        <span className="text-xs sm:text-sm font-medium text-primary-base uppercase tracking-wider">{project.category}</span>
-                                    </Div>
-                                </Div>
-                            </Div>
-                        );
-                    })}
-                </Flex>}
+                                    </Link>
+                                )}
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
 
-            <Div className="flex items-center justify-center gap-6 sm:gap-8 mt-2 sm:mt-4">
-                <button onClick={prev} className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg border border-gray-100 flex justify-center items-center text-gray-600 hover:bg-emerald-500 hover:text-white transition-all duration-300">
-                    <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-                </button>
+                    {canSlide && (
+                        <Div className="mt-5 flex items-center justify-center gap-6 sm:mt-6 sm:gap-8">
+                            <button type="button" onClick={() => move("previous")} aria-label="Previous featured project" className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-100 bg-white text-gray-600 shadow-sm transition-colors duration-200 hover:bg-emerald-600 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-600 sm:h-12 sm:w-12"><ChevronLeft size={22} /></button>
+                            <p aria-live="polite" aria-atomic="true" className="min-w-12 text-center text-sm tabular-nums text-slate-500"><span className="font-semibold text-slate-900">{current + 1}</span> / {projects.length}</p>
+                            <button type="button" onClick={() => move("next")} aria-label="Next featured project" className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-100 bg-white text-gray-600 shadow-sm transition-colors duration-200 hover:bg-emerald-600 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-600 sm:h-12 sm:w-12"><ChevronRight size={22} /></button>
+                        </Div>
+                    )}
+                </section>
+            )}
 
-                <button onClick={next} className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg border border-gray-100 flex justify-center items-center text-gray-600 hover:bg-emerald-500 hover:text-white transition-all duration-300">
-                    <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
-                </button>
-            </Div>
-
-            <Button onClick={() => navigate("/contact")} variant="primary_filled" height="large" className="border-2 border-primary-base/10 w-fit mt-2 sm:mt-4 mx-auto">
-                <Flex className="items-center text-sm sm:text-base">
-                    Start Your Project
-                    <ArrowRight size={18} className="ml-2 transition-transform" />
-                </Flex>
+            <Button onClick={() => navigate("/contact")} variant="primary_filled" height="large" className="mx-auto mt-5 w-fit border-2 border-primary-base/10 sm:mt-6">
+                <Flex className="items-center text-sm sm:text-base">Start Your Project <ArrowRight size={18} className="ml-2" /></Flex>
             </Button>
         </FlexColumn>
     );

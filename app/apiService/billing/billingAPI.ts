@@ -11,6 +11,11 @@ const getAdminBills = async () => {
     return { bills: data };
 };
 
+const getOne = async (id: string) => {
+    const { data } = await api.get<{ data: IBill }>(`/bills/${id}`);
+    return data;
+};
+
 const create = async (bill: Partial<IBill>) => {
     const { data } = await api.post<{ data: IBill }>('/bills', bill);
     return data;
@@ -29,6 +34,7 @@ const destroy = async (id: string) => {
 export default {
     getUserBills,
     getAdminBills,
+    getOne,
     create,
     update,
     destroy

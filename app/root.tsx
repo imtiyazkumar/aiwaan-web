@@ -14,6 +14,7 @@ import { Flex, FlexColumn } from "~/components/general/BaseComponents";
 import Footer from "~/components/sections/Footer";
 import Navbar from "~/components/Navbar";
 import { QueryProvider } from "~/providers/QueryProvider";
+import { ConfirmationProvider } from "~/contexts/ConfirmationContext";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -52,6 +53,7 @@ export default function App() {
     return (
         <QueryProvider>
             <AuthProvider>
+                <ConfirmationProvider>
                 <FlexColumn className="w-full justify-center items-center bg-slate-200">
                     <Navbar />
                     <FlexColumn className="w-full justify-center items-center px-1 sm:px-2 lg:px-4 py-1 sm:py-2 gap-2 lg:py-4">
@@ -59,6 +61,7 @@ export default function App() {
                     </FlexColumn>
                     <Footer />
                 </FlexColumn>
+                </ConfirmationProvider>
             </AuthProvider>
         </QueryProvider>
     );

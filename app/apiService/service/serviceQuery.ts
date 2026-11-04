@@ -52,8 +52,9 @@ const useMutationUpdateService = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (service: Partial<IService> & { id: string }) => ServiceAPI.update(service.id, service),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [Service_Query_Key.SERVICE] });
+        onSuccess: (service) => {
+            queryClient.setQueryData([Service_Query_Key.SERVICE, service.id], service);
+            return queryClient.invalidateQueries({ queryKey: [Service_Query_Key.SERVICE] });
         },
     });
 };

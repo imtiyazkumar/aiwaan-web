@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useLocation } from "react-router";
 import { Div, Flex } from "~/components/general/BaseComponents";
 import { useAuth } from "~/contexts/AuthContext";
 import { RouteDefinitions } from "~/utils/constants";
@@ -17,6 +17,13 @@ const AdminMenu = [
 
 const Navbar = () => {
     const { user, profile, logout } = useAuth();
+    const { pathname } = useLocation();
+    const adminActive = pathname.startsWith("/admin/");
+    const desktopLinkClass = ({ isActive }: { isActive: boolean }) =>
+        `text-sm font-medium border-b-2 transition-colors ${isActive
+            ? "text-primary-base border-primary-base"
+            : "text-secondary-500 border-transparent hover:text-primary-base"
+        }`;
     const [open, setOpen] = useState(false);
     const [adminOpen, setAdminOpen] = useState(false);
 
@@ -41,12 +48,7 @@ const Navbar = () => {
                                 <NavLink
                                     key={link.key}
                                     to={link.key}
-                                    className={({ isActive }) =>
-                                        `text-sm font-medium transition-all ${isActive
-                                            ? "text-primary-base border-b-2 border-primary-base"
-                                            : "text-secondary-500 hover:text-primary-base"
-                                        }`
-                                    }
+                                    className={desktopLinkClass}
                                 >
                                     {link.label}
                                 </NavLink>
@@ -63,7 +65,8 @@ const Navbar = () => {
                                     {profile?.is_admin && <Div className="relative">
                                         <button
                                             onClick={() => setAdminOpen(!adminOpen)}
-                                            className="flex items-center gap-1 text-sm font-medium text-secondary-500 hover:text-primary-base"
+                                            aria-expanded={adminOpen}
+                                            className={`flex items-center gap-1 ${desktopLinkClass({ isActive: adminActive })}`}
                                         >
                                             Admin
                                             <ChevronDown size={16} />
@@ -72,22 +75,22 @@ const Navbar = () => {
                                         {adminOpen && (
                                             <Div className="absolute right-0 mt-3 w-56 rounded-xl bg-white shadow-xl border border-gray-100 overflow-hidden">
                                                 {(profile?.is_admin ? AdminMenu : []).map(item => (
-                                                    <Link
+                                                    <NavLink
                                                         key={item.to}
                                                         to={item.to}
                                                         onClick={() => setAdminOpen(false)}
-                                                        className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary-base"
+                                                        className={({ isActive }) => `block px-4 py-3 text-sm ${isActive ? "text-primary-base underline underline-offset-4" : "text-gray-700 hover:bg-gray-50 hover:text-primary-base"}`}
                                                     >
                                                         {item.label}
-                                                    </Link>
+                                                    </NavLink>
                                                 ))}
                                             </Div>
                                         )}
                                     </Div>}
 
-                                    <Link to="/profile">Profile</Link>
-                                    <Link to="/orders">Orders</Link>
-                                    <Link to="/billing">Billing</Link>
+                                    <NavLink to="/profile" className={desktopLinkClass}>Profile</NavLink>
+                                    <NavLink to="/orders" className={desktopLinkClass}>Orders</NavLink>
+                                    <NavLink to="/billing" className={desktopLinkClass}>Billing</NavLink>
                                     <button
                                         onClick={logout}
                                         className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
@@ -140,19 +143,19 @@ const Navbar = () => {
                             <Div className="text-xs font-semibold text-gray-400 uppercase px-2">
                                 Account
                             </Div>
-                            <Link to="/profile" onClick={() => setOpen(false)}>Profile</Link>
-                            <Link to="/orders" onClick={() => setOpen(false)}>Orders</Link>
-                            <Link to="/billing" onClick={() => setOpen(false)}>Billing</Link>
+                            <NavLink to="/profile" className={linkClass} onClick={() => setOpen(false)}>Profile</NavLink>
+                            <NavLink to="/orders" className={linkClass} onClick={() => setOpen(false)}>Orders</NavLink>
+                            <NavLink to="/billing" className={linkClass} onClick={() => setOpen(false)}>Billing</NavLink>
                             <button onClick={logout}>Logout</button>
                             {(profile?.is_admin ? AdminMenu : []).map(item => (
-                                <Link
+                                <NavLink
                                     key={item.to}
                                     to={item.to}
                                     onClick={() => setOpen(false)}
-                                    className="block w-full rounded-md px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-100"
+                                    className={linkClass}
                                 >
                                     {item.label}
-                                </Link>
+                                </NavLink>
                             ))}
                         </Div>
                     )}

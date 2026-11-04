@@ -1,6 +1,5 @@
 import React from "react";
-import { Div, Flex, FlexColumn, Span } from "../general/BaseComponents";
-import GradientText from "../ui/GradientText";
+import { Div, Flex, FlexColumn } from "../general/BaseComponents";
 import StepCard from "~/components/cards/StepCard";
 import Title from "~/components/general/Title";
 import { ArrowRight, CheckCircle, PenTool, Sparkles, Users } from "lucide-react";
@@ -74,7 +73,7 @@ const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
     ];
 
     return (
-        <FlexColumn className={`${wrapperBaseClass} ${bgClass[backgroundColor]} bg`}>
+        <FlexColumn className={`${wrapperBaseClass} ${bgClass[backgroundColor]} py-8 sm:py-10 lg:py-12`}>
             <Flex className="items-center bg-primary-light text-primary px-4 py-2 gap-2 rounded-full text-14 font-medium w-max mx-auto">
                 {topIcon}
                 {topTitle || "Our Process"}
@@ -87,12 +86,12 @@ const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 </Div>
             </Div>
 
-            <Div className="relative px-6  mx-auto">
-                <Div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
-                    {howItWorksSteps.map((s, i) => (
-                        <StepCard key={s.number} step={s} isLast={i === howItWorksSteps.length - 1} />
+            <Div className="mx-auto mt-6 w-full max-w-7xl px-1 sm:mt-8 sm:px-2">
+                <ol className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+                    {howItWorksSteps.map((s) => (
+                        <StepCard key={s.number} step={s} />
                     ))}
-                </Div>
+                </ol>
             </Div>
 
             <Button onClick={() => navigate("/contact")} variant="primary_filled" height="large" className="border-2 border-white w-fit mt-4" >

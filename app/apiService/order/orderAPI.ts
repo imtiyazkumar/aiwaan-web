@@ -2,13 +2,16 @@ import { api } from "~/lib/api";
 
 export interface IOrder {
     id: string;
-    created_at: string;
-    service_id: string;
+    created_at: string | null;
+    service_id: string | null;
     project_id?: string | null;
     user_id?: string | null;
-    amount: number;
-    status: string;
-    details: Record<string, any>;
+    amount: number | null;
+    status: string | null;
+    details: Record<string, any> | null;
+    service?: { id: string; title: string } | null;
+    project?: { id: string; title: string } | null;
+    user?: { id: string; full_name: string | null; email: string | null } | null;
     created_by?: string;
 }
 

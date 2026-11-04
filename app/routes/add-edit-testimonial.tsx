@@ -114,9 +114,7 @@ export default function AddEditTestimonial() {
                 onSubmit={handleSubmit}
                 className="space-y-6 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100"
             >
-                <TitleCard
-                    title={isEditMode ? "Edit Testimonial" : "Add Testimonial"}
-                />
+                <div className="mb-6 flex items-center justify-between gap-4"><TitleCard title={isEditMode ? "Edit Testimonial" : "Add Testimonial"} className="mx-0 mb-0 sm:mb-0" /></div>
 
                 {error && (
                     <Div className="bg-red-50 text-red-700 p-4 rounded-xl border border-red-200 text-sm">

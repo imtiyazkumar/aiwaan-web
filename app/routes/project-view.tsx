@@ -6,6 +6,7 @@ import ProjectGallery from "~/components/sections/ImageGallery";
 import InfoRow from "~/components/cards/InfoRow";
 import ProjectQuery from "~/apiService/project/projectQuery";
 import { useParams, useNavigate } from "react-router";
+import EntityActionsMenu from '~/components/buttons/EntityActionsMenu';
 
 const ProjectView = () => {
     const { id } = useParams();
@@ -54,6 +55,7 @@ const ProjectView = () => {
                             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
                                 {project.title}
                             </h1>
+                            <div className="ml-auto"><EntityActionsMenu resource="projects" id={project.id} name={project.title} editPath={`/add-edit-project?id=${project.id}`} deleteRedirect="/projects" /></div>
                         </Div>
                         <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
                             {project.description}
