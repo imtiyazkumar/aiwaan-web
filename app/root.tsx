@@ -11,7 +11,6 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Flex, FlexColumn } from "~/components/general/BaseComponents";
-import Footer from "~/components/sections/Footer";
 import Navbar from "~/components/Navbar";
 import { QueryProvider } from "~/providers/QueryProvider";
 import { ConfirmationProvider } from "~/contexts/ConfirmationContext";
@@ -34,7 +33,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <html lang="en" suppressHydrationWarning>
             <head>
                 <meta charSet="utf-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+                <meta name="theme-color" content="#17201c" />
                 <Meta />
                 <Links />
             </head>
@@ -54,12 +54,9 @@ export default function App() {
         <QueryProvider>
             <AuthProvider>
                 <ConfirmationProvider>
-                <FlexColumn className="w-full justify-center items-center bg-slate-200">
+                <FlexColumn className="w-full">
                     <Navbar />
-                    <FlexColumn className="w-full justify-center items-center px-1 sm:px-2 lg:px-4 py-1 sm:py-2 gap-2 lg:py-4">
-                        <Outlet />
-                    </FlexColumn>
-                    <Footer />
+                    <Outlet />
                 </FlexColumn>
                 </ConfirmationProvider>
             </AuthProvider>
