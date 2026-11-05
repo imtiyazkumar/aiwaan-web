@@ -1,4 +1,4 @@
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8787';
+export const API_URL = import.meta.env.VITE_API_URL || 'https://aiwan-server.imtiyazah907.workers.dev';
 type Session = { access_token: string; refresh_token?: string; expires_at?: number };
 const storage = () => typeof localStorage === 'undefined' ? null : localStorage;
 function setSession(session: Session) {
